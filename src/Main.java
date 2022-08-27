@@ -1,6 +1,3 @@
-package src;
-//package src;
-
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
