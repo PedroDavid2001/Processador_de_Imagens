@@ -31,5 +31,3 @@ hs_err_pid*
 .vscode/
 libs/
 bin/
-.classpath
-.project
