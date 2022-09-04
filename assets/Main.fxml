@@ -60,12 +60,16 @@
       </MenuBar>
    </top>
    <center>
-      <Pane BorderPane.alignment="CENTER">
-         <children>
-            <ImageView fx:id="imagemIni" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="imagemSec" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="imagemFinal" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </Pane>
+      <ScrollPane prefViewportHeight="695.0" prefViewportWidth="1080.0">
+         <content>
+            <Pane BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fx:id="imagemIni" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imagemSec" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imagemFinal" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </Pane>
+         </content>
+      </ScrollPane>
    </center>
 </BorderPane>

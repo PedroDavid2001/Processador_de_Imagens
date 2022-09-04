@@ -1,3 +1,4 @@
+package src;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 import ij.ImagePlus;
@@ -7,7 +8,7 @@ import ij.ImagePlus;
  * O objeto do tipo BufferedImage será incializado com o retorno do método
  * read() da classe ImageIO, que, por sua vez, receberá um objeto do tipo 
  * File com o caminho do arquivo. A priori o arquivo deverá estar contido 
- * no pacote "Imagens" dentro da raíz do projeto. 
+ * no pacote "Imagens" dentro da pasta assets na raíz do projeto. 
  * O método de carregamento/abertura retornará um boolean informando se 
  * obteve êxito na abertura do arquivo.
  * 
