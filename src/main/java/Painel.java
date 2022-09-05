@@ -1,5 +1,7 @@
-package src;
+package main.java;
+
 import javax.swing.JFileChooser;
+import ij.io.FileSaver;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,6 +10,17 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+/**
+ * Classe controladora da tela principal. A priori, o
+ * o software possuirá apenas uma tela para manipular 
+ * as imagens e nela estarão os botões de operações, 
+ * transformações, realces, abrir e salvar arquivos.
+ * Os métodos estão separados por comentários, e, no
+ * último bloco, estão os métodos adicionais, tais 
+ * como, salvar arquivos, acumular operações, limpeza 
+ * da área de trabalho e sair do programa. 
+ */
 
 public class Painel {
 
@@ -446,6 +459,18 @@ public class Painel {
         limparPrimaria(event);
         limparSec(event);
         limparFinal(event);
+    }
+
+    @FXML
+    void salvar(ActionEvent event) {
+        
+        FileSaver fSaver = new FileSaver( imagem.getImgPlus() );
+        fSaver.save();
+    }
+
+    @FXML
+    void salvarComo(ActionEvent event) {
+        Main.fechar();
     }
 
     @FXML

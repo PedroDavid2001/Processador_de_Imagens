@@ -1,4 +1,4 @@
-package src;
+package main.java;
 
 import java.io.IOException;
 import javafx.application.Application;
@@ -25,9 +25,9 @@ public class Main extends Application {
     }
 
     public void iniciar() throws IOException {
-        Parent root = FXMLLoader.load(Main.class.getResource("/assets/Main.fxml"));
+        Parent root = FXMLLoader.load(Main.class.getResource("/Main.fxml"));
         Scene cena = new Scene(root);
-        stg.getIcons().add(new Image("/assets/icon.png"));
+        stg.getIcons().add(new Image("/src/main/resources/icon.png"));
         stg.setTitle("FotoXop");
         stg.setScene(cena);
     }

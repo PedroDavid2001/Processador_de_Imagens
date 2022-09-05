@@ -1,4 +1,5 @@
-package src;
+package main.java;
+
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 import ij.ImagePlus;
@@ -12,7 +13,7 @@ import ij.ImagePlus;
  * O método de carregamento/abertura retornará um boolean informando se 
  * obteve êxito na abertura do arquivo.
  * 
- * --- Captura dos campos do RGB ---
+ * ---------------- Captura dos campos do RGB ---------------------------
  * 
  * (CAPTURAR BLUE)
  * 0xff -> 1111 1111 -> 255
@@ -26,7 +27,7 @@ import ij.ImagePlus;
  * (CAPTURAR ALPHA)
  * 0xff000000 -> 1111 1111 0000 0000 0000 0000 0000 0000 -> 4.278.190.080 
  * 
- * ---------------------------------
+ * ----------------------------------------------------------------------
  * 
  * - Cada elemento do rgb vai de 0000 0000 (0) à 1111 1111 (255)
  * 
@@ -73,11 +74,12 @@ import ij.ImagePlus;
 public class Processador {
 
     private BufferedImage arquivo;
-    
+    private ImagePlus imagePlus;
+
     public boolean carregarImg(String path){
 
         try {
-            ImagePlus imagePlus = new ImagePlus(path);
+            imagePlus = new ImagePlus(path);
             arquivo = imagePlus.getBufferedImage();
             return true;
 
@@ -148,7 +150,7 @@ public class Processador {
     public BufferedImage getImg(){
         return arquivo;
     }
-
+    
     public void setImg(BufferedImage img){
 
         arquivo = new BufferedImage(
@@ -161,6 +163,10 @@ public class Processador {
                 arquivo.setRGB( x, y, img.getRGB(x, y) );
             }
         }
+    }
+
+    public ImagePlus getImgPlus(){
+        return imagePlus;
     }
 
     public void apagarImg(){

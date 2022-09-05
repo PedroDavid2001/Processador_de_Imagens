@@ -1,6 +1,22 @@
-package src;
+package main.java;
+
 import java.awt.image.BufferedImage;
 
+/**
+ * Classe responsável pela implementação dos métodos 
+ * de operações aritméticas bit-a-bit nas imagens. 
+ * Todas as operações, exceto a de divisão, possuem 
+ * um método com truncamento e normalização para 
+ * controlar o range dos campos do RGB.
+ * É necessário entender que cada campo varia de 0
+ * a 255 e quando as imagens têm esses campos 
+ * alterados por operações, necessitam de um controle 
+ * dos valores para evitar overflows (campo acima de 255) 
+ * ou underflows (campo abaixo de 0). Como já citado, a 
+ * divisão é a única operação que não passa por esse 
+ * controle, e isso se deve ao fato de que em uma divisão 
+ * não é possível obter valores fora do range.
+ */
 public class Operacoes {
     //--------------------------------------------------------------
     //operações aritméticas

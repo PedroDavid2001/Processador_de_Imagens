@@ -1,4 +1,5 @@
-package src;
+package main.java;
+
 import java.awt.image.BufferedImage;
 
 /**
