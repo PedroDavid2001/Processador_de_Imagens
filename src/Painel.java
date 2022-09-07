@@ -8,8 +8,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 
 /**
  * Classe controladora da tela principal. A priori, o
@@ -58,6 +60,9 @@ public class Painel {
     private Menu menuLimpar;
 
     @FXML
+    private TextField textoValor;
+
+    @FXML
     private MenuItem botaoLimparIni;
 
     @FXML
@@ -68,6 +73,9 @@ public class Painel {
 
     @FXML
     private RadioMenuItem botaoAcc;
+
+    @FXML
+    private Pane popupValor;
 
     private Processador imagem = new Processador();
     private Processador imgSec = new Processador();
@@ -91,8 +99,13 @@ public class Painel {
      * 4 - and
      * 5 - or
      * 6 - xor
+     * 7 - CisX
      */
     private int lstAct;
+
+    /*Variável ponto flutuante que armazena o 
+    último valor digitado para uma transformação */
+    private float valorTransf;
 
     //--------------------------------------------------------------
     //Métodos para exibir a imagem na tela
@@ -366,6 +379,32 @@ public class Painel {
         botaoSalvarComo.setDisable(false);
     }
 
+    @FXML
+    void cisalharX(ActionEvent event) {
+        popupValor.setVisible(true);
+        lstAct = 7;
+    }
+
+    void cisX(){
+        img = null;
+
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Transformacoes.cisalhamentoX( imgFinal.getImg(), valorTransf ) );    
+        else
+            imgFinal.setImg( Transformacoes.cisalhamentoX( imagem.getImg() , valorTransf ) );
+
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
+        imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
+        imagemFinal.setY( imagemIni.getY() );
+
+        botaoLimparFinal.setDisable(false);
+        botaoSalvarComo.setDisable(false);
+    }
+
     
     //--------------------------------------------------------------
     //Métodos extras
@@ -443,6 +482,17 @@ public class Painel {
          */
         if( imagemIni.getImage() == null && imagemFinal.getImage() == null )
             menuLimpar.setDisable(true);
+    }
+
+    @FXML
+    void botaoValor(ActionEvent event) {
+        valorTransf = Float.valueOf( textoValor.getText() );
+        popupValor.setVisible(false);
+
+        if(lstAct == 7)
+            cisX();
+
+        textoValor.clear();
     }
 
     @FXML

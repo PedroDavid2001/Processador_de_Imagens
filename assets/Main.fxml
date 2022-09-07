@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -34,7 +35,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#espelhoX" text="Inverter eixo X" />
                   <MenuItem mnemonicParsing="false" onAction="#espelhoY" text="Inverter eixo Y" />
-                  <MenuItem mnemonicParsing="false" text="Cisalhar eixo X" />
+                  <MenuItem mnemonicParsing="false" onAction="#cisalharX" text="Cisalhar eixo X" />
                   <MenuItem mnemonicParsing="false" text="Cisalhar eixo Y" />
                   <MenuItem mnemonicParsing="false" text="Redimensionar" />
                   <MenuItem mnemonicParsing="false" text="Rotacionar" />
@@ -67,6 +68,21 @@
                   <ImageView fx:id="imagemIni" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="imagemSec" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="imagemFinal" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <Pane fx:id="popupValor" layoutX="412.0" layoutY="269.0" prefHeight="150.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                     <children>
+                        <Label layoutX="65.0" layoutY="14.0" prefHeight="30.0" prefWidth="121.0" text="Digite o valor">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textoValor" layoutX="56.0" layoutY="57.0" prefHeight="30.0" prefWidth="139.0" />
+                        <Button layoutX="68.0" layoutY="98.0" mnemonicParsing="false" onAction="#botaoValor" prefHeight="20.0" prefWidth="115.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </Pane>
                </children>
             </Pane>
          </content>

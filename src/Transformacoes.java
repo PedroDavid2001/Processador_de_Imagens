@@ -57,4 +57,40 @@ public class Transformacoes {
             
         return tmp;
     }
+
+    public static BufferedImage cisalhamentoX(BufferedImage img, float sx){
+
+        /**
+        *            | 1  Sx 0 |   
+        * Shear(x) = | 0  1  0 |  Sx = valor do cisalhamento horizontal
+        *            | 0  0  1 | 
+        *
+        *
+        * | x |   | 1  Sx 0 |   | x + y * Sx |
+        * | y | * | 0  1  0 | = |      y     |
+        * | 1 |   | 0  0  1 |   |      1     |
+        *
+        * Apenas o x tem o valor alterado, portanto precisamos ter um 
+        * controle apenas desse valor para não ficar abaixo de zero e 
+        * resultar em index out of bound!!!
+        **/
+
+        BufferedImage tmp = new BufferedImage(((int)(img.getHeight() * sx) + img.getWidth()), img.getHeight(), 2);
+        int newX;
+        int newY;   /*variavel usada para controlar o y, 
+                    pois utilizar o y normal iria inverter 
+                    o processo, perceba que, começando no 
+                    y = 0, a imagem vai cisalhar de baixo 
+                    para cima (efeito inverso)*/
+
+        for(int y = 0; y < img.getHeight(); y++){
+            for(int x = 0; x < img.getWidth(); x++){
+                newY = ( img.getHeight() - 1 ) - y; 
+                newX = (int)(newY * sx) + x;
+                tmp.setRGB( newX, y, img.getRGB(x, y) );
+            }
+        }
+    
+        return tmp;
+    }
 }
