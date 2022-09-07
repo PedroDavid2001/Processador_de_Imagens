@@ -29,5 +29,3 @@ hs_err_pid*
 *.vsix
 
 .vscode/
-libs/
-bin/
