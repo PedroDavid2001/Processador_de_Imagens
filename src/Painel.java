@@ -101,54 +101,44 @@ public class Painel {
     void abrirImgPrimaria(ActionEvent event) {
         img = null;
         
-        int response = fileChooser.showOpenDialog(null);
-       
-        if(response == JFileChooser.APPROVE_OPTION) {
+        imagem.carregarImg();
+            
+        imgFinal.setImg( imagem.getImg() );
+            
+        img = SwingFXUtils.toFXImage(imagem.getImg(), null);
+            
+        imagemIni.setImage(img);
+            
+        imagemIni.setX( 10.0 );
+        imagemIni.setY( 10.0 );
+        imagemIni.setFitHeight( imagem.getHeight() );
+        imagemIni.setFitWidth( imagem.getWidth() );
 
-            imagem.carregarImg( fileChooser.getSelectedFile().getAbsolutePath() );
-            
-            imgFinal.setImg( imagem.getImg() );
-            
-            img = SwingFXUtils.toFXImage(imagem.getImg(), null);
-            
-            imagemIni.setImage(img);
-            
-            imagemIni.setX( 10.0 );
-            imagemIni.setY( 10.0 );
-            imagemIni.setFitHeight( imagem.getHeight() );
-            imagemIni.setFitWidth( imagem.getWidth() );
-
-            //habilita os botões da interface caso a imagem abra com sucesso
-            botaoAbrirCamada.setDisable(false);
-            menuTransformar.setDisable(false);
-            menuLimpar.setDisable(false);
-            botaoLimparIni.setDisable(false);
-        }
+        //habilita os botões da interface caso a imagem abra com sucesso
+        botaoAbrirCamada.setDisable(false);
+        menuTransformar.setDisable(false);
+        menuLimpar.setDisable(false);
+        botaoLimparIni.setDisable(false);
     }
 
     @FXML
     void abrirImgSec(ActionEvent event) {
         img = null;
         
-        int response = fileChooser.showOpenDialog(null); 
-       
-        if(response == JFileChooser.APPROVE_OPTION) {
+        imgSec.carregarImg();
+        img = SwingFXUtils.toFXImage(imgSec.getImg(), null);
+            
+        imagemSec.setImage(img);
+            
+        imagemSec.setFitHeight( imgSec.getHeight() );
+        imagemSec.setFitWidth( imgSec.getWidth() );
+            
+        imagemSec.setX( 10.0 );
+        imagemSec.setY( imagemIni.getY() + imagemIni.getFitHeight() + 10 );
 
-            imgSec.carregarImg( fileChooser.getSelectedFile().getAbsolutePath() );
-            img = SwingFXUtils.toFXImage(imgSec.getImg(), null);
-            
-            imagemSec.setImage(img);
-            
-            imagemSec.setFitHeight( imgSec.getHeight() );
-            imagemSec.setFitWidth( imgSec.getWidth() );
-            
-            imagemSec.setX( 10.0 );
-            imagemSec.setY( imagemIni.getY() + imagemIni.getFitHeight() + 10 );
-
-            //habilita os botões da interface caso a imagem abra com sucesso
-            menuOperacoes.setDisable(false);
-            botaoLimparSec.setDisable(false);
-        }
+        //habilita os botões da interface caso a imagem abra com sucesso
+        menuOperacoes.setDisable(false);
+        botaoLimparSec.setDisable(false);
     }
 
     //--------------------------------------------------------------

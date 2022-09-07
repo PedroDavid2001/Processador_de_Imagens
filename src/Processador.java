@@ -1,17 +1,27 @@
 package src;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
 import java.awt.Color;
+
+import ij.IJ;
 import ij.ImagePlus;
 
 /**
  * Classe responsável por carregar uma imagem a partir do path do arquivo.
- * O objeto do tipo BufferedImage será incializado com o retorno do método
- * read() da classe ImageIO, que, por sua vez, receberá um objeto do tipo 
- * File com o caminho do arquivo. A priori o arquivo deverá estar contido 
- * no pacote "Imagens" dentro da pasta assets na raíz do projeto. 
- * O método de carregamento/abertura retornará um boolean informando se 
- * obteve êxito na abertura do arquivo.
+ * O objeto do tipo BufferedImage será incializado com o retorno do método 
+ * read() da classe ImageIO caso seja uma imagem no formato PNG e nos demais 
+ * casos será inicializado pelo método getBufferedImage() de um objeto da 
+ * classe ImagePlus. 
+ * Esses dois métodos de abertura foram selecionados por dois motivos: o 
+ * método da ImagePlus não obteve êxito carregando imagens no formato PNG, 
+ * pois não passava o campo Alpha dos pixels da imagem corretamente e o método 
+ * da ImageIO dispara exceção na abertura de formato PGM. A priori o arquivo 
+ * deverá estar contido no pacote "Imagens" dentro da pasta assets na raíz do 
+ * projeto. O método de carregamento/abertura retornará um boolean informando 
+ * se obteve êxito na abertura do arquivo.
  * 
  * ---------------- Captura dos campos do RGB ---------------------------
  * 
@@ -76,11 +86,26 @@ public class Processador {
     private BufferedImage arquivo;
     private ImagePlus imagePlus;
 
-    public boolean carregarImg(String path){
+    public boolean carregarImg(){
 
+        String path;
+        imagePlus = IJ.openImage();                                         //abre o explorador de arquivo
+        
+        path = imagePlus.getOriginalFileInfo().getFilePath();               /*passa o path da imagem selecionada
+                                                                            para a String*/
+        
+        String format = path.substring(path.length() - 4, path.length());   /*passa os quatro últimos caracteres 
+                                                                            para a String para verificar o formato*/
+        
         try {
-            imagePlus = new ImagePlus(path);
-            arquivo = imagePlus.getBufferedImage();
+            File file = new File(path);
+            
+            if(format.compareTo(".png") != 0){
+                arquivo = imagePlus.getBufferedImage();    
+            }else{
+                arquivo = ImageIO.read(file);
+            }
+
             return true;
 
         } catch (Exception exc) {

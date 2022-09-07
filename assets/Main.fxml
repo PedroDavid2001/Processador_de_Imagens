@@ -60,9 +60,9 @@
       </MenuBar>
    </top>
    <center>
-      <ScrollPane prefViewportHeight="695.0" prefViewportWidth="1080.0">
+      <ScrollPane BorderPane.alignment="CENTER">
          <content>
-            <Pane BorderPane.alignment="CENTER">
+            <Pane style="-fx-background-color: transparent;">
                <children>
                   <ImageView fx:id="imagemIni" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="imagemSec" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />

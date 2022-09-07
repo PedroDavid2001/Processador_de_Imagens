@@ -31,7 +31,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(Main.class.getResource("/assets/Main.fxml"));
         Scene cena = new Scene(root);
         stg.getIcons().add(new Image("/assets/icon.png"));
-        stg.setTitle("FotoXop");
+        stg.setTitle("Processador de Imagem");
         stg.setScene(cena);
     }
 
