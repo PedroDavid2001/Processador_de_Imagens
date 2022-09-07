@@ -100,8 +100,9 @@ public class Painel {
     @FXML
     void abrirImgPrimaria(ActionEvent event) {
         img = null;
-         
-        if(imagem.carregarImg()){
+        imagem.carregarImg();
+
+        if(imagem.getImg() != null){
             imgFinal.setImg( imagem.getImg() );
             
             img = SwingFXUtils.toFXImage(imagem.getImg(), null);
@@ -124,8 +125,9 @@ public class Painel {
     @FXML
     void abrirImgSec(ActionEvent event) {
         img = null;
-        
-        if(imgSec.carregarImg()){
+        imgSec.carregarImg();
+
+        if(imgSec.getImg() != null){
             img = SwingFXUtils.toFXImage(imgSec.getImg(), null);
             
             imagemSec.setImage(img);
@@ -490,10 +492,6 @@ public class Painel {
 
     @FXML
     void Sair(ActionEvent event) {
-        img = null;
-        imagem.destruir();
-        imgFinal.destruir();
-        imgSec.destruir();
         Main.fechar();
     }
 }

@@ -2,10 +2,8 @@ package src;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 import java.awt.Color;
-
 import ij.IJ;
 import ij.ImagePlus;
 
@@ -86,9 +84,16 @@ public class Processador {
     private BufferedImage arquivo;
     private ImagePlus imagePlus;
 
-    public boolean carregarImg(){
+    public Processador(){   
+        arquivo = null;
+        imagePlus = null;
+    }
 
+    public boolean carregarImg(){
+        arquivo = null;
+        imagePlus = null;
         String path;
+        
         imagePlus = IJ.openImage(); //abre o explorador de arquivo
         
         if(imagePlus != null){  //verifica se obteve sucesso na abertura do arquivo
@@ -178,6 +183,8 @@ public class Processador {
     */
 
     public BufferedImage getImg(){
+        if(arquivo == null)
+            return null;
         return arquivo;
     }
     
@@ -196,6 +203,8 @@ public class Processador {
     }
 
     public ImagePlus getImgPlus(){
+        if(imagePlus == null)
+            return null;
         return imagePlus;
     }
 
@@ -227,9 +236,4 @@ public class Processador {
         
     }
 
-    public void destruir(){
-        arquivo = null;
-        imagePlus = null;
-        IJ.exit();
-    }
 }
