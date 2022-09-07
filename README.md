@@ -1,2 +1,8 @@
-# Processador_de_Imagens
-Software desenvolvido em Java para a disciplina de Processamento Digital de Imagens na U
+# Processador de Imagens
+* Software developed for Digital image processing discipline
+* Build in java using javaFX 
+*  Software capable of opening all types of images and performing operations with them
+
+
+
+
