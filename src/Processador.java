@@ -89,31 +89,36 @@ public class Processador {
     public boolean carregarImg(){
 
         String path;
-        imagePlus = IJ.openImage();                                         //abre o explorador de arquivo
+        imagePlus = IJ.openImage(); //abre o explorador de arquivo
         
-        path = imagePlus.getOriginalFileInfo().getFilePath();               /*passa o path da imagem selecionada
-                                                                            para a String*/
-        
-        String format = path.substring(path.length() - 4, path.length());   /*passa os quatro últimos caracteres 
-                                                                            para a String para verificar o formato*/
-        
-        try {
-            File file = new File(path);
+        if(imagePlus != null){  //verifica se obteve sucesso na abertura do arquivo
             
-            if(format.compareTo(".png") != 0){
-                arquivo = imagePlus.getBufferedImage();    
-            }else{
-                arquivo = ImageIO.read(file);
+            path = imagePlus.getOriginalFileInfo().getFilePath();   /*passa o path da imagem selecionada
+                                                                    para a String*/
+
+            String format = path.substring(path.length() - 4, path.length());   /*passa os quatro últimos caracteres 
+                                                                                para a String para verificar o formato*/
+            
+            try {
+                File file = new File(path);
+                
+                if(format.compareTo(".png") != 0){
+                    arquivo = imagePlus.getBufferedImage();    
+                }else{
+                    arquivo = ImageIO.read(file);
+                }
+                return true;
+
+            } catch (Exception exc) {
+
+                exc.printStackTrace();
+                System.out.println("Ocorreu um erro na abertura do arquivo!!");
+              
+                return false;
+
             }
-
-            return true;
-
-        } catch (Exception exc) {
-
-            exc.printStackTrace();
-            System.out.println("Ocorreu um erro na abertura do arquivo!!");
+        }else{
             return false;
-
         } 
     }
 
@@ -217,7 +222,14 @@ public class Processador {
     public void setRGB(int x, int y, int r, int g, int b){
         
         Color cor = new Color(r, g, b);
-        arquivo.setRGB(x, y, cor.getRGB());
+        if(escalaAlpha(x, y) != 0)
+            arquivo.setRGB(x, y, cor.getRGB());
         
+    }
+
+    public void destruir(){
+        arquivo = null;
+        imagePlus = null;
+        IJ.exit();
     }
 }

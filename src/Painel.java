@@ -100,45 +100,46 @@ public class Painel {
     @FXML
     void abrirImgPrimaria(ActionEvent event) {
         img = null;
-        
-        imagem.carregarImg();
+         
+        if(imagem.carregarImg()){
+            imgFinal.setImg( imagem.getImg() );
             
-        imgFinal.setImg( imagem.getImg() );
-            
-        img = SwingFXUtils.toFXImage(imagem.getImg(), null);
-            
-        imagemIni.setImage(img);
-            
-        imagemIni.setX( 10.0 );
-        imagemIni.setY( 10.0 );
-        imagemIni.setFitHeight( imagem.getHeight() );
-        imagemIni.setFitWidth( imagem.getWidth() );
+            img = SwingFXUtils.toFXImage(imagem.getImg(), null);
+                
+            imagemIni.setImage(img);
+                
+            imagemIni.setX( 10.0 );
+            imagemIni.setY( 10.0 );
+            imagemIni.setFitHeight( imagem.getHeight() );
+            imagemIni.setFitWidth( imagem.getWidth() );
 
-        //habilita os botões da interface caso a imagem abra com sucesso
-        botaoAbrirCamada.setDisable(false);
-        menuTransformar.setDisable(false);
-        menuLimpar.setDisable(false);
-        botaoLimparIni.setDisable(false);
+            //habilita os botões da interface caso a imagem abra com sucesso
+            botaoAbrirCamada.setDisable(false);
+            menuTransformar.setDisable(false);
+            menuLimpar.setDisable(false);
+            botaoLimparIni.setDisable(false);
+        }
     }
 
     @FXML
     void abrirImgSec(ActionEvent event) {
         img = null;
         
-        imgSec.carregarImg();
-        img = SwingFXUtils.toFXImage(imgSec.getImg(), null);
+        if(imgSec.carregarImg()){
+            img = SwingFXUtils.toFXImage(imgSec.getImg(), null);
             
-        imagemSec.setImage(img);
-            
-        imagemSec.setFitHeight( imgSec.getHeight() );
-        imagemSec.setFitWidth( imgSec.getWidth() );
-            
-        imagemSec.setX( 10.0 );
-        imagemSec.setY( imagemIni.getY() + imagemIni.getFitHeight() + 10 );
+            imagemSec.setImage(img);
+                
+            imagemSec.setFitHeight( imgSec.getHeight() );
+            imagemSec.setFitWidth( imgSec.getWidth() );
+                
+            imagemSec.setX( 10.0 );
+            imagemSec.setY( imagemIni.getY() + imagemIni.getFitHeight() + 10 );
 
-        //habilita os botões da interface caso a imagem abra com sucesso
-        menuOperacoes.setDisable(false);
-        botaoLimparSec.setDisable(false);
+            //habilita os botões da interface caso a imagem abra com sucesso
+            menuOperacoes.setDisable(false);
+            botaoLimparSec.setDisable(false);
+        }
     }
 
     //--------------------------------------------------------------
@@ -418,6 +419,7 @@ public class Painel {
         botaoLimparIni.setDisable(true);
         botaoAbrirCamada.setDisable(true);
         menuTransformar.setDisable(true);
+        menuOperacoes.setDisable(true);
 
         /*
          * Se restar apenas a imagem primária na 
@@ -488,6 +490,10 @@ public class Painel {
 
     @FXML
     void Sair(ActionEvent event) {
+        img = null;
+        imagem.destruir();
+        imgFinal.destruir();
+        imgSec.destruir();
         Main.fechar();
     }
 }
