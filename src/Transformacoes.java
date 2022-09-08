@@ -75,19 +75,57 @@ public class Transformacoes {
         * resultar em index out of bound!!!
         **/
 
-        BufferedImage tmp = new BufferedImage(((int)(img.getHeight() * sx) + img.getWidth()), img.getHeight(), 2);
+        BufferedImage tmp = new BufferedImage(((int)(img.getHeight() * sx) + img.getWidth()), img.getHeight(), 6);
         int newX;
-        int newY;   /*variavel usada para controlar o y, 
+        int newY;   /*variável usada para controlar o y, 
                     pois utilizar o y normal iria inverter 
                     o processo, perceba que, começando no 
-                    y = 0, a imagem vai cisalhar de baixo 
-                    para cima (efeito inverso)*/
+                    y = 0, a imagem vai começar cisalhando 
+                    de baixo (efeito que ocorre quando sx 
+                    é menor que zero)*/
 
         for(int y = 0; y < img.getHeight(); y++){
             for(int x = 0; x < img.getWidth(); x++){
-                newY = ( img.getHeight() - 1 ) - y; 
+                newY = sx > 0.0 ? ( img.getHeight() - 1 ) - y : y; 
                 newX = (int)(newY * sx) + x;
                 tmp.setRGB( newX, y, img.getRGB(x, y) );
+            }
+        }
+    
+        return tmp;
+    }
+
+    public static BufferedImage cisalhamentoY(BufferedImage img, float sy){
+
+        /**
+        *            | 1  0  0 |   
+        * Shear(y) = | Sy 1  0 |  Sy = valor do cisalhamento vertical
+        *            | 0  0  1 | 
+        *
+        *
+        * | x |   | 1  0  0 |   |      x     |
+        * | y | * | Sy 1  0 | = | Sy * x + y |
+        * | 1 |   | 0  0  1 |   |      1     |
+        *
+        * Apenas o y tem o valor alterado, portanto precisamos ter um 
+        * controle apenas desse valor para não ficar abaixo de zero e 
+        * resultar em index out of bound!!!
+        **/
+
+        BufferedImage tmp = new BufferedImage( img.getWidth() ,((int)(img.getWidth() * sy) + img.getHeight()), 6);
+        int newY;
+        int newX;   /*variável usada para controlar o x, 
+                    pois utilizar o x normal iria inverter 
+                    o processo, perceba que, começando no 
+                    x = 0, a imagem vai começar cisalhando 
+                    da esquerda (efeito que ocorre quando 
+                    sy é menor que zero)*/
+
+        for(int y = 0; y < img.getHeight(); y++){
+            for(int x = 0; x < img.getWidth(); x++){
+                newX = sy > 0.0 ? ( img.getWidth() - 1 ) - x : x; 
+                newY = (int)(newX * sy) + y;
+                tmp.setRGB( x, newY, img.getRGB(x, y) );
             }
         }
     

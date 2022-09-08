@@ -100,6 +100,7 @@ public class Painel {
      * 5 - or
      * 6 - xor
      * 7 - CisX
+     * 8 - CisY
      */
     private int lstAct;
 
@@ -405,6 +406,43 @@ public class Painel {
         botaoSalvarComo.setDisable(false);
     }
 
+    @FXML
+    void cisalharY(ActionEvent event) {
+        popupValor.setVisible(true);
+        lstAct = 8;
+    }
+
+    void cisY(){
+        img = null;
+
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Transformacoes.cisalhamentoY( imgFinal.getImg(), valorTransf ) );    
+        else
+            imgFinal.setImg( Transformacoes.cisalhamentoY( imagem.getImg() , valorTransf ) );
+
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
+        imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
+        imagemFinal.setY( imagemIni.getY() );
+
+        botaoLimparFinal.setDisable(false);
+        botaoSalvarComo.setDisable(false);
+    }
+
+    @FXML
+    void redimensionar(ActionEvent event) {
+
+    }
+
+    @FXML
+    void rotacionar(ActionEvent event) {
+
+    }
+
+
     
     //--------------------------------------------------------------
     //Métodos extras
@@ -491,6 +529,8 @@ public class Painel {
 
         if(lstAct == 7)
             cisX();
+        else if(lstAct == 8)
+            cisY();
 
         textoValor.clear();
     }
