@@ -83,19 +83,12 @@ public class Processador {
 
     private BufferedImage arquivo;
     private ImagePlus imagePlus;
-
-    public Processador(){   
-        arquivo = null;
-        imagePlus = null;
-    }
-
+    
     public boolean carregarImg(){
-        arquivo = null;
-        imagePlus = null;
         String path;
         
         imagePlus = IJ.openImage(); //abre o explorador de arquivo
-        
+       
         if(imagePlus != null){  //verifica se obteve sucesso na abertura do arquivo
             
             path = imagePlus.getOriginalFileInfo().getFilePath();   /*passa o path da imagem selecionada
@@ -126,7 +119,7 @@ public class Processador {
             return false;
         } 
     }
-
+    
     public int nivelCinza(int x, int y){
         
         double cinza;

@@ -93,6 +93,7 @@ public class Painel {
     /*
      * Inteiro que armazena qual foi a ultima ação
      * para auxiliar em métodos adicionais.
+     * 0 - divis�o (ZERA PARA N�O ALTERAR NA DIVIS�O!!!)
      * 1 - soma
      * 2 - subtração
      * 3 - multiplicação
@@ -175,8 +176,8 @@ public class Painel {
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
             
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth( imagem.getWidth() );
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
         imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
         imagemFinal.setY( imagemIni.getY() );
 
@@ -200,8 +201,8 @@ public class Painel {
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth( imagem.getWidth() );
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
         imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
         imagemFinal.setY( imagemIni.getY() );
 
@@ -225,8 +226,8 @@ public class Painel {
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth( imagem.getWidth() );
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
         imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
         imagemFinal.setY( imagemIni.getY() );
 
@@ -249,10 +250,12 @@ public class Painel {
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth( imagem.getWidth() );
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
         imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
         imagemFinal.setY( imagemIni.getY() );
+        
+        lstAct = 0;
        
         botaoLimparFinal.setDisable(false);
         botaoSalvarComo.setDisable(false);
@@ -273,8 +276,8 @@ public class Painel {
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth( imagem.getWidth() );
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
         imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
         imagemFinal.setY( imagemIni.getY() );
 
@@ -298,8 +301,8 @@ public class Painel {
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth( imagem.getWidth() );
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
         imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
         imagemFinal.setY( imagemIni.getY() );
 
@@ -323,8 +326,8 @@ public class Painel {
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth( imagem.getWidth() );
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
         imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
         imagemFinal.setY( imagemIni.getY() );
 
@@ -349,8 +352,8 @@ public class Painel {
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth( imagem.getWidth() );
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
         imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
         imagemFinal.setY( imagemIni.getY() );
 
@@ -371,8 +374,8 @@ public class Painel {
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth( imagem.getWidth() );
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
         imagemFinal.setX( imagemIni.getX() + imagemIni.getFitWidth() + 20 );
         imagemFinal.setY( imagemIni.getY() );
 
@@ -526,6 +529,7 @@ public class Painel {
     void botaoValor(ActionEvent event) {
         valorTransf = Float.valueOf( textoValor.getText() );
         popupValor.setVisible(false);
+        System.out.println("\n\nValor: " + Float.valueOf((textoValor.getText())) + "\n\n");
 
         if(lstAct == 7)
             cisX();

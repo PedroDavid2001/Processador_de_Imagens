@@ -112,10 +112,24 @@ public class Operacoes {
                 g = imgA.nivelGreen(x, y) - imgB.nivelGreen(x, y); 
                 b = imgA.nivelBlue(x, y) - imgB.nivelBlue(x, y);
                 
-                r = ( ( ( 255 * (r - menorR) ) / (maiorR - menorR) ) );
-                g = ( ( ( 255 * (g - menorG) ) / (maiorG - menorG) ) );
-                b = ( ( ( 255 * (b - menorB) ) / (maiorB - menorB) ) );
-
+                //-------------------------------------------------------------
+                //verificações necessárias para evitar divisões por 0 (zero)!!!
+                if(maiorR > menorR)
+                	r = ( ( ( 255 * (r - menorR) ) / (maiorR - menorR) ) );
+                else
+                	r = 0;
+                
+                if(maiorG > menorG)
+                	g = ( ( ( 255 * (g - menorG) ) / (maiorG - menorG) ) );
+                else
+                	g = 0;
+                
+                if(maiorB > menorB)
+                	b = ( ( ( 255 * (b - menorB) ) / (maiorB - menorB) ) );
+                else
+                	b = 0;
+                //-------------------------------------------------------------
+                
                 imgF.setRGB( x, y, r, g, b );
             }
         }
@@ -163,9 +177,23 @@ public class Operacoes {
                 g = imgA.nivelGreen(x, y) * imgB.nivelGreen(x, y); 
                 b = imgA.nivelBlue(x, y) * imgB.nivelBlue(x, y);
              
-                r = ( ( ( 255 * (r - menorR) ) / (maiorR - menorR) ) );
-                g = ( ( ( 255 * (g - menorG) ) / (maiorG - menorG) ) );
-                b = ( ( ( 255 * (b - menorB) ) / (maiorB - menorB) ) );
+                //-------------------------------------------------------------
+                //verificações necessárias para evitar divisões por 0 (zero)!!!
+                if(maiorR > menorR)
+                	r = ( ( ( 255 * (r - menorR) ) / (maiorR - menorR) ) );
+                else
+                	r = 0;
+                
+                if(maiorG > menorG)
+                	g = ( ( ( 255 * (g - menorG) ) / (maiorG - menorG) ) );
+                else
+                	g = 0;
+                
+                if(maiorB > menorB)
+                	b = ( ( ( 255 * (b - menorB) ) / (maiorB - menorB) ) );
+                else
+                	b = 0;
+                //-------------------------------------------------------------
 
                 imgF.setRGB( x, y, r, g, b );
             }

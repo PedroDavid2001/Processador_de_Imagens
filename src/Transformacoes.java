@@ -74,6 +74,11 @@ public class Transformacoes {
         * controle apenas desse valor para n√£o ficar abaixo de zero e 
         * resultar em index out of bound!!!
         **/
+    	
+    	boolean negative = sx < 0 ? true : false; //verifica se o valor de cisalhamento digitado È negativo
+    	
+    	if(negative)
+    		sx = -sx;//teste necess·rio para evitar acessar coordenada negativa!!!
 
         BufferedImage tmp = new BufferedImage(((int)(img.getHeight() * sx) + img.getWidth()), img.getHeight(), 6);
         int newX;
@@ -86,7 +91,9 @@ public class Transformacoes {
 
         for(int y = 0; y < img.getHeight(); y++){
             for(int x = 0; x < img.getWidth(); x++){
-                newY = sx > 0.0 ? ( img.getHeight() - 1 ) - y : y; 
+            	
+                newY = negative ? y : ( img.getHeight() - 1 ) - y; 
+                
                 newX = (int)(newY * sx) + x;
                 tmp.setRGB( newX, y, img.getRGB(x, y) );
             }
@@ -111,6 +118,10 @@ public class Transformacoes {
         * controle apenas desse valor para n√£o ficar abaixo de zero e 
         * resultar em index out of bound!!!
         **/
+    	boolean negative = sy < 0 ? true : false; //verifica se o valor de cisalhamento digitado È negativo
+    	
+    	if(negative)
+    		sy = -sy;//teste necess·rio para evitar acessar coordenada negativa!!!
 
         BufferedImage tmp = new BufferedImage( img.getWidth() ,((int)(img.getWidth() * sy) + img.getHeight()), 6);
         int newY;
@@ -123,7 +134,9 @@ public class Transformacoes {
 
         for(int y = 0; y < img.getHeight(); y++){
             for(int x = 0; x < img.getWidth(); x++){
-                newX = sy > 0.0 ? ( img.getWidth() - 1 ) - x : x; 
+                
+            	newX = negative ? x : ( img.getWidth() - 1 ) - x;
+            	
                 newY = (int)(newX * sy) + y;
                 tmp.setRGB( x, newY, img.getRGB(x, y) );
             }
