@@ -5,9 +5,9 @@ public class Cores {
 	//exibe os components RGB
 	public static void RGB(Processador img) {
 		
-		Processador proR = new Processador(); //Ciano
-		Processador proG = new Processador(); //Amarelo
-		Processador proB = new Processador(); //Magenta
+		Processador proR = new Processador(); 
+		Processador proG = new Processador(); 
+		Processador proB = new Processador(); 
 		
 		
 		proR.setImg( img.getImg() );
@@ -47,6 +47,51 @@ public class Cores {
 		
 	}
 	
+	//exibe os components CMY
+		public static void CMY(Processador img) {
+			
+			Processador proC = new Processador(); 
+			Processador proM = new Processador(); 
+			Processador proY = new Processador(); 
+			
+			
+			proC.setImg( img.getImg() );
+			proM.setImg( img.getImg() );
+			proY.setImg( img.getImg() );
+			
+			//Cyan
+			for(int y = 0; y < img.getHeight(); y++){
+	            for(int x = 0; x < img.getWidth(); x++){
+	                proC.setRGB(x, y, 0, 255 - img.nivelRed(x, y), 255 - img.nivelRed(x, y)); //1-R, G, B
+	            }
+	        }
+			
+			//Magenta
+			for(int y = 0; y < img.getHeight(); y++){
+	            for(int x = 0; x < img.getWidth(); x++){
+	                proM.setRGB(x, y, 255 - img.nivelGreen(x, y), 0, 255 - img.nivelGreen(x, y));//R, 1-G, B
+	            }
+	        }
+			
+			//Yellow
+			for(int y = 0; y < img.getHeight(); y++){
+	            for(int x = 0; x < img.getWidth(); x++){
+	                proY.setRGB(x, y, 255 - img.nivelBlue(x, y), 255 - img.nivelBlue(x, y), 0);//R, G, 1-B
+	            }
+	        }
+			
+			//inicializa as image plus
+			proC.setImgPlus();
+			proM.setImgPlus();
+			proY.setImgPlus();
+			
+			//exibe as image plus
+			proC.getImgPlus().show();
+			proM.getImgPlus().show();
+			proY.getImgPlus().show();
+			
+		}
+	
 	//exibe a imagem em escala de cinza equivalente
 	public static void grayScale(Processador img) {
 		
@@ -70,7 +115,7 @@ public class Cores {
 		gray.getImgPlus().show();
 	}
 	
-	//exibe os components RGB
+	//exibe os components YUV
 		public static void YUV(Processador img) {
 			
 			/**
@@ -92,20 +137,28 @@ public class Cores {
 			for(int y = 0; y < img.getHeight(); y++){
 	            for(int x = 0; x < img.getWidth(); x++){
 	            	int nvlY = (int) (0.299 * img.nivelRed(x, y) + 0.587 * img.nivelGreen(x, y) + 0.114 * img.nivelBlue(x, y));
-	                proY.setRGB(x, y, nvlY, nvlY, nvlY); 
+	                proY.setRGB(x, y, nvlY, nvlY, nvlY); //Y Y Y
 	            }
 	        }
 			
 			for(int y = 0; y < img.getHeight(); y++){
 	            for(int x = 0; x < img.getWidth(); x++){
-	            	int nvlU;
-	                proU.setRGB(x, y, 0, img.nivelGreen(x, y), 0);//0 G 0
+	            	int nvlU = (int) (-0.14713 * img.nivelRed(x, y) - 0.28886 * img.nivelGreen(x, y) + 0.436 * img.nivelBlue(x, y));
+	            	
+	            	if(nvlU < 0)
+	            		nvlU = 0;//verificação para evitar valores negativos
+	            	
+	            	proU.setRGB(x, y, 0, nvlU, nvlU);//0 U U
 	            }
 	        }
 		
 			for(int y = 0; y < img.getHeight(); y++){
 	            for(int x = 0; x < img.getWidth(); x++){
-	                proV.setRGB(x, y, 0, 0, img.nivelBlue(x, y));//0 0 B
+	            	int nvlV = (int) (0.615 * img.nivelRed(x, y) - 0.51499 * img.nivelGreen(x, y) + 0.312 * img.nivelBlue(x, y));
+	            	
+	            	if(nvlV < 0)
+	            		nvlV = 0;//verificação para evitar valores negativos
+	                proV.setRGB(x, y, nvlV, nvlV, 0);//V V 0
 	            }
 	        }
 			

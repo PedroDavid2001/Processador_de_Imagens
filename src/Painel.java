@@ -536,14 +536,17 @@ public class Painel implements Initializable{
     @FXML
     void exibirRGB(ActionEvent event) {
     	if( botaoAcc.isSelected() )
-    		Cores.RGB( imagem );
-    	else
     		Cores.RGB( imgFinal );
+    	else
+    		Cores.RGB( imagem );
     }
 
     @FXML
     void exibirCMY(ActionEvent event) {
-
+    	if( botaoAcc.isSelected() )
+    		Cores.CMY( imgFinal );
+    	else
+    		Cores.CMY( imagem );
     }
 
     @FXML
@@ -553,15 +556,18 @@ public class Painel implements Initializable{
 
     @FXML
     void exibirYUV(ActionEvent event) {
-
+    	if( botaoAcc.isSelected() )
+    		Cores.YUV( imgFinal );
+    	else
+    		Cores.YUV( imagem );
     }
     
     @FXML
     void exibirGray(ActionEvent event) {
     	if( botaoAcc.isSelected() )
-    		Cores.grayScale( imagem );
-    	else
     		Cores.grayScale( imgFinal );
+    	else
+    		Cores.grayScale( imagem );
     }
     
     //--------------------------------------------------------------
