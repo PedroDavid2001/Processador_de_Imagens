@@ -75,12 +75,12 @@ public class Transformacoes {
         * resultar em index out of bound!!!
         **/
     	
-    	boolean negative = sx < 0 ? true : false; //verifica se o valor de cisalhamento digitado é negativo
+    	boolean negative = sx < 0 ? true : false; //verifica se o valor de cisalhamento digitado ï¿½ negativo
     	
     	if(negative)
-    		sx = -sx;//teste necessário para evitar acessar coordenada negativa!!!
+    		sx = -sx;//teste necessï¿½rio para evitar acessar coordenada negativa!!!
 
-        BufferedImage tmp = new BufferedImage(((int)(img.getHeight() * sx) + img.getWidth()), img.getHeight(), 6);
+        BufferedImage tmp = new BufferedImage(((int)(img.getHeight() * sx) + img.getWidth()), img.getHeight(), img.getType());
         int newX;
         int newY;   /*variÃ¡vel usada para controlar o y, 
                     pois utilizar o y normal iria inverter 
@@ -118,12 +118,12 @@ public class Transformacoes {
         * controle apenas desse valor para nÃ£o ficar abaixo de zero e 
         * resultar em index out of bound!!!
         **/
-    	boolean negative = sy < 0 ? true : false; //verifica se o valor de cisalhamento digitado é negativo
+    	boolean negative = sy < 0 ? true : false; //verifica se o valor de cisalhamento digitado ï¿½ negativo
     	
     	if(negative)
-    		sy = -sy;//teste necessário para evitar acessar coordenada negativa!!!
+    		sy = -sy;//teste necessï¿½rio para evitar acessar coordenada negativa!!!
 
-        BufferedImage tmp = new BufferedImage( img.getWidth() ,((int)(img.getWidth() * sy) + img.getHeight()), 6);
+        BufferedImage tmp = new BufferedImage( img.getWidth() ,((int)(img.getWidth() * sy) + img.getHeight()), img.getType());
         int newY;
         int newX;   /*variÃ¡vel usada para controlar o x, 
                     pois utilizar o x normal iria inverter 
@@ -144,4 +144,32 @@ public class Transformacoes {
     
         return tmp;
     }
+    
+    public static double[] rotacao( double angle, double x, double y) {
+   	 	/**
+        *          |  cos()  -sin()  0 |   
+        * Rotate = |  sin()   cos()  0 |  () = angulo passado no argumento
+        *          |   0       0     1 | 
+        *
+        *
+        * | x |   |  cos()  -sin()  0 |   |  cos()*x - sin()*y |
+        * | y | * |  sin()   cos()  0 | = |  sin()*x + cos()*y |
+        * | 1 |   |   0       0     1 |   |          1         |
+        *
+        **/
+    	
+    	double sin = Math.sin( Math.toRadians(angle) );
+   		double cos = Math.cos( Math.toRadians(angle) );
+
+        double[] posicoes = new double[2];//0 = x, 1 = y
+        
+        //novo X
+        posicoes[0] = (cos * x) - (sin * y);  
+        
+        //novo Y
+        posicoes[1] = (sin * x) + (cos * y);
+        		
+        return posicoes;
+   }
+    
 }

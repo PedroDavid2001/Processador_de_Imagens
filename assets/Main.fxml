@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
@@ -37,10 +39,17 @@
                   <MenuItem mnemonicParsing="false" onAction="#espelhoY" text="Inverter eixo Y" />
                   <MenuItem mnemonicParsing="false" onAction="#cisalharX" text="Cisalhar eixo X" />
                   <MenuItem mnemonicParsing="false" onAction="#cisalharY" text="Cisalhar eixo Y" />
-                  <MenuItem mnemonicParsing="false" onAction="#redimensionar" text="Redimensionar" />
-                  <MenuItem mnemonicParsing="false" onAction="#rotacionar" text="Rotacionar" />
             </items>
           </Menu>
+            <Menu fx:id="menuCores" disable="true" mnemonicParsing="false" text="Gerar componentes">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#exibirRGB" text="RGB" />
+                  <MenuItem mnemonicParsing="false" onAction="#exibirCMY" text="CMY" />
+                  <MenuItem mnemonicParsing="false" onAction="#exibirCMYK" text="CMY-K" />
+                  <MenuItem mnemonicParsing="false" onAction="#exibirYUV" text="YUV" />
+                  <MenuItem mnemonicParsing="false" onAction="#exibirGray" text="Gray Scale" />
+              </items>
+            </Menu>
             <Menu fx:id="menuLimpar" disable="true" mnemonicParsing="false" text="Limpeza">
                <items>
                   <MenuItem fx:id="botaoLimparIni" mnemonicParsing="false" onAction="#limparPrimaria" text="Limpar primaria" />
@@ -63,29 +72,102 @@
    <center>
       <ScrollPane BorderPane.alignment="CENTER">
          <content>
-            <Pane style="-fx-background-color: transparent;">
+            <AnchorPane>
                <children>
-                  <ImageView fx:id="imagemIni" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="imagemSec" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="imagemFinal" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <Pane fx:id="popupValor" layoutX="412.0" layoutY="269.0" prefHeight="130.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                  <Pane style="-fx-background-color: transparent;">
                      <children>
-                        <Label layoutX="80.0" layoutY="8.0" prefHeight="30.0" prefWidth="91.0" text="Digite o valor">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="textoValor" layoutX="75.0" layoutY="48.0" prefWidth="100.0" />
-                        <Button layoutX="70.0" layoutY="87.0" mnemonicParsing="false" onAction="#botaoValor" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Button>
+                        <ImageView fx:id="imagemFinal" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" />
+                        <Pane fx:id="popupValor" layoutX="412.0" layoutY="269.0" prefHeight="130.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                           <children>
+                              <Label layoutX="80.0" layoutY="8.0" prefHeight="30.0" prefWidth="91.0" text="Digite o valor">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="textoValor" layoutX="75.0" layoutY="48.0" prefWidth="100.0" />
+                              <Button layoutX="70.0" layoutY="87.0" mnemonicParsing="false" onAction="#botaoValor" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </Pane>
                      </children>
                   </Pane>
                </children>
-            </Pane>
+            </AnchorPane>
          </content>
       </ScrollPane>
    </center>
+   <left>
+      <Pane fx:id="painelLateral" prefWidth="250.0" visible="false" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="imagemSec" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="imagemIni" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="70.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Slider fx:id="rotacaoSlide" layoutX="15.0" layoutY="210.0" max="360.0">
+               <cursor>
+                  <Cursor fx:constant="OPEN_HAND" />
+               </cursor>
+            </Slider>
+            <Slider fx:id="tamXSlide" layoutX="15.0" layoutY="260.0" max="5.0" min="0.1" value="1.0">
+               <cursor>
+                  <Cursor fx:constant="OPEN_HAND" />
+               </cursor>
+            </Slider>
+            <Label layoutX="20.0" layoutY="190.0" prefHeight="17.0" prefWidth="131.0" text="Rotação" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="20.0" layoutY="240.0" prefHeight="17.0" prefWidth="130.0" text="Redimensionar X" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="grauText" layoutX="160.0" layoutY="205.0" maxWidth="45.0" onAction="#angulo" text="0.0" />
+            <TextField fx:id="tamXTexto" layoutX="160.0" layoutY="255.0" onAction="#tamanhoX" prefWidth="45.0" text="1.0" />
+            <TextField fx:id="posXText" layoutX="40.0" layoutY="348.0" onAction="#transladeX" prefWidth="50.0" text="0.0" />
+            <TextField fx:id="posYText" layoutX="40.0" layoutY="393.0" onAction="#transladeY" prefWidth="50.0" text="0.0" />
+            <Label layoutX="21.0" layoutY="350.0" text="X" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="20.0" layoutY="395.0" text="Y " textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#exibirImgPrimaria" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="10.0" layoutY="70.0" mnemonicParsing="false" onAction="#exibirImgSecundaria" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <TextField fx:id="tamYTexto" layoutX="160.0" layoutY="305.0" onAction="#tamanhoY" prefWidth="45.0" text="1.0" />
+            <Label layoutX="20.0" layoutY="290.0" prefHeight="17.0" prefWidth="130.0" text="Redimensionar Y" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Slider fx:id="tamYSlide" layoutX="15.0" layoutY="310.0" max="5.0" min="0.1" value="1.0">
+               <cursor>
+                  <Cursor fx:constant="OPEN_HAND" />
+               </cursor>
+            </Slider>
+         </children>
+      </Pane>
+   </left>
 </BorderPane>

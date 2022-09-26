@@ -86,6 +86,8 @@ public class Processador {
     
     public boolean carregarImg(){
         String path;
+        arquivo = null;
+        imagePlus = null;
         
         imagePlus = IJ.openImage(); //abre o explorador de arquivo
        
@@ -101,8 +103,9 @@ public class Processador {
                 File file = new File(path);
                 
                 if(format.compareTo(".png") != 0){
-                    arquivo = imagePlus.getBufferedImage();    
-                }else{
+                    this.setImg( imagePlus.getBufferedImage() );    
+                }
+                else{
                     arquivo = ImageIO.read(file);
                 }
                 return true;
@@ -115,7 +118,8 @@ public class Processador {
                 return false;
 
             }
-        }else{
+        }
+        else{
             return false;
         } 
     }
@@ -182,17 +186,11 @@ public class Processador {
     }
     
     public void setImg(BufferedImage img){
-
-        arquivo = new BufferedImage(
-            img.getWidth(), 
-            img.getHeight(), 
-            img.getType() );
-
-        for(int x = 0; x < img.getWidth() ; x++) {
-            for(int y = 0; y < img.getHeight(); y++) {
-                arquivo.setRGB( x, y, img.getRGB(x, y) );
-            }
-        }
+    	
+    	//transforma qualquer formato aberto em PNG para possibilitar as transformações
+        arquivo = new BufferedImage( img.getWidth(), img.getHeight(), 6 );
+        arquivo.getGraphics().drawImage(img, 0, 0, null);
+        setImgPlus();
     }
 
     public ImagePlus getImgPlus(){
@@ -201,6 +199,16 @@ public class Processador {
         return imagePlus;
     }
 
+    //método que inicializa com a imagem passada no argumento
+    public void setImgPlus( BufferedImage img ) {
+    	imagePlus = new ImagePlus("", img);
+    }
+    
+    //método que inicializa com a buffered image do Processador
+    public void setImgPlus() {
+    	imagePlus = new ImagePlus("", arquivo);
+    }
+    
     public void apagarImg(){
         this.arquivo = null;
     }
