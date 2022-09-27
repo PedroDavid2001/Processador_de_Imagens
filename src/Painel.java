@@ -494,22 +494,9 @@ public class Painel implements Initializable{
     	imagemFinal.setFitWidth( imgFinal.getWidth() * tamXSlide.getValue() );
     	imagemFinal.setFitHeight( imgFinal.getHeight() * tamYSlide.getValue() );
     }
-    
-    //EM DESENVOLVIMENTO
+ 
     void rotacionar() {
-    	
-    	/*double xInit = imagemFinal.getX();
-    	double yInit = imagemFinal.getY();
-    	
-    	imagemFinal.setX( imagemFinal.getX() - (imagemFinal.getFitWidth() / 2.0) );
-    	imagemFinal.setY( imagemFinal.getY() - (imagemFinal.getFitHeight() / 2.0) );*/
-    	
     	imagemFinal.setRotate( rotacaoSlide.getValue() );
-    	
-    	/*double newPos[] = Transformacoes.rotacao(rotacaoSlide.getValue(), xInit, yInit);
-    	
-    	imagemFinal.setX( imagemFinal.getX() + newPos[0] );
-    	imagemFinal.setY( imagemFinal.getY() + newPos[1] );*/
     }
     
     @FXML
@@ -551,7 +538,10 @@ public class Painel implements Initializable{
 
     @FXML
     void exibirCMYK(ActionEvent event) {
-
+    	if( botaoAcc.isSelected() )
+    		Cores.CMYK( imgFinal );
+    	else
+    		Cores.CMYK( imagem );
     }
 
     @FXML

@@ -229,12 +229,27 @@ public class Processador {
         return arquivo.getRGB(x, y);
     }
     
-    public void setRGB(int x, int y, int r, int g, int b){
+    public void setRGB(int x, int y, int r, int g, int b){ //[RANGE 0 - 255]
         
         Color cor = new Color(r, g, b);
         if(escalaAlpha(x, y) != 0)
             arquivo.setRGB(x, y, cor.getRGB());
         
+    }
+    
+    //sobrecarga que recebe campos em ponto flutuante [RANGE 0.0 - 1.0]
+    public void setRGB(int x, int y, float r, float g, float b){
+        
+        Color cor = new Color(r, g, b);
+        if(escalaAlpha(x, y) != 0)
+            arquivo.setRGB(x, y, cor.getRGB());
+        
+    }
+    
+    /*chave utilizada na exibicição dos componentes do CMY-K. 
+    A chave (key) é igual a 255 menos o maior campo do RGB em um pixel*/
+    public int getKey(int x, int y) {
+    	return (255 - Math.max( this.nivelRed(x, y), Math.max( this.nivelGreen(x, y), this.nivelBlue(x, y) ) ));
     }
 
 }
