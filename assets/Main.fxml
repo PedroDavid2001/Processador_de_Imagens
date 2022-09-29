@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.control.*?>
 <?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #aaaaaa;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.Painel">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #777;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.Painel">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -63,35 +78,31 @@
                   <RadioMenuItem fx:id="botaoTrunc" mnemonicParsing="false" onAction="#Truncar" text="Truncar" />
                   <RadioMenuItem fx:id="botaoNormal" mnemonicParsing="false" onAction="#Normalizar" selected="true" text="Normalizar " />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <RadioMenuItem fx:id="botaoAcc" mnemonicParsing="false" text="Acumular" />
+                  <RadioMenuItem fx:id="botaoAcc" mnemonicParsing="false" selected="true" text="Acumular" />
               </items>
             </Menu>
         </menus>
       </MenuBar>
    </top>
    <center>
-      <ScrollPane BorderPane.alignment="CENTER">
+      <ScrollPane prefHeight="664.0" prefWidth="867.0" BorderPane.alignment="CENTER">
          <content>
-            <AnchorPane>
+            <AnchorPane fx:id="workspace" prefHeight="4096.0" prefWidth="2160.0">
                <children>
-                  <Pane style="-fx-background-color: transparent;">
+                  <ImageView fx:id="imagemFinal" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" />
+                  <Pane fx:id="popupValor" prefHeight="130.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
                      <children>
-                        <ImageView fx:id="imagemFinal" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" />
-                        <Pane fx:id="popupValor" layoutX="412.0" layoutY="269.0" prefHeight="130.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
-                           <children>
-                              <Label layoutX="80.0" layoutY="8.0" prefHeight="30.0" prefWidth="91.0" text="Digite o valor">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <TextField fx:id="textoValor" layoutX="75.0" layoutY="48.0" prefWidth="100.0" />
-                              <Button layoutX="70.0" layoutY="87.0" mnemonicParsing="false" onAction="#botaoValor" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Button>
-                           </children>
-                        </Pane>
+                        <Label layoutX="80.0" layoutY="8.0" prefHeight="30.0" prefWidth="91.0" text="Digite o valor">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textoValor" layoutX="75.0" layoutY="48.0" prefWidth="100.0" />
+                        <Button layoutX="70.0" layoutY="87.0" mnemonicParsing="false" onAction="#botaoValor" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
                      </children>
                   </Pane>
                </children>
@@ -99,8 +110,29 @@
          </content>
       </ScrollPane>
    </center>
-   <left>
-      <Pane fx:id="painelLateral" prefWidth="250.0" visible="false" BorderPane.alignment="CENTER">
+   <bottom>
+      <Pane prefHeight="31.0" prefWidth="1080.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text fx:id="mousePosText" fill="WHITE" layoutX="31.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1000, 1000px">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="150.0" fitWidth="15.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@position-icon.png" />
+               </image>
+            </ImageView>
+            <Text fx:id="rgbText" fill="WHITE" layoutX="120.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RGB( 255, 255, 255 )">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </bottom>
+   <right>
+      <Pane fx:id="painelLateral" prefHeight="664.0" prefWidth="220.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="imagemSec" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
                <cursor>
@@ -134,6 +166,7 @@
             </Label>
             <TextField fx:id="grauText" layoutX="160.0" layoutY="205.0" maxWidth="45.0" onAction="#angulo" text="0.0" />
             <TextField fx:id="tamXTexto" layoutX="160.0" layoutY="255.0" onAction="#tamanhoX" prefWidth="45.0" text="1.0" />
+            <TextField fx:id="tamYTexto" layoutX="160.0" layoutY="305.0" onAction="#tamanhoY" prefWidth="45.0" text="1.0" />
             <TextField fx:id="posXText" layoutX="40.0" layoutY="348.0" onAction="#transladeX" prefWidth="50.0" text="0.0" />
             <TextField fx:id="posYText" layoutX="40.0" layoutY="393.0" onAction="#transladeY" prefWidth="50.0" text="0.0" />
             <Label layoutX="21.0" layoutY="350.0" text="X" textFill="WHITE">
@@ -146,17 +179,16 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#exibirImgPrimaria" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+            <Button layoutX="150.0" layoutY="10.0" mnemonicParsing="false" onAction="#exibirImgPrimaria" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button layoutX="10.0" layoutY="70.0" mnemonicParsing="false" onAction="#exibirImgSecundaria" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+            <Button layoutX="150.0" layoutY="70.0" mnemonicParsing="false" onAction="#exibirImgSecundaria" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <TextField fx:id="tamYTexto" layoutX="160.0" layoutY="305.0" onAction="#tamanhoY" prefWidth="45.0" text="1.0" />
             <Label layoutX="20.0" layoutY="290.0" prefHeight="17.0" prefWidth="130.0" text="Redimensionar Y" textFill="WHITE">
                <font>
                   <Font size="14.0" />
@@ -169,5 +201,5 @@
             </Slider>
          </children>
       </Pane>
-   </left>
+   </right>
 </BorderPane>

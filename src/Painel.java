@@ -17,7 +17,9 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 /**
  * Classe controladora da tela principal. A priori, o
@@ -31,6 +33,15 @@ import javafx.scene.layout.Pane;
  */
 
 public class Painel implements Initializable{
+
+	@FXML
+    private AnchorPane workspace;
+	
+    @FXML
+    private Text mousePosText;
+    
+    @FXML
+    private Text rgbText;
 
     @FXML
     private ImageView imagemIni;
@@ -121,6 +132,17 @@ public class Painel implements Initializable{
     private double posXInit = 100.0;
     private double posYInit = 100.0;
     
+    //posições do mouse na tela
+    private double mouseXpos;
+    private double mouseYpos;
+    
+  //posições do mouse na imagem
+    private double mouseX;
+    private double mouseY;
+    
+    //boolean para ativar/desativar opção de arrastar
+    private boolean dragMode = false;
+    
     JFileChooser fileChooser = new JFileChooser();
     
     /*
@@ -165,13 +187,13 @@ public class Painel implements Initializable{
             //preview da imagem
             imagemIni.setImage(img);
                 
-            imagemIni.setX( 10.0 );
+            imagemIni.setX( 160.0 );
             imagemIni.setY( 10.0 );
             imagemIni.setFitHeight( 50.0 );
             imagemIni.setFitWidth(  50.0 );
             
-            //imagem exibida na área de trabalho do software
-            imagemFinal.setImage(img);
+            //configura a imagem exibida na área de trabalho
+            this.configurarImgFinal();
 
             grauText.setText( "0.0" );
             rotacaoSlide.setValue( 0.0 );
@@ -182,20 +204,6 @@ public class Painel implements Initializable{
             posXText.setText( "0.0" );
             posYText.setText( "0.0" );
 
-            imagemFinal.setFitHeight( imagem.getHeight() );
-            imagemFinal.setFitWidth(  imagem.getWidth() );
-            
-            imagemFinal.setX( posXInit );
-            imagemFinal.setY( posYInit );
-            
-            //habilita os botões da interface caso a imagem abra com sucesso
-            botaoAbrirCamada.setDisable(false);
-            menuTransformar.setDisable(false);
-            menuLimpar.setDisable(false);
-            botaoLimparIni.setDisable(false);
-            painelLateral.setVisible(true);
-            menuCores.setDisable(false);
-           
         }
     }
 
@@ -212,7 +220,7 @@ public class Painel implements Initializable{
             imagemSec.setFitHeight( 50.0 );
             imagemSec.setFitWidth( 50.0 );
                 
-            imagemSec.setX( 10.0 );
+            imagemSec.setX( 160.0 );
             imagemSec.setY( 70.0 );
 
             //habilita os botões da interface caso a imagem abra com sucesso
@@ -433,7 +441,8 @@ public class Painel implements Initializable{
     }
 
     void cisX(){
-        img = null;
+        
+    	img = null;
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Transformacoes.cisalhamentoX( imgFinal.getImg(), valorTransf ) );    
@@ -443,8 +452,18 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
+        
+        /*Se acumular estiver selecionado, o tamanho 
+        após cisalhamento será o definido nos sliders 
+        de redimensionamento*/
+        if( botaoAcc.isSelected() ){
+        	imagemFinal.setFitWidth( imgFinal.getWidth() * tamXSlide.getValue() );
+        	imagemFinal.setFitHeight( imgFinal.getHeight() * tamYSlide.getValue() );
+        }
+        else {
+        	imagemFinal.setFitHeight( imgFinal.getHeight() );
+        	imagemFinal.setFitWidth( imgFinal.getWidth() );
+        }
         
         botaoLimparFinal.setDisable(false);
         botaoSalvarComo.setDisable(false);
@@ -457,7 +476,8 @@ public class Painel implements Initializable{
     }
 
     void cisY(){
-        img = null;
+        
+    	img = null;
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Transformacoes.cisalhamentoY( imgFinal.getImg(), valorTransf ) );    
@@ -467,8 +487,18 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
+        
+        /*Se acumular estiver selecionado, o tamanho 
+        após cisalhamento será o definido nos sliders 
+        de redimensionamento*/
+        if( botaoAcc.isSelected() ) {
+        	imagemFinal.setFitWidth( imgFinal.getWidth() * tamXSlide.getValue() );
+        	imagemFinal.setFitHeight( imgFinal.getHeight() * tamYSlide.getValue() );
+        }
+        else {
+        	imagemFinal.setFitHeight( imgFinal.getHeight() );
+        	imagemFinal.setFitWidth( imgFinal.getWidth() );
+        }
         
         botaoLimparFinal.setDisable(false);
         botaoSalvarComo.setDisable(false);
@@ -490,31 +520,16 @@ public class Painel implements Initializable{
     		imagemFinal.setY( posYInit + Double.valueOf(posYText.getText()) );
     }
     
-    void redimensionar() {
-    	imagemFinal.setFitWidth( imgFinal.getWidth() * tamXSlide.getValue() );
-    	imagemFinal.setFitHeight( imgFinal.getHeight() * tamYSlide.getValue() );
+    void redimensionarX() {
+    	imagemFinal.setFitWidth( imagem.getWidth() * tamXSlide.getValue() );
+    }
+    
+    void redimensionarY() {
+    	imagemFinal.setFitHeight( imagem.getHeight() * tamYSlide.getValue() );
     }
  
     void rotacionar() {
     	imagemFinal.setRotate( rotacaoSlide.getValue() );
-    }
-    
-    @FXML
-    void angulo(ActionEvent event) {
-    	rotacaoSlide.setValue( Double.valueOf( grauText.getText() ) );
-    	rotacionar();
-    }
-
-    @FXML
-    void tamanhoX(ActionEvent event) {
-    	tamXSlide.setValue( Double.valueOf( tamXTexto.getText() ) );
-    	redimensionar();
-    }
-    
-    @FXML
-    void tamanhoY(ActionEvent event) {
-    	tamYSlide.setValue( Double.valueOf( tamYTexto.getText() ) );
-    	redimensionar();
     }
     
     //--------------------------------------------------------------
@@ -563,8 +578,28 @@ public class Painel implements Initializable{
     //--------------------------------------------------------------
     //Métodos extras
     
+    @FXML
+    void angulo(ActionEvent event) {
+    	rotacaoSlide.setValue( Double.valueOf( grauText.getText() ) );
+    	rotacionar();
+    }
+
+    @FXML
+    void tamanhoX(ActionEvent event) {
+    	tamXSlide.setValue( Double.valueOf( tamXTexto.getText() ) );
+    	redimensionarX();
+    }
+    
+    @FXML
+    void tamanhoY(ActionEvent event) {
+    	tamYSlide.setValue( Double.valueOf( tamYTexto.getText() ) );
+    	redimensionarY();
+    }
+    
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+    	
+    	//detecção de rotação
     	rotacaoSlide.valueProperty().addListener(new ChangeListener<Number>() {
     		
     		@Override
@@ -574,24 +609,64 @@ public class Painel implements Initializable{
     		}
     	} );
     	
+    	//detecção do slider X
     	tamXSlide.valueProperty().addListener(new ChangeListener<Number>() {
     		
     		@Override
     		public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
     			tamXTexto.setText( Double.toString(tamXSlide.getValue()) );
-    			redimensionar();
+    			redimensionarX();
     		}
     	} );
     	
+    	//detecção do slider Y
     	tamYSlide.valueProperty().addListener(new ChangeListener<Number>() {
     		
     		@Override
     		public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
     			tamYTexto.setText( Double.toString(tamYSlide.getValue()) );
-    			redimensionar();
+    			redimensionarY();
     		}
     	} );
     	
+    	//pega a posição inicial do mouse no momento em que clica na imagem
+    	imagemFinal.setOnMouseClicked( mouseEvent -> {
+    		dragMode = !dragMode;
+    		mouseX = mouseEvent.getX() - imagemFinal.getX();
+    		mouseY = mouseEvent.getY() - imagemFinal.getY();
+    	});
+    	
+    	//captura o rgb na posição que o mouse está na imagem
+    	imagemFinal.setOnMouseMoved( mouseEvent -> {
+    		//não altera quando está movendo a imagem
+    		if(!dragMode && imgFinal.getImg() != null) {
+    			int x = (int)(mouseEvent.getX() - imagemFinal.getX());
+    			int y = (int)(mouseEvent.getY() - imagemFinal.getY());
+    			
+    			int R = imgFinal.nivelRed(x, y);
+    			int G = imgFinal.nivelGreen(x, y);
+    			int B = imgFinal.nivelBlue(x, y);
+    			
+    			rgbText.setText( "RGB( " + R + ", " + G + ", " + B + " )" );
+    		}
+    	});
+    	
+    	//captura posição do mouse
+    	workspace.setOnMouseMoved( mouseEvent ->{
+    		mouseXpos = mouseEvent.getX();
+    		mouseYpos = mouseEvent.getY();
+    		
+    		mousePosText.setText(  mouseXpos + ", " + mouseYpos + "px" );
+    		
+    		if( dragMode ) {
+    			imagemFinal.setX( mouseXpos - mouseX);
+        		imagemFinal.setY( mouseYpos - mouseY);
+        		
+        		//atualiza os valores nos textos de posição
+        		posXText.setText( Double.toString( imagemFinal.getX() ));
+        		posYText.setText( Double.toString( imagemFinal.getY() ));
+    		}
+    	});
     }
 
     /*
@@ -643,6 +718,13 @@ public class Painel implements Initializable{
     void exibirImgPrimaria(ActionEvent event) {
     	if(imagem.getImgPlus() != null)
     		imagem.getImgPlus().show();
+    	
+    	if(imagemFinal.getImage() == null) {
+    		img = SwingFXUtils.toFXImage( imagem.getImg(), null);
+    		
+    		this.configurarImgFinal();
+    	}
+    		
     }
 
     @FXML
@@ -715,6 +797,7 @@ public class Painel implements Initializable{
          * caso o botão acumular esteja ativado.
          */
         imgFinal.setImg( imagem.getImg() );
+        dragMode = false;
     }
 
     @FXML
@@ -722,6 +805,28 @@ public class Painel implements Initializable{
         limparPrimaria(event);
         limparSec(event);
         limparFinal(event);
+    }
+    
+    //método que setta a imagem final exibida com os atributos da imagem primária
+    void configurarImgFinal() {
+    	
+    	imagemFinal.setFitHeight( imagem.getHeight() );
+        imagemFinal.setFitWidth(  imagem.getWidth() );
+        
+        imagemFinal.setX( posXInit );
+        imagemFinal.setY( posYInit );
+        
+        //imagem exibida na área de trabalho do software
+        imagemFinal.setImage(img);
+        
+        //habilita os botões da interface caso a imagem abra com sucesso
+        botaoAbrirCamada.setDisable(false);
+        menuTransformar.setDisable(false);
+        menuLimpar.setDisable(false);
+        botaoLimparIni.setDisable(false);
+        painelLateral.setVisible(true);
+        menuCores.setDisable(false);
+        dragMode = false;
     }
 
     @FXML

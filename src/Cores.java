@@ -250,7 +250,7 @@ public class Cores {
 			
 			for(int y = 0; y < img.getHeight(); y++){
 	            for(int x = 0; x < img.getWidth(); x++){
-	            	float nvlY = (int) (0.299 * img.nivelRed(x, y) + 0.587 * img.nivelGreen(x, y) + 0.114 * img.nivelBlue(x, y));
+	            	float nvlY = (float)(0.299 * img.nivelRed(x, y) + 0.587 * img.nivelGreen(x, y) + 0.114 * img.nivelBlue(x, y));
 	            	
 	            	nvlY /= 255; 
 	            	
@@ -260,7 +260,7 @@ public class Cores {
 			
 			for(int y = 0; y < img.getHeight(); y++){
 	            for(int x = 0; x < img.getWidth(); x++){
-	            	float nvlU = (int) (-0.14713 * img.nivelRed(x, y) - 0.28886 * img.nivelGreen(x, y) + 0.436 * img.nivelBlue(x, y));
+	            	float nvlU = (float) (-0.14713 * img.nivelRed(x, y) - 0.28886 * img.nivelGreen(x, y) + 0.436 * img.nivelBlue(x, y));
 	            	
 	            	nvlU /= 255;
 	            	
@@ -273,7 +273,7 @@ public class Cores {
 		
 			for(int y = 0; y < img.getHeight(); y++){
 	            for(int x = 0; x < img.getWidth(); x++){
-	            	float nvlV = (int) (0.615 * img.nivelRed(x, y) - 0.51499 * img.nivelGreen(x, y) + 0.312 * img.nivelBlue(x, y));
+	            	float nvlV = (float) (0.615 * img.nivelRed(x, y) - 0.51499 * img.nivelGreen(x, y) + 0.312 * img.nivelBlue(x, y));
 	            	
 	            	nvlV /= 255;
 	            	

@@ -144,32 +144,4 @@ public class Transformacoes {
     
         return tmp;
     }
-    
-    public static double[] rotacao( double angle, double x, double y) {
-   	 	/**
-        *          |  cos()  -sin()  0 |   
-        * Rotate = |  sin()   cos()  0 |  () = angulo passado no argumento
-        *          |   0       0     1 | 
-        *
-        *
-        * | x |   |  cos()  -sin()  0 |   |  cos()*x - sin()*y |
-        * | y | * |  sin()   cos()  0 | = |  sin()*x + cos()*y |
-        * | 1 |   |   0       0     1 |   |          1         |
-        *
-        **/
-    	
-    	double sin = Math.sin( Math.toRadians(angle) );
-   		double cos = Math.cos( Math.toRadians(angle) );
-
-        double[] posicoes = new double[2];//0 = x, 1 = y
-        
-        //novo X
-        posicoes[0] = (cos * x) - (sin * y);  
-        
-        //novo Y
-        posicoes[1] = (sin * x) + (cos * y);
-        		
-        return posicoes;
-   }
-    
 }
