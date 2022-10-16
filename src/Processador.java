@@ -6,6 +6,8 @@ import javax.imageio.ImageIO;
 import java.awt.Color;
 import ij.IJ;
 import ij.ImagePlus;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 
 /**
  * Classe responsável por carregar uma imagem a partir do path do arquivo.
@@ -192,6 +194,15 @@ public class Processador {
         arquivo.getGraphics().drawImage(img, 0, 0, null);
         setImgPlus();
     }
+    
+    public void setImg( Image img) {
+    	arquivo = null;
+    	imagePlus = null;
+    	
+    	//conversão JavaFX.Image para BufferedImage
+        arquivo = SwingFXUtils.fromFXImage(img, null);
+        setImgPlus();
+    }
 
     public ImagePlus getImgPlus(){
         if(imagePlus == null)
@@ -250,6 +261,45 @@ public class Processador {
     A chave (key) é igual a 255 menos o maior campo do RGB em um pixel*/
     public int getKey(int x, int y) {
     	return (255 - Math.max( this.nivelRed(x, y), Math.max( this.nivelGreen(x, y), this.nivelBlue(x, y) ) ));
+    }
+    
+    /**
+     * método usado para retornar uma String com o 
+     * código hexadecimal de um pixel da imagem.
+     * Se o código individual de um campo for menor 
+     * que f, é necessário concatenar esse valor a 
+     * "0" para que tenha dois símbolos no valor do 
+     * campo.
+     * 
+     * Ex.: 
+     * - R = "e" 
+     * - "0".concat("e") 
+     * - R = "0e"
+     *
+    **/
+    public String getHex(int x, int y) {
+    	
+    	String hexR = Integer.toHexString( this.nivelRed(x, y) );
+    	
+    	if(hexR.length() < 2)
+    		hexR = "0" + hexR; 
+    	
+    	String hexG = Integer.toHexString( this.nivelGreen(x, y) );
+    	
+    	if(hexG.length() < 2)
+    		hexG = "0" + hexG;
+    	
+    	String hexB = Integer.toHexString( this.nivelBlue(x, y) );
+    	
+    	if(hexB.length() < 2)
+    		hexB = "0" + hexB;
+    	
+    	String retorno = "";
+    	retorno = retorno.concat(hexR);
+    	retorno = retorno.concat(hexG);
+    	retorno = retorno.concat(hexB);
+    	
+    	return retorno;
     }
 
 }

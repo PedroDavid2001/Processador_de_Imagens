@@ -1,5 +1,6 @@
 package src;
 
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -48,6 +49,9 @@ public class Painel implements Initializable{
 
     @FXML
     private Menu menuOperacoes;
+    
+    @FXML
+    private Menu menuRealce;
 
     @FXML
     private Menu menuTransformar;
@@ -95,7 +99,25 @@ public class Painel implements Initializable{
     private Slider rotacaoSlide;
     
     @FXML
+    private Menu menuPseudoCor;
+    
+    @FXML
     private Slider tamXSlide;
+    
+    @FXML
+    private Pane paneSaturation;
+    
+    @FXML
+    private ImageView saturationArrow;
+    
+    @FXML
+    private ImageView brightnessArrow;
+    
+    @FXML
+    private ImageView hueArrow;
+    
+    @FXML
+    private Pane paneBrightness;
    
     @FXML
     private TextField tamXTexto;
@@ -530,6 +552,7 @@ public class Painel implements Initializable{
  
     void rotacionar() {
     	imagemFinal.setRotate( rotacaoSlide.getValue() );
+    	imgFinal.setImg( imagemFinal.getImage() );
     }
     
     //--------------------------------------------------------------
@@ -557,6 +580,7 @@ public class Painel implements Initializable{
     		Cores.CMYK( imgFinal );
     	else
     		Cores.CMYK( imagem );
+    	
     }
 
     @FXML
@@ -573,6 +597,89 @@ public class Painel implements Initializable{
     		Cores.grayScale( imgFinal );
     	else
     		Cores.grayScale( imagem );
+    }
+    
+    //--------------------------------------------------------------
+    //Pseudocoloração
+    
+    @FXML
+    void PseudoRGB(ActionEvent event) {
+    	Cores.pseudoColorGrayScale(imgFinal, 1);
+    }	
+
+    @FXML
+    void PseudoRBG(ActionEvent event) {
+    	Cores.pseudoColorGrayScale(imgFinal, 2);
+    }
+
+    @FXML
+    void PseudoBRG(ActionEvent event) {
+    	Cores.pseudoColorGrayScale(imgFinal, 3);
+    }
+
+    @FXML
+    void PseudoBGR(ActionEvent event) {
+    	Cores.pseudoColorGrayScale(imgFinal, 4);
+    }
+
+    @FXML
+    void PseudoGRB(ActionEvent event) {
+    	Cores.pseudoColorGrayScale(imgFinal, 5);
+    }
+
+    @FXML
+    void PseudoGBR(ActionEvent event) {
+    	Cores.pseudoColorGrayScale(imgFinal, 6);
+    }
+    
+    //Ignorar uma cor
+
+    @FXML
+    void IgnoreBlue(ActionEvent event) {
+    	Cores.pseudoColorIgnoring(imgFinal, 1);
+    }
+    
+    @FXML
+    void IgnoreRed(ActionEvent event) {
+    	Cores.pseudoColorIgnoring(imgFinal, 2);
+    }
+    
+    @FXML
+    void IgnoreGreen(ActionEvent event) {
+    	Cores.pseudoColorIgnoring(imgFinal, 3);
+    }
+    
+    //Aumentar uma cor
+    
+    @FXML
+    void IncBlue(ActionEvent event) {
+    	Cores.pseudoColorIncreasing(imgFinal, 1);
+    }
+    
+    @FXML
+    void IncRed(ActionEvent event) {
+    	Cores.pseudoColorIncreasing(imgFinal, 2);
+    }
+    
+    @FXML
+    void IncGreen(ActionEvent event) {
+    	Cores.pseudoColorIncreasing(imgFinal, 3);
+    }
+
+    //Reduzir uma cor
+    @FXML
+    void ReduBlue(ActionEvent event) {
+    	Cores.pseudoColorReducing(imgFinal, 1);
+    }
+    
+    @FXML
+    void ReduRed(ActionEvent event) {
+    	Cores.pseudoColorReducing(imgFinal, 2);
+    }
+    
+    @FXML
+    void ReduGreen(ActionEvent event) {
+    	Cores.pseudoColorReducing(imgFinal, 3);
     }
     
     //--------------------------------------------------------------
@@ -640,14 +747,21 @@ public class Painel implements Initializable{
     	imagemFinal.setOnMouseMoved( mouseEvent -> {
     		//não altera quando está movendo a imagem
     		if(!dragMode && imgFinal.getImg() != null) {
-    			int x = (int)(mouseEvent.getX() - imagemFinal.getX());
-    			int y = (int)(mouseEvent.getY() - imagemFinal.getY());
+    			int x = (int)(mouseEvent.getX() - (int)imagemFinal.getX());
+    			int y = (int)(mouseEvent.getY() - (int)imagemFinal.getY());
     			
     			int R = imgFinal.nivelRed(x, y);
     			int G = imgFinal.nivelGreen(x, y);
     			int B = imgFinal.nivelBlue(x, y);
     			
     			rgbText.setText( "RGB( " + R + ", " + G + ", " + B + " )" );
+    			
+    			paneBrightness.setStyle("-fx-background-color: #" + imgFinal.getHex(x, y) );
+    			paneSaturation.setStyle("-fx-background-color: #" + imgFinal.getHex(x, y) );
+    			
+    			hueArrow.setLayoutX( (( Cores.Hue(R, G, B) ) / 360.0) * 200.0 );//( valor / 360 ) * 200px
+    			saturationArrow.setLayoutX( Cores.Saturation(R, G, B) * 200.0 ); //( valor / 255 ) * 200px
+    			brightnessArrow.setLayoutX( (( Cores.Brightness(R, G, B) ) / 255.0) * 200.0 ); //( valor / 255 ) * 200px
     		}
     	});
     	
@@ -656,7 +770,7 @@ public class Painel implements Initializable{
     		mouseXpos = mouseEvent.getX();
     		mouseYpos = mouseEvent.getY();
     		
-    		mousePosText.setText(  mouseXpos + ", " + mouseYpos + "px" );
+    		mousePosText.setText(  (int)mouseXpos + ", " + (int)mouseYpos + "px" );
     		
     		if( dragMode ) {
     			imagemFinal.setX( mouseXpos - mouseX);
@@ -755,7 +869,9 @@ public class Painel implements Initializable{
         menuTransformar.setDisable(true);
         menuOperacoes.setDisable(true);
         painelLateral.setVisible(false);
+        menuPseudoCor.setDisable(true);
         menuCores.setDisable(true);
+        menuRealce.setDisable(true);
         /*
          * Se restar apenas a imagem primária na 
          * tela, desativará o menu de limpeza.
@@ -825,8 +941,15 @@ public class Painel implements Initializable{
         menuLimpar.setDisable(false);
         botaoLimparIni.setDisable(false);
         painelLateral.setVisible(true);
+        menuPseudoCor.setDisable(false);
         menuCores.setDisable(false);
+        menuRealce.setDisable(false);
         dragMode = false;
+    }
+    
+    @FXML
+    void gerarHistograma(ActionEvent event) {
+        imgFinal.getImgPlus().plotHistogram();
     }
 
     @FXML

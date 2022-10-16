@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
@@ -31,6 +33,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#abrirImgPrimaria" text="Abrir" />
                   <MenuItem fx:id="botaoAbrirCamada" disable="true" mnemonicParsing="false" onAction="#abrirImgSec" text="Abrir como camada" />
+                  <MenuItem disable="true" mnemonicParsing="false" onAction="#gerarHistograma" text="Gerar Histograma" />
                   <MenuItem fx:id="botaoSalvar" disable="true" mnemonicParsing="false" onAction="#salvar" text="Salvar" />
                   <MenuItem fx:id="botaoSalvarComo" disable="true" mnemonicParsing="false" onAction="#salvarComo" text="Salvar como" />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -65,6 +68,63 @@
                   <MenuItem mnemonicParsing="false" onAction="#exibirGray" text="Gray Scale" />
               </items>
             </Menu>
+            <Menu fx:id="menuPseudoCor" disable="true" mnemonicParsing="false" text="Pseudocoloração">
+               <items>
+                  <Menu mnemonicParsing="false" text="Fatiamento por Densidade">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#PseudoRGB" text="RGB" />
+                        <MenuItem mnemonicParsing="false" onAction="#PseudoRBG" text="RBG" />
+                        <MenuItem mnemonicParsing="false" onAction="#PseudoBRG" text="BRG" />
+                        <MenuItem mnemonicParsing="false" onAction="#PseudoBGR" text="BGR" />
+                        <MenuItem mnemonicParsing="false" onAction="#PseudoGRB" text="GRB" />
+                        <MenuItem mnemonicParsing="false" onAction="#PseudoGBR" text="GBR" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Redistribuição de cores">
+                     <items>
+                        <Menu mnemonicParsing="false" text="Ignorar">
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#IgnoreRed" text="Red" />
+                              <MenuItem mnemonicParsing="false" onAction="#IgnoreGreen" text="Green" />
+                              <MenuItem mnemonicParsing="false" onAction="#IgnoreBlue" text="Blue" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Aumentar">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#IncBlue" text="Blue" />
+                              <MenuItem mnemonicParsing="false" onAction="#IncGreen" text="Green" />
+                              <MenuItem mnemonicParsing="false" onAction="#IncRed" text="Red" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Reduzir">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#ReduRed" text="Red" />
+                              <MenuItem mnemonicParsing="false" onAction="#ReduGreen" text="Green" />
+                              <MenuItem mnemonicParsing="false" onAction="#ReduBlue" text="Blue" />
+                           </items>
+                        </Menu>
+                     </items>
+                  </Menu>
+               </items>
+            </Menu>
+            <Menu fx:id="menuRealce" disable="true" mnemonicParsing="false" text="Realçe">
+               <items>
+                  <Menu mnemonicParsing="false" text="Transformação linear">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#RealceLinear" text="Normal" />
+                        <MenuItem mnemonicParsing="false" onAction="#RealceInverso" text="Inverso" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Transformação não-linear">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#RealceLog" text="Logaritmo" />
+                        <MenuItem mnemonicParsing="false" onAction="#RealceQuad" text="Quadrado" />
+                        <MenuItem mnemonicParsing="false" onAction="#RealceExp" text="Exponencial" />
+                        <MenuItem mnemonicParsing="false" onAction="#RealceRaiz" text="Raiz Quadrada" />
+                     </items>
+                  </Menu>
+               </items>
+            </Menu>
             <Menu fx:id="menuLimpar" disable="true" mnemonicParsing="false" text="Limpeza">
                <items>
                   <MenuItem fx:id="botaoLimparIni" mnemonicParsing="false" onAction="#limparPrimaria" text="Limpar primaria" />
@@ -85,7 +145,7 @@
       </MenuBar>
    </top>
    <center>
-      <ScrollPane prefHeight="664.0" prefWidth="867.0" BorderPane.alignment="CENTER">
+      <ScrollPane prefHeight="664.0" prefWidth="850.0" BorderPane.alignment="CENTER">
          <content>
             <AnchorPane fx:id="workspace" prefHeight="4096.0" prefWidth="2160.0">
                <children>
@@ -132,7 +192,7 @@
       </Pane>
    </bottom>
    <right>
-      <Pane fx:id="painelLateral" prefHeight="664.0" prefWidth="220.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="painelLateral" prefHeight="664.0" prefWidth="220.0" visible="false" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="imagemSec" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
                <cursor>
@@ -144,37 +204,37 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Slider fx:id="rotacaoSlide" layoutX="15.0" layoutY="210.0" max="360.0">
+            <Slider fx:id="rotacaoSlide" layoutX="15.0" layoutY="178.0" max="360.0">
                <cursor>
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
             </Slider>
-            <Slider fx:id="tamXSlide" layoutX="15.0" layoutY="260.0" max="5.0" min="0.1" value="1.0">
+            <Slider fx:id="tamXSlide" layoutX="15.0" layoutY="228.0" max="5.0" min="0.1" value="1.0">
                <cursor>
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
             </Slider>
-            <Label layoutX="20.0" layoutY="190.0" prefHeight="17.0" prefWidth="131.0" text="Rotação" textFill="WHITE">
+            <Label layoutX="20.0" layoutY="158.0" prefHeight="17.0" prefWidth="131.0" text="Rotação" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="20.0" layoutY="240.0" prefHeight="17.0" prefWidth="130.0" text="Redimensionar X" textFill="WHITE">
+            <Label layoutX="20.0" layoutY="208.0" prefHeight="17.0" prefWidth="130.0" text="Redimensionar X" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="grauText" layoutX="160.0" layoutY="205.0" maxWidth="45.0" onAction="#angulo" text="0.0" />
-            <TextField fx:id="tamXTexto" layoutX="160.0" layoutY="255.0" onAction="#tamanhoX" prefWidth="45.0" text="1.0" />
-            <TextField fx:id="tamYTexto" layoutX="160.0" layoutY="305.0" onAction="#tamanhoY" prefWidth="45.0" text="1.0" />
-            <TextField fx:id="posXText" layoutX="40.0" layoutY="348.0" onAction="#transladeX" prefWidth="50.0" text="0.0" />
-            <TextField fx:id="posYText" layoutX="40.0" layoutY="393.0" onAction="#transladeY" prefWidth="50.0" text="0.0" />
-            <Label layoutX="21.0" layoutY="350.0" text="X" textFill="WHITE">
+            <TextField fx:id="grauText" layoutX="160.0" layoutY="173.0" maxWidth="45.0" onAction="#angulo" text="0.0" />
+            <TextField fx:id="tamXTexto" layoutX="160.0" layoutY="223.0" onAction="#tamanhoX" prefWidth="45.0" text="1.0" />
+            <TextField fx:id="tamYTexto" layoutX="160.0" layoutY="273.0" onAction="#tamanhoY" prefWidth="45.0" text="1.0" />
+            <TextField fx:id="posXText" layoutX="40.0" layoutY="316.0" onAction="#transladeX" prefWidth="50.0" text="0.0" />
+            <TextField fx:id="posYText" layoutX="40.0" layoutY="361.0" onAction="#transladeY" prefWidth="50.0" text="0.0" />
+            <Label layoutX="21.0" layoutY="318.0" text="X" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="20.0" layoutY="395.0" text="Y " textFill="WHITE">
+            <Label layoutX="20.0" layoutY="363.0" text="Y " textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
@@ -189,16 +249,76 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label layoutX="20.0" layoutY="290.0" prefHeight="17.0" prefWidth="130.0" text="Redimensionar Y" textFill="WHITE">
+            <Label layoutX="20.0" layoutY="258.0" prefHeight="17.0" prefWidth="130.0" text="Redimensionar Y" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Slider fx:id="tamYSlide" layoutX="15.0" layoutY="310.0" max="5.0" min="0.1" value="1.0">
+            <Slider fx:id="tamYSlide" layoutX="15.0" layoutY="278.0" max="5.0" min="0.1" value="1.0">
                <cursor>
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
             </Slider>
+            <Pane layoutX="10.0" layoutY="440.0" prefHeight="25.0" prefWidth="200.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@matiz.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Label layoutX="10.0" layoutY="415.0" prefHeight="17.0" prefWidth="131.0" text="Matiz / hue" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="10.0" layoutY="490.0" prefHeight="20.0" prefWidth="145.0" text="Saturação / Saturation" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Pane fx:id="paneSaturation" layoutX="10.0" layoutY="515.0" prefHeight="25.0" prefWidth="200.0">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@saturation%20blur.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane fx:id="paneBrightness" layoutX="10.0" layoutY="590.0" prefHeight="25.0" prefWidth="200.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@brightness%20blur.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Label layoutX="10.0" layoutY="565.0" prefHeight="20.0" prefWidth="126.0" text="Brilho / Brightness" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="hueArrow" fitHeight="15.0" fitWidth="15.0" layoutY="465.0" pickOnBounds="true" preserveRatio="true" x="3.0">
+               <image>
+                  <Image url="@arrow.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="saturationArrow" fitHeight="15.0" fitWidth="15.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" x="3.0">
+               <image>
+                  <Image url="@arrow.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="brightnessArrow" fitHeight="15.0" fitWidth="15.0" layoutX="3.0" layoutY="615.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@arrow.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </right>

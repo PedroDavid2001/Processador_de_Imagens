@@ -1,5 +1,10 @@
 package src;
 
+import java.awt.image.BufferedImage;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+
 public class Cores {
 	
 	//exibe os components RGB
@@ -41,6 +46,10 @@ public class Cores {
 		proB.setImgPlus();
 		
 		//exibe as image plus
+		proR.getImgPlus().setTitle("Red");
+		proG.getImgPlus().setTitle("Green");
+		proB.getImgPlus().setTitle("Blue");
+		
 		proR.getImgPlus().show();
 		proG.getImgPlus().show();
 		proB.getImgPlus().show();
@@ -99,8 +108,13 @@ public class Cores {
 			proY.setImgPlus();
 			
 			//exibe as image plus
+			proC.getImgPlus().setTitle("Cyan");
 			proC.getImgPlus().show();
+			
+			proM.getImgPlus().setTitle("Magenta");
 			proM.getImgPlus().show();
+			
+			proY.getImgPlus().setTitle("Yellow");
 			proY.getImgPlus().show();
 			
 		}
@@ -199,9 +213,16 @@ public class Cores {
 		proK.setImgPlus();
 		
 		//exibe as image plus
+		proC.getImgPlus().setTitle("Cyan");
 		proC.getImgPlus().show();
+		
+		proM.getImgPlus().setTitle("Magenta");
 		proM.getImgPlus().show();
+		
+		proY.getImgPlus().setTitle("Yellow");
 		proY.getImgPlus().show();
+		
+		proK.getImgPlus().setTitle("Black / Key");
 		proK.getImgPlus().show();
 		
 	}
@@ -226,6 +247,7 @@ public class Cores {
 		gray.setImgPlus();
 		
 		//exibe as image plus
+		gray.getImgPlus().setTitle("Gray Scale");
 		gray.getImgPlus().show();
 	}
 	
@@ -290,9 +312,377 @@ public class Cores {
 			proV.setImgPlus();
 			
 			//exibe as image plus
+			proY.getImgPlus().setTitle("Iluminância");
 			proY.getImgPlus().show();
+			
+			proU.getImgPlus().setTitle("U");
 			proU.getImgPlus().show();
+			
+			proU.getImgPlus().setTitle("V");
 			proV.getImgPlus().show();
 			
 		}
+	
+	public static double Hue(int r, int g, int b) {
+		/**
+		 * Para o HSB precisamos calcular cada componente após descobrir 
+		 * o menor e maior valor entre os campos RGB do pixel analisado.
+		 * 
+		 * I passo:
+		 * 
+		 * Math.max(R', G', B')
+		 * Math.min(R', G', B')
+		 * 
+		 * II passo:
+		 * 
+		 * Delta = max - min
+		 * 
+		 * III passo (matiz / hue):
+		 * 
+		 * hue = 0, if delta == 0
+		 * hue = 60 * ((( G' - B' ) / delta) mod 6 ), if max == R
+		 * hue = 60 * ((( B' - R' ) / delta) + 2 ), if max == G
+		 * hue = 60 * ((( R' - G' ) / delta) + 4 ), if max == B
+		 **/
+		
+		double newR = (double)r;
+		double newG = (double)g;
+		double newB = (double)b;
+		
+		double maior = Math.max(newR, Math.max(newG, newB));
+		double menor = Math.min(newR, Math.min(newG, newB));
+		
+		double delta = maior - menor;
+		
+		double hue;
+		
+		if(delta == 0.0)
+			hue = 0.0;
+		else if(maior == newR)
+			hue = 60 * ((( newG - newB ) / delta) % 6 );
+		else if(maior == newG)
+			hue = 60 * ((( newB - newR ) / delta) + 2 );
+		else 
+			hue = 60 * ((( newR - newG ) / delta) + 4 );
+		
+		return hue;
+	}
+	
+	public static double Saturation(int r, int g, int b) {
+		/**
+		 * Para o HSB precisamos calcular cada componente após descobrir 
+		 * o menor e maior valor entre os campos RGB do pixel analisado.
+		 * 
+		 * I passo:
+		 * 
+		 * Math.max(R', G', B')
+		 * Math.min(R', G', B')
+		 * 
+		 * II passo:
+		 * 
+		 * Delta = max - min
+		 * 
+		 * III passo (saturação / saturation):
+		 * 
+		 * sat = 0, if == 0
+		 * sat = delta / max
+		 **/
+		
+		double newR = (double)r;
+		double newG = (double)g;
+		double newB = (double)b;
+		
+		double maior = Math.max(newR, Math.max(newG, newB));
+		double menor = Math.min(newR, Math.min(newG, newB));
+		
+		double delta = maior - menor;
+		
+		double saturation;
+		
+		if(delta == 0.0)
+			saturation = 0.0;
+		else
+			saturation = delta / maior;
+		
+		return saturation;
+	}
+	
+	public static double Brightness(int r, int g, int b) {
+		/**
+		 * Para o HSB precisamos calcular cada componente após descobrir 
+		 * o menor e maior valor entre os campos RGB do pixel analisado.
+		 * 
+		 * I passo:
+		 * 
+		 * Math.max(R', G', B')
+		 * 
+		 * II passo (brilho / brightness):
+		 * 
+		 * brightness = max
+		 **/
+		
+		double newR = (double)r;
+		double newG = (double)g;
+		double newB = (double)b;
+		
+		double maior = Math.max(newR, Math.max(newG, newB));
+		
+		return maior;
+		
+	}
+	
+	//Pseudocoloração de imagem 
+	
+	/**
+	 * Para imagens em escala de cinza(preto e branco),
+	 * São escolhidas 7 subdivisões de  densidades de brilho
+	 * (de 0 a 255) e cada campo é predominante em uma dessas 
+	 * divisões, portanto, se o azul está predominante nas 
+	 * mais baixas, em locais mais escuros da imagem, o 
+	 * azul será mais destacado.
+	 **/
+	
+	public static void pseudoColorGrayScale( Processador img, int opt ) {
+		
+		Processador tmp = new Processador();
+		
+		tmp.setImg( img.getImg() );
+		
+		int brilho;
+		String result = "";
+		
+		//	prim = camada mais clara
+		//  seg  = camada intermediaria 
+		//  ter  = camada mais escura 
+		float prim = 0;
+		float seg = 0;
+		float ter = 0;
+		
+		for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+            	
+            	brilho = img.nivelCinza(x, y);
+            	
+            	if( brilho >= 0 && brilho <= 36) {
+            		prim = 0;
+            		seg = brilho * (float)0.36;
+            		ter = brilho;
+            	}
+            	else if( brilho >= 37 && brilho <= 73) {
+            		prim = 0;
+            		seg = brilho * (float)0.51;
+            		ter = brilho * (float)0.85;
+            	}
+            	else if( brilho >= 74 && brilho <= 110) {
+            		prim = 0;
+            		seg = brilho * (float)0.85;
+            		ter = brilho * (float)0.51;
+            	}
+            	else if( brilho >= 111 && brilho <= 147) {
+            		prim = brilho * (float)0.36;
+            		seg = brilho;
+            		ter = brilho * (float)0.36;
+            	}
+            	else if( brilho >= 148 && brilho <= 184) {
+            		prim = brilho * (float)0.51;
+            		seg = brilho * (float)0.85;
+            		ter = 0;
+            	}
+            	else if( brilho >= 185 && brilho <= 221) {
+            		prim = brilho * (float)0.85;
+            		seg = brilho * (float)0.51;
+            		ter = 0;
+            	}
+            	else if( brilho >= 222 && brilho <= 255) {
+            		prim = brilho;
+            		seg = brilho * (float)0.36;
+            		ter = 0;
+            	}
+            	
+            	// teste de underflow
+            	prim = prim < 0 ? 0 : prim; 
+            	seg = seg < 0 ? 0 : seg;
+                ter = ter < 0 ? 0 : ter;
+                
+                // teste de overflow
+                prim = prim > 255 ? 255 : prim; 
+                seg = seg > 255 ? 255 : seg;
+                ter = ter > 255 ? 255 : ter;
+            	
+                /**
+                 * RGB = 1
+                 * RBG = 2
+                 * 
+                 * BGR = 3
+                 * BRG = 4
+                 * 
+                 * GRB = 5
+                 * GBR = 6
+                 **/
+                
+                if(opt == 1) {
+                	result = "RGB";
+                	tmp.setRGB(x, y, prim/255, seg/255, ter/255);
+                }
+                else if(opt == 2) {
+                	result = "RBG";
+                	tmp.setRGB(x, y, prim/255, ter/255, seg/255);
+                }
+                else if(opt == 3) {
+                	result = "BGR";
+                	tmp.setRGB(x, y, ter/255, seg/255, prim/255);
+                }
+                else if(opt == 4) {
+                	result = "BRG";
+                	tmp.setRGB(x, y, ter/255, prim/255, seg/255);
+                }
+                else if(opt == 5) {
+                	result = "GRB";
+                	tmp.setRGB(x, y, seg/255, prim/255, ter/255);
+                }
+                else if(opt == 6) {
+                	result = "GBR";
+                	tmp.setRGB(x, y, seg/255, ter/255, prim/255);
+                }
+            }
+		
+		tmp.setImgPlus();
+		tmp.getImgPlus().setTitle( result );
+		tmp.getImgPlus().show();
+	}
+	
+	/**
+	 * Para pseudocoloração das imagens coloridas 
+	 * um campo é removido (iguala a zero) quando 
+	 * estiver abaixo OU acima de um limiar. 
+	 * Por exemplo: Se o tom azul na imagem estiver 
+	 * abaixo de 128, será removido naquele pixel.
+	 * 
+	 **/
+	
+	public static void pseudoColorIgnoring( Processador img, int opt ) {
+		
+		Processador tmp = new Processador();
+		
+		tmp.setImg( img.getImg() );
+		
+		String result = "";
+		
+		int r = 0;
+		int g = 0;
+		int b = 0;
+		
+		for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+            	r = img.nivelRed(x, y);
+            	g = img.nivelGreen(x, y);
+            	b = img.nivelBlue(x, y);
+            	
+            	if(opt == 1) {
+                	result = "Ignorando Blue";
+                	if(b > 128)
+                		b = 0;
+                }
+                else if(opt == 2) {
+                	result = "Ignorando Red";
+                	if(r > 128)
+                		r = 0;
+                }
+                else if(opt == 3) {
+                	result = "Ignorando Green";
+                	if(g > 128)
+                		g = 0;
+                }
+            	
+            	tmp.setRGB(x, y, r, g, b);
+            }
+	
+		tmp.setImgPlus();
+		tmp.getImgPlus().setTitle( result );
+		tmp.getImgPlus().show();
+	}
+	
+	public static void pseudoColorReducing( Processador img, int opt ) {
+		
+		Processador tmp = new Processador();
+		
+		tmp.setImg( img.getImg() );
+		
+		String result = "";
+		
+		int r = 0;
+		int g = 0;
+		int b = 0;
+		
+		for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+            	r = img.nivelRed(x, y);
+            	g = img.nivelGreen(x, y);
+            	b = img.nivelBlue(x, y);
+            	
+            	if(opt == 1) {
+                	result = "Reduzindo Blue";
+                	if(b > 128)
+                		b = b / 2;
+                }
+                else if(opt == 2) {
+                	result = "Reduzindo Red";
+                	if(r > 128)
+                		r = r / 2;
+                }
+                else if(opt == 3) {
+                	result = "Reduzindo Green";
+                	if(g > 128)
+                		g = g / 2;
+                }
+            	
+            	tmp.setRGB(x, y, r, g, b);
+            }
+	
+		tmp.setImgPlus();
+		tmp.getImgPlus().setTitle( result );
+		tmp.getImgPlus().show();
+	}
+	
+	public static void pseudoColorIncreasing( Processador img, int opt ) {
+		
+		Processador tmp = new Processador();
+		
+		tmp.setImg( img.getImg() );
+		
+		String result = "";
+		
+		int r = 0;
+		int g = 0;
+		int b = 0;
+		
+		for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+            	r = img.nivelRed(x, y);
+            	g = img.nivelGreen(x, y);
+            	b = img.nivelBlue(x, y);
+            	
+            	if(opt == 1) {
+                	result = "Aumentando Blue";
+                	if(b < 127)
+                		b = (b * 2) + 1;
+                }
+                else if(opt == 2) {
+                	result = "Aumentando Red";
+                	if(r < 127)
+                		r = (r * 2) + 1;
+                }
+                else if(opt == 3) {
+                	result = "Aumentando Green";
+                	if(g < 127)
+                		g = (g * 2) + 1;
+                }
+            	
+            	tmp.setRGB(x, y, r, g, b);
+            }
+	
+		tmp.setImgPlus();
+		tmp.getImgPlus().setTitle( result );
+		tmp.getImgPlus().show();
+	}
 }
