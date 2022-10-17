@@ -33,7 +33,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#abrirImgPrimaria" text="Abrir" />
                   <MenuItem fx:id="botaoAbrirCamada" disable="true" mnemonicParsing="false" onAction="#abrirImgSec" text="Abrir como camada" />
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#gerarHistograma" text="Gerar Histograma" />
+                  <MenuItem fx:id="botaoHistograma" disable="true" mnemonicParsing="false" onAction="#gerarHistograma" text="Gerar Histograma" />
                   <MenuItem fx:id="botaoSalvar" disable="true" mnemonicParsing="false" onAction="#salvar" text="Salvar" />
                   <MenuItem fx:id="botaoSalvarComo" disable="true" mnemonicParsing="false" onAction="#salvarComo" text="Salvar como" />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -107,7 +107,7 @@
                   </Menu>
                </items>
             </Menu>
-            <Menu fx:id="menuRealce" disable="true" mnemonicParsing="false" text="Realçe">
+            <Menu fx:id="menuRealce" disable="true" mnemonicParsing="false" text="Realce">
                <items>
                   <Menu mnemonicParsing="false" text="Transformação linear">
                      <items>
@@ -123,6 +123,9 @@
                         <MenuItem mnemonicParsing="false" onAction="#RealceRaiz" text="Raiz Quadrada" />
                      </items>
                   </Menu>
+                  <MenuItem mnemonicParsing="false" onAction="#equalHisto" text="Equalizar Histograma" />
+                  <MenuItem mnemonicParsing="false" onAction="#corrigirGama" text="Corrigir  Gama" />
+                  <MenuItem mnemonicParsing="false" onAction="#fatiarBits" text="Fatiar Bits" />
                </items>
             </Menu>
             <Menu fx:id="menuLimpar" disable="true" mnemonicParsing="false" text="Limpeza">
@@ -150,7 +153,7 @@
             <AnchorPane fx:id="workspace" prefHeight="4096.0" prefWidth="2160.0">
                <children>
                   <ImageView fx:id="imagemFinal" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" />
-                  <Pane fx:id="popupValor" prefHeight="130.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                  <Pane fx:id="popupValor" layoutX="10.0" layoutY="10.0" prefHeight="130.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
                      <children>
                         <Label layoutX="80.0" layoutY="8.0" prefHeight="30.0" prefWidth="91.0" text="Digite o valor">
                            <font>
@@ -159,6 +162,63 @@
                         </Label>
                         <TextField fx:id="textoValor" layoutX="75.0" layoutY="48.0" prefWidth="100.0" />
                         <Button layoutX="70.0" layoutY="87.0" mnemonicParsing="false" onAction="#botaoValor" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="MinMaxPane" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="300.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                     <children>
+                        <Label layoutX="25.0" layoutY="78.0" prefHeight="30.0" prefWidth="100.0" text="Valor mínimo">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="valorMax" layoutX="25.0" layoutY="44.0" prefWidth="100.0" promptText="0 - 255" />
+                        <TextField fx:id="valorMin" layoutX="25.0" layoutY="108.0" prefWidth="100.0" promptText="0 - 255" />
+                        <Button layoutX="170.0" layoutY="100.0" mnemonicParsing="false" onAction="#botaoRealceLinear" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="25.0" layoutY="14.0" prefHeight="30.0" prefWidth="100.0" text="Valor máximo">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="GammaPane" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="300.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                     <children>
+                        <Label layoutX="25.0" layoutY="78.0" prefHeight="30.0" prefWidth="100.0" text="Gamma">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="valorFatorC" layoutX="25.0" layoutY="44.0" prefWidth="100.0" text="1" />
+                        <TextField fx:id="valorGamma" layoutX="25.0" layoutY="108.0" prefWidth="100.0" />
+                        <Button layoutX="170.0" layoutY="100.0" mnemonicParsing="false" onAction="#botaoControlGamma" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="25.0" layoutY="14.0" prefHeight="30.0" prefWidth="100.0" text="fator c">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="fatiarPanel" layoutX="20.0" layoutY="20.0" prefHeight="130.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                     <children>
+                        <Label layoutX="54.0" layoutY="14.0" prefHeight="30.0" prefWidth="143.0" text="Número de camadas">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="numCamadas" layoutX="75.0" layoutY="48.0" prefWidth="100.0" />
+                        <Button layoutX="70.0" layoutY="87.0" mnemonicParsing="false" onAction="#botaoFatiarBits" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -261,7 +321,7 @@
             </Slider>
             <Pane layoutX="10.0" layoutY="440.0" prefHeight="25.0" prefWidth="200.0">
                <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="matizImg" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@matiz.png" />
                      </image>

@@ -43,6 +43,9 @@ public class Painel implements Initializable{
     
     @FXML
     private Text rgbText;
+    
+    @FXML
+    private TextField numCamadas;
 
     @FXML
     private ImageView imagemIni;
@@ -70,6 +73,9 @@ public class Painel implements Initializable{
     
     @FXML
     private Pane painelLateral;
+    
+    @FXML
+    private MenuItem botaoHistograma;
 
     @FXML
     private MenuItem botaoSalvarComo;
@@ -88,6 +94,12 @@ public class Painel implements Initializable{
     
     @FXML
     private TextField posYText;
+    
+    @FXML
+    private TextField valorFatorC;
+    
+    @FXML
+    private TextField valorGamma;
     
     @FXML
     private TextField posXText;
@@ -130,10 +142,28 @@ public class Painel implements Initializable{
     
     @FXML
     private TextField grauText;
+    
+    @FXML
+    private TextField valorMin;
+    
+    @FXML
+    private TextField valorMax;
 
     @FXML
     private MenuItem botaoLimparIni;
 
+    @FXML
+    private Pane MinMaxPane;
+    
+    @FXML
+    private ImageView matizImg;
+    
+    @FXML
+    private Pane GammaPane;
+    
+    @FXML
+    private Pane fatiarPanel;
+    
     @FXML
     private MenuItem botaoLimparSec;
 
@@ -165,6 +195,20 @@ public class Painel implements Initializable{
     //boolean para ativar/desativar opção de arrastar
     private boolean dragMode = false;
     
+    //boolean que decide qual transformação linear será utilizada
+    private boolean linearInverso;
+    
+    //valores minimos e maximos usados nas transformações lineares
+    private int valorMinimo;
+    private int valorMaximo;
+    
+    //valores usados na correção de gamma
+    private double fatorC;
+    private double gamma;
+    
+    //numero de camadas usadas no fatiamento de bits
+    private int qntCamadas;
+    
     JFileChooser fileChooser = new JFileChooser();
     
     /*
@@ -173,6 +217,9 @@ public class Painel implements Initializable{
      * a opção "acumular" no menu "opções" está selecionada. 
      */
     private Processador imgFinal = new Processador();
+    
+    //processador usado para armazenar a faixa de matiz na tabela lateral
+    private Processador matiz = new Processador();
     
     /*
      * Inteiro que armazena qual foi a ultima ação
@@ -225,6 +272,8 @@ public class Painel implements Initializable{
             tamYSlide.setValue( 1.0 );
             posXText.setText( "0.0" );
             posYText.setText( "0.0" );
+            
+            matiz.setImg( matizImg.getImage() );
 
         }
     }
@@ -455,7 +504,7 @@ public class Painel implements Initializable{
         botaoLimparFinal.setDisable(false);
         botaoSalvarComo.setDisable(false);
     }
-
+    
     @FXML
     void cisalharX(ActionEvent event) {
         popupValor.setVisible(true);
@@ -683,6 +732,64 @@ public class Painel implements Initializable{
     }
     
     //--------------------------------------------------------------
+    //Realces
+    
+    @FXML
+    void RealceLinear(ActionEvent event) {
+        linearInverso = false;
+        MinMaxPane.setVisible(true);
+    }
+
+    @FXML
+    void RealceInverso(ActionEvent event) {
+       linearInverso = true;
+       MinMaxPane.setVisible(true);
+    }
+    
+    /**
+     * 1 = logaritmo
+     * 2 = exponencial
+     * 3 = quadrado
+     * 4 = raiz quadrada 
+     **/
+    
+    @FXML
+    void RealceLog(ActionEvent event) {
+        Realce.NaoLinear(imgFinal, 1);
+    }
+
+    @FXML
+    void RealceQuad(ActionEvent event) {
+        Realce.NaoLinear(imgFinal, 3);
+    }
+    
+
+    @FXML
+    void RealceExp(ActionEvent event) {
+        Realce.NaoLinear(imgFinal, 2);
+    }
+
+    @FXML
+    void RealceRaiz(ActionEvent event) {
+        Realce.NaoLinear(imgFinal, 4);
+    }
+    
+    @FXML
+    void equalHisto(ActionEvent event) {
+        Realce.EqualizarHistoGrama(imgFinal.getImg());
+    }
+    
+    @FXML
+    void corrigirGama(ActionEvent event) {
+        GammaPane.setVisible(true);
+    }
+    
+    @FXML
+    void fatiarBits(ActionEvent event) {
+        fatiarPanel.setVisible(true);
+    }
+    
+    //--------------------------------------------------------------
     //Métodos extras
     
     @FXML
@@ -756,10 +863,10 @@ public class Painel implements Initializable{
     			
     			rgbText.setText( "RGB( " + R + ", " + G + ", " + B + " )" );
     			
-    			paneBrightness.setStyle("-fx-background-color: #" + imgFinal.getHex(x, y) );
-    			paneSaturation.setStyle("-fx-background-color: #" + imgFinal.getHex(x, y) );
-    			
     			hueArrow.setLayoutX( (( Cores.Hue(R, G, B) ) / 360.0) * 200.0 );//( valor / 360 ) * 200px
+    			
+    			paneBrightness.setStyle("-fx-background-color: #" + matiz.getHex((int)hueArrow.getLayoutX(), 10) );
+                paneSaturation.setStyle("-fx-background-color: #" + matiz.getHex((int)hueArrow.getLayoutX(), 10) );
     			saturationArrow.setLayoutX( Cores.Saturation(R, G, B) * 200.0 ); //( valor / 255 ) * 200px
     			brightnessArrow.setLayoutX( (( Cores.Brightness(R, G, B) ) / 255.0) * 200.0 ); //( valor / 255 ) * 200px
     		}
@@ -851,7 +958,6 @@ public class Painel implements Initializable{
     void botaoValor(ActionEvent event) {
         valorTransf = Float.valueOf( textoValor.getText() );
         popupValor.setVisible(false);
-        //System.out.println("\n\nValor: " + Float.valueOf((textoValor.getText())) + "\n\n");
 
         if(lstAct == 7)
             cisX();
@@ -859,6 +965,35 @@ public class Painel implements Initializable{
             cisY();
 
         textoValor.clear();
+    }
+    
+    @FXML
+    void botaoRealceLinear(ActionEvent event) {
+        valorMaximo = Integer.valueOf( valorMax.getText() );
+        valorMinimo = Integer.valueOf( valorMin.getText() );
+        MinMaxPane.setVisible(false);
+        
+        Realce.Linear(imgFinal, valorMinimo, valorMaximo, linearInverso);
+        
+        valorMax.clear();
+        valorMin.clear();
+    }
+    
+    @FXML
+    void botaoControlGamma(ActionEvent event) {
+        fatorC = Double.valueOf( valorFatorC.getText() );
+        gamma = Double.valueOf( valorGamma.getText() );
+        GammaPane.setVisible(false);
+        
+        Realce.corrigirGama(imgFinal, fatorC, gamma);
+    }
+    
+    @FXML
+    void botaoFatiarBits(ActionEvent event) {
+        qntCamadas = Integer.valueOf( numCamadas.getText() );
+        fatiarPanel.setVisible(false);
+        
+        Realce.fatiarBits(imgFinal, qntCamadas);
     }
     
     @FXML
@@ -871,6 +1006,7 @@ public class Painel implements Initializable{
         painelLateral.setVisible(false);
         menuPseudoCor.setDisable(true);
         menuCores.setDisable(true);
+        botaoHistograma.setDisable(true);
         menuRealce.setDisable(true);
         /*
          * Se restar apenas a imagem primária na 
@@ -943,8 +1079,10 @@ public class Painel implements Initializable{
         painelLateral.setVisible(true);
         menuPseudoCor.setDisable(false);
         menuCores.setDisable(false);
+        botaoHistograma.setDisable(false);
         menuRealce.setDisable(false);
         dragMode = false;
+        
     }
     
     @FXML
