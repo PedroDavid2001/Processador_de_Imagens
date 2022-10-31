@@ -1,10 +1,5 @@
 package src;
 
-import java.awt.image.BufferedImage;
-
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-
 public class Cores {
 	
 	//exibe os components RGB
@@ -365,6 +360,10 @@ public class Cores {
 		else 
 			hue = 60 * ((( newR - newG ) / delta) + 4 );
 		
+		if(hue < 0)
+		    hue = 0;
+		else if(hue > 360)
+		    hue = 360;
 		return hue;
 	}
 	

@@ -301,5 +301,24 @@ public class Processador {
     	
     	return retorno;
     }
+    
+    //métodos static (algumas utilidades da classe :^D )
+    
+    public static int getRed(int rgb) {
+        return ( rgb & 0xff0000 ) >> 16 ;
+    }
+
+    public static int getBlue(int rgb) {
+        return rgb & 0xff; 
+    }
+
+    public static int getGreen(int rgb) {
+        return ( rgb & 0xff00 ) >> 8 ;
+    }
+    
+    //cria uma BufferedImage com uma Image do JavaFX
+    public static BufferedImage createBufferedImage(Image img) {
+        return SwingFXUtils.fromFXImage(img, null);
+    }
 
 }

@@ -128,6 +128,54 @@
                   <MenuItem mnemonicParsing="false" onAction="#fatiarBits" text="Fatiar Bits" />
                </items>
             </Menu>
+            <Menu fx:id="menuFiltragem" disable="true" mnemonicParsing="false" text="Filtragem">
+               <items>
+                  <Menu mnemonicParsing="false" text="Passa-baixa">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Média">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#media3x3" text="3x3" />
+                              <MenuItem mnemonicParsing="false" onAction="#media5x5" text="5x5" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Mediana">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#mediana3x3" text="3x3" />
+                              <MenuItem mnemonicParsing="false" onAction="#mediana5x5" text="5x5" />
+                           </items>
+                        </Menu>
+                      <MenuItem mnemonicParsing="false" onAction="#minimo" text="Minimo" />
+                        <MenuItem mnemonicParsing="false" onAction="#maximo" text="Máximo" />
+                        <MenuItem mnemonicParsing="false" onAction="#moda" text="Moda" />
+                        <MenuItem mnemonicParsing="false" onAction="#kuwahara" text="Kuwahara" />
+                        <MenuItem mnemonicParsing="false" onAction="#tomitaTsuji" text="Tomita e Tsuji" />
+                        <MenuItem mnemonicParsing="false" onAction="#nagaoMatsuyama" text="Nagao e Matsuyama" />
+                        <MenuItem mnemonicParsing="false" onAction="#somboonkaew" text="Somboonkaew" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Passa-alta">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#h1" text="H1" />
+                        <MenuItem mnemonicParsing="false" onAction="#h2" text="H2" />
+                        <MenuItem mnemonicParsing="false" onAction="#m1" text="M1" />
+                        <MenuItem mnemonicParsing="false" onAction="#m2" text="M2" />
+                        <MenuItem mnemonicParsing="false" onAction="#m3" text="M3" />
+                        <MenuItem mnemonicParsing="false" onAction="#highBoost" text="High-Boost" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Meio-tom">
+                     <items>
+                        <Menu mnemonicParsing="false" text="Pontilhado Ordenado">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#ht2x2" text="2x2" />
+                              <MenuItem mnemonicParsing="false" onAction="#ht3x2" text="3x2" />
+                              <MenuItem mnemonicParsing="false" text="3x3" />
+                           </items>
+                        </Menu>
+                     </items>
+                  </Menu>
+               </items>
+            </Menu>
             <Menu fx:id="menuLimpar" disable="true" mnemonicParsing="false" text="Limpeza">
                <items>
                   <MenuItem fx:id="botaoLimparIni" mnemonicParsing="false" onAction="#limparPrimaria" text="Limpar primaria" />
@@ -219,6 +267,21 @@
                         </Label>
                         <TextField fx:id="numCamadas" layoutX="75.0" layoutY="48.0" prefWidth="100.0" />
                         <Button layoutX="70.0" layoutY="87.0" mnemonicParsing="false" onAction="#botaoFatiarBits" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="popupAmplificacao" layoutX="10.0" layoutY="10.0" prefHeight="130.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                     <children>
+                        <Label layoutX="26.0" layoutY="7.0" prefHeight="30.0" prefWidth="198.0" text="Digite o valor de amplificação">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textoAmplificar" layoutX="75.0" layoutY="48.0" prefWidth="100.0" text="1" />
+                        <Button layoutX="70.0" layoutY="87.0" mnemonicParsing="false" onAction="#botaoAmplificar" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
                            <font>
                               <Font size="15.0" />
                            </font>

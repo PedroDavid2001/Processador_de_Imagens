@@ -58,6 +58,9 @@ public class Painel implements Initializable{
 
     @FXML
     private Menu menuTransformar;
+
+    @FXML
+    private Menu menuFiltragem;
     
     @FXML
     private Menu menuCores;
@@ -106,6 +109,9 @@ public class Painel implements Initializable{
 
     @FXML
     private TextField textoValor;
+    
+    @FXML
+    private TextField textoAmplificar;
     
     @FXML
     private Slider rotacaoSlide;
@@ -175,6 +181,9 @@ public class Painel implements Initializable{
 
     @FXML
     private Pane popupValor;
+    
+    @FXML
+    private Pane popupAmplificacao;
 
     private Processador imagem = new Processador();
     private Processador imgSec = new Processador();
@@ -593,10 +602,12 @@ public class Painel implements Initializable{
     
     void redimensionarX() {
     	imagemFinal.setFitWidth( imagem.getWidth() * tamXSlide.getValue() );
+    	imgFinal.setImg( imagemFinal.getImage());
     }
     
     void redimensionarY() {
     	imagemFinal.setFitHeight( imagem.getHeight() * tamYSlide.getValue() );
+    	imgFinal.setImg( imagemFinal.getImage());
     }
  
     void rotacionar() {
@@ -788,6 +799,104 @@ public class Painel implements Initializable{
     void fatiarBits(ActionEvent event) {
         fatiarPanel.setVisible(true);
     }
+
+    //--------------------------------------------------------------
+    //Métodos extras
+    
+    @FXML
+    void media3x3(ActionEvent event) {
+        Filtros.media3x3(imgFinal);
+    }
+
+    @FXML
+    void media5x5(ActionEvent event) {
+        Filtros.media5x5(imgFinal);
+    }
+
+    @FXML
+    void mediana3x3(ActionEvent event) {
+        Filtros.mediana3x3(imgFinal);
+    }
+
+    @FXML
+    void mediana5x5(ActionEvent event) {
+        Filtros.mediana5x5(imgFinal);
+    }
+    
+    @FXML
+    void maximo(ActionEvent event) {
+        Filtros.maximo(imgFinal);
+    }
+
+    @FXML
+    void minimo(ActionEvent event) {
+        Filtros.minimo(imgFinal);
+    }
+    
+    @FXML
+    void moda(ActionEvent event) {
+        Filtros.moda(imgFinal);
+    }
+    
+    @FXML
+    void kuwahara(ActionEvent event) {
+        Filtros.kuwahara(imgFinal);
+    }
+    
+    @FXML
+    void tomitaTsuji(ActionEvent event) {
+        Filtros.tomitaTsuji(imgFinal);
+    }
+    
+    @FXML
+    void nagaoMatsuyama(ActionEvent event) {
+        Filtros.nagaoMatsuyama(imgFinal);
+    }
+    
+    @FXML
+    void somboonkaew(ActionEvent event) {
+        Filtros.somboonkaew(imgFinal);
+    }
+    
+    @FXML
+    void h1(ActionEvent event) {
+        Filtros.h1(imgFinal);
+    }
+    
+    @FXML
+    void h2(ActionEvent event) {
+        Filtros.h2(imgFinal);
+    }
+    
+    @FXML
+    void m1(ActionEvent event) {
+        Filtros.m1(imgFinal);
+    }
+    
+    @FXML
+    void m2(ActionEvent event) {
+        Filtros.m2(imgFinal);
+    }
+    
+    @FXML
+    void m3(ActionEvent event) {
+        Filtros.m3(imgFinal);
+    }
+    
+    @FXML
+    void highBoost(ActionEvent event) {
+        popupAmplificacao.setVisible(true);
+    }
+    
+    @FXML
+    void ht2x2(ActionEvent event) {
+        Filtros.ht2x2(imgFinal);
+    }
+    
+    @FXML
+    void ht3x2(ActionEvent event) {
+        Filtros.ht3x2(imgFinal);
+    }
     
     //--------------------------------------------------------------
     //Métodos extras
@@ -854,8 +963,8 @@ public class Painel implements Initializable{
     	imagemFinal.setOnMouseMoved( mouseEvent -> {
     		//não altera quando está movendo a imagem
     		if(!dragMode && imgFinal.getImg() != null) {
-    			int x = (int)(mouseEvent.getX() - (int)imagemFinal.getX());
-    			int y = (int)(mouseEvent.getY() - (int)imagemFinal.getY());
+    			int x = (int)(((int)(mouseEvent.getX() - (int)imagemFinal.getX()))/tamXSlide.getValue());
+    			int y = (int)(((int)(mouseEvent.getY() - (int)imagemFinal.getY()))/tamYSlide.getValue());
     			
     			int R = imgFinal.nivelRed(x, y);
     			int G = imgFinal.nivelGreen(x, y);
@@ -968,6 +1077,13 @@ public class Painel implements Initializable{
     }
     
     @FXML
+    void botaoAmplificar(ActionEvent event) {
+        Filtros.highBoost(imgFinal, Float.valueOf( textoAmplificar.getText() ));
+        popupAmplificacao.setVisible(false);
+        textoAmplificar.setText("1");
+    }
+    
+    @FXML
     void botaoRealceLinear(ActionEvent event) {
         valorMaximo = Integer.valueOf( valorMax.getText() );
         valorMinimo = Integer.valueOf( valorMin.getText() );
@@ -1008,6 +1124,8 @@ public class Painel implements Initializable{
         menuCores.setDisable(true);
         botaoHistograma.setDisable(true);
         menuRealce.setDisable(true);
+        menuFiltragem.setDisable(true);
+        
         /*
          * Se restar apenas a imagem primária na 
          * tela, desativará o menu de limpeza.
@@ -1081,6 +1199,7 @@ public class Painel implements Initializable{
         menuCores.setDisable(false);
         botaoHistograma.setDisable(false);
         menuRealce.setDisable(false);
+        menuFiltragem.setDisable(false);
         dragMode = false;
         
     }

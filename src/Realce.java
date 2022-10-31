@@ -10,35 +10,66 @@ public class Realce {
 		
 		tmp.setImg( img.getImg() );
 		
-		int maior = 0;
-		int menor = 255;
+		int maiorR = 0, maiorG = 0, maiorB = 0;
+		int menorR = 255, menorG = 255, menorB = 255;
 		
 		for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
             	
-                int gray = img.nivelCinza(x, y);
+                int r = img.nivelRed(x, y);
+                int g = img.nivelGreen(x, y);
+                int b = img.nivelBlue(x, y);
             	
-                if( gray > maior ) {
-            		maior = gray;
+                //red
+                if( r > maiorR ) {
+            		maiorR = r;
             	}
-            	if( gray < menor ) {
-            		menor = gray;
+            	if( r < menorR ) {
+            		menorR = r;
             	}
+            	//blue
+            	if( b > maiorB ) {
+                    maiorB = b;
+                }
+                if( b < menorB ) {
+                    menorB = b;
+                }
+                //green
+                if( g > maiorG ) {
+                    maiorG = g;
+                }
+                if( g < menorG ) {
+                    menorG = g;
+                }
             }
 		
 	
 		for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
             	
-                float a =  (float)( max - min ) / (float)( maior - menor );
-            	float gray = a * (img.nivelCinza(x, y) - menor) + min;
+                float r =  (float)( max - min ) / (float)( maiorR - menorR );
+            	float red = r * (img.nivelRed(x, y) - menorR) + min;
             	
-            	gray = gray / 255;
+            	red = red / 255;
             	
-            	if(invert)
-            		gray = 1 - gray;
+            	float g =  (float)( max - min ) / (float)( maiorG - menorG );
+                float green = g * (img.nivelGreen(x, y) - menorG) + min;
+                
+                green = green / 255;
             	
-            	tmp.setRGB(x, y, gray, gray, gray);
+            	float b =  (float)( max - min ) / (float)( maiorB - menorB );
+                float blue = b * (img.nivelBlue(x, y) - menorB) + min;
+                
+                blue = blue / 255;
+            	
+            	if(invert) {
+            	    red = 1 - red;
+            	    green = 1 - green;
+            	    blue = 1 - blue;
+            	}
+            		
+            	
+            	tmp.setRGB(x, y, red, green, blue);
             }
 		
 		tmp.setImgPlus();
@@ -51,19 +82,39 @@ public class Realce {
 		Processador tmp = new Processador();
 		tmp.setImg( img.getImg() );
 		
-		int maior = 0;
-		int menor= 255;
-		double a = 1;
+		int maiorR = 0, maiorG = 0, maiorB = 0;
+        int menorR = 255, menorG = 255, menorB = 255;
+		double aR = 1, aG = 1, aB = 1;
 		double e = Math.E;
 		
 		for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
             	
-            	if( img.nivelCinza(x, y) > maior ) {
-            		maior = img.nivelCinza(x, y);
-            	}else if( img.nivelCinza(x, y) < menor ) {
-            		menor = img.nivelCinza(x, y);
-            	}
+                int r = img.nivelRed(x, y);
+                int g = img.nivelGreen(x, y);
+                int b = img.nivelBlue(x, y);
+                
+                //red
+                if( r > maiorR ) {
+                    maiorR = r;
+                }
+                if( r < menorR ) {
+                    menorR = r;
+                }
+                //blue
+                if( b > maiorB ) {
+                    maiorB = b;
+                }
+                if( b < menorB ) {
+                    menorB = b;
+                }
+                //green
+                if( g > maiorG ) {
+                    maiorG = g;
+                }
+                if( g < menorG ) {
+                    menorG = g;
+                }
             }
 		
 		/**
@@ -74,51 +125,71 @@ public class Realce {
 		 **/
 		
 		if(calculo == 1) {
-			a = 255 / (Math.log( 1 + maior ));
+			aR = 255 / (Math.log( 1 + maiorR ));
+			aG = 255 / (Math.log( 1 + maiorG ));
+			aB = 255 / (Math.log( 1 + maiorB ));
 			
 			for(int y = 0; y < img.getHeight(); y++) 
 	            for(int x = 0; x < img.getWidth(); x++) {
 	            	
-	            	int gray = (int)(a * Math.log( img.nivelCinza(x, y) + 1 ));
+	            	int red = (int)(aR * Math.log( img.nivelRed(x, y) + 1 ));
+	            	int green = (int)(aG * Math.log( img.nivelGreen(x, y) + 1 ));
+	            	int blue = (int)(aB * Math.log( img.nivelBlue(x, y) + 1 ));
 	            	
-	            	tmp.setRGB(x, y, gray, gray, gray);
+	            	tmp.setRGB(x, y, red, green, blue);
 	            }
 		}
 		else if(calculo == 2) {
-			a = (255 / Math.pow( (1 + e),  ( maior + menor ) ));
+			aR = (255 / Math.pow( (1 + e),  ( maiorR + menorR ) ));
+			aG = (255 / Math.pow( (1 + e),  ( maiorG + menorG ) ));
+			aB = (255 / Math.pow( (1 + e),  ( maiorB + menorB ) ));
 			
 			for(int y = 0; y < img.getHeight(); y++) 
 	            for(int x = 0; x < img.getWidth(); x++) {
 	            	
-	            	double gray = ( a * ( 1 + Math.pow(e, img.nivelCinza(x, y)) ));
+	            	double red = ( aR * ( 1 + Math.pow(e, img.nivelRed(x, y)) ));
+	            	double green = ( aG * ( 1 + Math.pow(e, img.nivelGreen(x, y)) ));
+	            	double blue = ( aB * ( 1 + Math.pow(e, img.nivelBlue(x, y)) ));
 	            	
-	            	gray /= 255;
+	            	red /= 255;
+	            	blue /= 255;
+	            	green /= 255;
 	            	
-	            	tmp.setRGB(x, y, (float)gray, (float)gray, (float)gray);
+	            	tmp.setRGB(x, y, (float)red, (float)green, (float)blue);
 	            }
 		}
 		else if(calculo == 3) {
-			a = ( 255 / Math.pow( maior, 2 ));
+			aR = ( 255 / Math.pow( maiorR, 2 ));
+			aG = ( 255 / Math.pow( maiorG, 2 ));
+			aB = ( 255 / Math.pow( maiorB, 2 ));
 			
 			for(int y = 0; y < img.getHeight(); y++) 
 	            for(int x = 0; x < img.getWidth(); x++) {
 	            	
-	            	float gray = (int)( a * Math.pow(img.nivelCinza(x, y), 2) );
+	            	float red = (int)( aR * Math.pow(img.nivelRed(x, y), 2) );
+	            	float green = (int)( aG * Math.pow(img.nivelGreen(x, y), 2) );
+	            	float blue = (int)( aB * Math.pow(img.nivelBlue(x, y), 2) );
 	            	
-	            	gray /= 255;
+	            	red /= 255;
+                    blue /= 255;
+                    green /= 255;
 	            	
-	            	tmp.setRGB(x, y, gray, gray, gray);
+                    tmp.setRGB(x, y, red, green, blue);
 	            }
 		}
 		else if(calculo == 4) {
-			a = 255 / (Math.sqrt(1 + maior));
+			aR = 255 / (Math.sqrt(1 + maiorR));
+			aG = 255 / (Math.sqrt(1 + maiorG));
+			aB = 255 / (Math.sqrt(1 + maiorB));
 			
 			for(int y = 0; y < img.getHeight(); y++) 
 	            for(int x = 0; x < img.getWidth(); x++) {
 	            	
-	            	int gray = (int)( a * Math.sqrt( img.nivelCinza(x, y) ) );
+	            	int red = (int)( aR * Math.sqrt( img.nivelRed(x, y) ) );
+	            	int green = (int)( aG * Math.sqrt( img.nivelGreen(x, y) ) );
+	            	int blue = (int)( aB * Math.sqrt( img.nivelBlue(x, y) ) );
 	            	
-	            	tmp.setRGB(x, y, gray, gray, gray);
+	            	tmp.setRGB(x, y, red, green, blue);
 	            }
 		}
 		
@@ -204,16 +275,30 @@ public class Realce {
 		for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
             	
-            	float gray = (float)(c * (Math.pow(img.nivelCinza(x, y), gama ) ));
+            	float red = (float)(c * (Math.pow(img.nivelRed(x, y), gama ) ));
+            	float green = (float)(c * (Math.pow(img.nivelGreen(x, y), gama ) ));
+            	float blue = (float)(c * (Math.pow(img.nivelBlue(x, y), gama ) ));
             	
-            	gray /= 255;
+            	red /= 255;
+            	green /= 255;
+            	blue /= 255;
             	
-            	if(gray > 1)
-            	    gray = 1;
-            	else if(gray < 0)
-            	    gray = 0;
+            	if(red > 1)
+            	    red = 1;
+            	else if(red < 0)
+            	    red = 0;
             	
-            	tmp.setRGB(x, y, gray, gray, gray);
+            	if(green > 1)
+                    green = 1;
+                else if(green < 0)
+                    green = 0;
+            	
+            	if(blue > 1)
+                    blue = 1;
+                else if(blue < 0)
+                    blue = 0;
+            	
+            	tmp.setRGB(x, y, red, green, blue);
             }
 		
 		tmp.setImgPlus();
@@ -221,7 +306,8 @@ public class Realce {
 		tmp.getImgPlus().show();
 	}
 	
-	public static void fatiarBits(Processador img, int nCamadas) {
+	//fatia a imagem em camadas que se distinguem de acordo com a intensidade dos campos do RGB
+	public static void fatiarBitsRGB(Processador img, int nCamadas) {
 		Processador tmp = new Processador();
 		tmp.setImg( img.getImg() );
 		
@@ -232,12 +318,24 @@ public class Realce {
 	            	
 	                int um = 1;
 	                // realiza operação bit a bit
-	            	int gray = img.nivelCinza(x, y) & ( um << fatia ); 
+	                //red
+	            	int red = img.nivelRed(x, y) & ( um << fatia ); 
 	            	
-	            	if(gray != 0)
-	            	    gray = 255;
+	            	if(red != 0)
+	            	    red = 255;
+	            	//green
+	            	int green = img.nivelGreen(x, y) & ( um << fatia ); 
+                    
+                    if(green != 0)
+                        green = 255;
+                    //blue
+                    int blue = img.nivelBlue(x, y) & ( um << fatia ); 
+                    
+                    if(blue != 0)
+                        blue = 255;
+                    
 	            	
-	            	tmp.setRGB(x, y, gray, gray, gray);
+	            	tmp.setRGB(x, y, red, green, blue);
 	            }
 			
 			tmp.setImgPlus();
@@ -245,4 +343,30 @@ public class Realce {
 			tmp.getImgPlus().show();
 		}
 	}
+
+    //fatia a imagem em camadas que se distinguem de acordo com a intensidade de iluminação
+	public static void fatiarBits(Processador img, int nCamadas) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        for (int fatia = 0; fatia < nCamadas; fatia++) {
+            
+            for(int y = 0; y < img.getHeight(); y++) 
+                for(int x = 0; x < img.getWidth(); x++) {
+                    
+                    int um = 1;
+                    // realiza operação bit a bit
+                    int g = img.nivelCinza(x, y) & ( um << fatia ); 
+                    
+                    if(g != 0)
+                        g = 255;
+                    
+                    tmp.setRGB(x, y, g, g, g);
+                }
+            
+            tmp.setImgPlus();
+            tmp.getImgPlus().setTitle( "Camada " + fatia );
+            tmp.getImgPlus().show();
+        }
+    }
 }
