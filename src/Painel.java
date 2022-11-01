@@ -1,6 +1,5 @@
 package src;
 
-import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -898,6 +897,11 @@ public class Painel implements Initializable{
         Filtros.ht3x2(imgFinal);
     }
     
+    @FXML
+    void ht3x3(ActionEvent event) {
+        Filtros.ht3x3(imgFinal);
+    }
+    
     //--------------------------------------------------------------
     //Métodos extras
     
@@ -965,6 +969,18 @@ public class Painel implements Initializable{
     		if(!dragMode && imgFinal.getImg() != null) {
     			int x = (int)(((int)(mouseEvent.getX() - (int)imagemFinal.getX()))/tamXSlide.getValue());
     			int y = (int)(((int)(mouseEvent.getY() - (int)imagemFinal.getY()))/tamYSlide.getValue());
+    			
+    			if(x >= (int)imagemFinal.getFitWidth()) {
+    			    x = (int)imagemFinal.getFitWidth() - 1;
+    			}else if(x < 0) {
+    			    x = 0;
+    			}
+    			
+    			if(y >= (int)imagemFinal.getFitHeight()) {
+                    y = (int)imagemFinal.getFitHeight() - 1;
+                }else if(y < 0) {
+                    y = 0;
+                }
     			
     			int R = imgFinal.nivelRed(x, y);
     			int G = imgFinal.nivelGreen(x, y);
@@ -1211,9 +1227,7 @@ public class Painel implements Initializable{
 
     @FXML
     void salvar(ActionEvent event) {
-        
-        FileSaver fSaver = new FileSaver( imagem.getImgPlus() );
-        fSaver.save();
+        imgFinal.salvarImagem();
     }
 
     @FXML

@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.Color;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.io.FileSaver;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
@@ -300,6 +301,13 @@ public class Processador {
     	retorno = retorno.concat(hexB);
     	
     	return retorno;
+    }
+    
+    public void salvarImagem() {
+        String path = "C:/Users/pedro/OneDrive/Documents/Processador_de_Imagens/PDI/assets/kkk.png";
+        FileSaver fSaver = new FileSaver(imagePlus);
+        
+        fSaver.saveAsPng(path);
     }
     
     //métodos static (algumas utilidades da classe :^D )

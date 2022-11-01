@@ -23,33 +23,30 @@ public class Filtros {
                 rTotal = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        if(j != y || i != x)
-                            rTotal += img.nivelRed(i, j);
+                        rTotal += img.nivelRed(i, j);
                     }
                 
                 rTotal /= 255;
-                rMedio = rTotal / 8;
+                rMedio = rTotal / 9;
                 
                 //green
                 gTotal = 0; 
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        if(j != y || i != x)
-                            gTotal += img.nivelGreen(i, j);
+                        gTotal += img.nivelGreen(i, j);
                     }
                 
                 gTotal /= 255;
-                gMedio = gTotal / 8;
+                gMedio = gTotal / 9;
                 
                 //blue
                 bTotal = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        if(j != y || i != x)
-                            bTotal += img.nivelBlue(i, j);
+                        bTotal += img.nivelBlue(i, j);
                     }
                 bTotal /= 255;
-                bMedio = bTotal / 8;
+                bMedio = bTotal / 9;
                 
                 tmp.setRGB(x, y, rMedio, gMedio, bMedio);
             }
@@ -78,33 +75,30 @@ public class Filtros {
                 rTotal = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        if(j != y || i != x)
-                            rTotal += img.nivelRed(i, j);
+                        rTotal += img.nivelRed(i, j);
                     }
                 
                 rTotal /= 255;
-                rMedio = rTotal / 24;
+                rMedio = rTotal / 25;
                 
                 //green
                 gTotal = 0; 
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        if(j != y || i != x)
-                            gTotal += img.nivelGreen(i, j);
+                        gTotal += img.nivelGreen(i, j);
                     }
                 
                 gTotal /= 255;
-                gMedio = gTotal / 24;
+                gMedio = gTotal / 25;
                 
                 //blue
                 bTotal = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        if(j != y || i != x)
-                            bTotal += img.nivelBlue(i, j);
+                        bTotal += img.nivelBlue(i, j);
                     }
                 bTotal /= 255;
-                bMedio = bTotal / 24;
+                bMedio = bTotal / 25;
                 
                 tmp.setRGB(x, y, rMedio, gMedio, bMedio);
             }
@@ -132,41 +126,35 @@ public class Filtros {
             for(int x = 1; x < (img.getWidth() - 1); x++) {
                 
                 //red
-                rTotal = new int[8];
+                rTotal = new int[9];
                 rI = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        if(j != y || i != x) {
-                            rTotal[rI] = img.nivelRed(i, j);
-                            rI++;
-                        }
+                        rTotal[rI] = img.nivelRed(i, j);
+                        rI++;
                     }
                 
                 rMedio = mediana(rTotal);
                 
                 //green
-                gTotal = new int[8];
+                gTotal = new int[9];
                 gI = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        if(j != y || i != x) {
-                            gTotal[gI] = img.nivelGreen(i, j);
-                            gI++;
-                        }
+                        gTotal[gI] = img.nivelGreen(i, j);
+                        gI++;
                             
                     }
                 
                 gMedio = mediana(gTotal);
                 
                 //blue
-                bTotal = new int[8];
+                bTotal = new int[9];
                 bI = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        if(j != y || i != x) {
-                            bTotal[bI] = img.nivelBlue(i, j);
-                            bI++;
-                        }
+                        bTotal[bI] = img.nivelBlue(i, j);
+                        bI++;
                             
                     }
                 
@@ -197,41 +185,35 @@ public class Filtros {
             for(int x = 2; x < (img.getWidth() - 2); x++) {
                 
                 //red
-                rTotal = new int[24];
+                rTotal = new int[25];
                 rI = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        if(j != y || i != x) {
-                            rTotal[rI] = img.nivelRed(i, j);
-                            rI++;
-                        }
+                        rTotal[rI] = img.nivelRed(i, j);
+                        rI++;
                     }
                 
                 rMedio = mediana(rTotal);
                 
                 //green
-                gTotal = new int[24];
+                gTotal = new int[25];
                 gI = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        if(j != y || i != x) {
-                            gTotal[gI] = img.nivelGreen(i, j);
-                            gI++;
-                        }
+                        gTotal[gI] = img.nivelGreen(i, j);
+                        gI++;
                             
                     }
                 
                 gMedio = mediana(gTotal);
                 
                 //blue
-                bTotal = new int[24];
+                bTotal = new int[25];
                 bI = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        if(j != y || i != x) {
-                            bTotal[bI] = img.nivelBlue(i, j);
-                            bI++;
-                        }
+                        bTotal[bI] = img.nivelBlue(i, j);
+                        bI++;
                             
                     }
                 
@@ -1998,7 +1980,7 @@ public class Filtros {
                 index = 0;
                 
                 for(int j = y; j <= y + 1; j++)
-                    for(int i = x; i <= x + 1; i++) {
+                    for(int i = x; i <= x + 2; i++) {
                         valR[index] = img.nivelRed(x, y);
                         valG[index] = img.nivelGreen(x, y);
                         valB[index] = img.nivelBlue(x, y);
@@ -2196,4 +2178,394 @@ public class Filtros {
         tmp.getImgPlus().setTitle( "Ponto Ordenado 3x2" );
         tmp.getImgPlus().show();
     }
+
+    public static void ht3x3(Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        float valR[], valG[], valB[];
+        float rMedio, gMedio, bMedio;
+        float matrizR[], matrizG[], matrizB[];
+        int index;
+        
+        for(int y = 0; y < (img.getHeight() - 2); y += 3) 
+            for(int x = 0; x < (img.getWidth() - 2); x += 3) {
+                
+                valR = new float[9];
+                valG = new float[9];
+                valB = new float[9];
+                
+                matrizR = new float[9];
+                matrizG = new float[9];
+                matrizB = new float[9];
+                
+                index = 0;
+                
+                for(int j = y; j <= y + 2; j++)
+                    for(int i = x; i <= x + 2; i++) {
+                        valR[index] = img.nivelRed(x, y);
+                        valG[index] = img.nivelGreen(x, y);
+                        valB[index] = img.nivelBlue(x, y);
+                        index++;
+                    }
+                
+                rMedio = media(valR);
+                gMedio = media(valG);
+                bMedio = media(valB);
+                
+                //red
+                if(rMedio <= 25.5){
+                    matrizR[0] = 0;
+                    matrizR[1] = 0;
+                    matrizR[2] = 0;
+                    matrizR[3] = 0;
+                    matrizR[4] = 0;
+                    matrizR[5] = 0;
+                    matrizR[6] = 0;
+                    matrizR[7] = 0;
+                    matrizR[8] = 0;
+                }
+                else if(rMedio <= 51){
+                    matrizR[0] = 0;
+                    matrizR[1] = 0;
+                    matrizR[2] = 0;
+                    matrizR[3] = 0;
+                    matrizR[4] = 1;
+                    matrizR[5] = 0;
+                    matrizR[6] = 0;
+                    matrizR[7] = 0;
+                    matrizR[8] = 0;
+                }
+                else if(rMedio <= 76.5){
+                    matrizR[0] = 0;
+                    matrizR[1] = 0;
+                    matrizR[2] = 0;
+                    matrizR[3] = 1;
+                    matrizR[4] = 1;
+                    matrizR[5] = 0;
+                    matrizR[6] = 0;
+                    matrizR[7] = 0;
+                    matrizR[8] = 0;
+                }
+                else if(rMedio <= 102){
+                    matrizR[0] = 0;
+                    matrizR[1] = 0;
+                    matrizR[2] = 0;
+                    matrizR[3] = 1;
+                    matrizR[4] = 1;
+                    matrizR[5] = 0;
+                    matrizR[6] = 0;
+                    matrizR[7] = 1;
+                    matrizR[8] = 0;
+                }
+                else if(rMedio <= 127.5){
+                    matrizR[0] = 0;
+                    matrizR[1] = 0;
+                    matrizR[2] = 0;
+                    matrizR[3] = 1;
+                    matrizR[4] = 1;
+                    matrizR[5] = 1;
+                    matrizR[6] = 0;
+                    matrizR[7] = 1;
+                    matrizR[8] = 0;
+                }
+                else if(rMedio <= 153){
+                    matrizR[0] = 0;
+                    matrizR[1] = 0;
+                    matrizR[2] = 1;
+                    matrizR[3] = 1;
+                    matrizR[4] = 1;
+                    matrizR[5] = 1;
+                    matrizR[6] = 0;
+                    matrizR[7] = 1;
+                    matrizR[8] = 0;
+                }
+                else if(rMedio <= 178.5){
+                    matrizR[0] = 0;
+                    matrizR[1] = 0;
+                    matrizR[2] = 1;
+                    matrizR[3] = 1;
+                    matrizR[4] = 1;
+                    matrizR[5] = 1;
+                    matrizR[6] = 1;
+                    matrizR[7] = 1;
+                    matrizR[8] = 0;
+                }
+                else if(rMedio <= 204){
+                    matrizR[0] = 1;
+                    matrizR[1] = 0;
+                    matrizR[2] = 1;
+                    matrizR[3] = 1;
+                    matrizR[4] = 1;
+                    matrizR[5] = 1;
+                    matrizR[6] = 1;
+                    matrizR[7] = 1;
+                    matrizR[8] = 0;
+                }
+                else if(rMedio <= 229.5){
+                    matrizR[0] = 1;
+                    matrizR[1] = 0;
+                    matrizR[2] = 1;
+                    matrizR[3] = 1;
+                    matrizR[4] = 1;
+                    matrizR[5] = 1;
+                    matrizR[6] = 1;
+                    matrizR[7] = 1;
+                    matrizR[8] = 1;
+                }
+                else if(rMedio <= 255){
+                    matrizR[0] = 1;
+                    matrizR[1] = 1;
+                    matrizR[2] = 1;
+                    matrizR[3] = 1;
+                    matrizR[4] = 1;
+                    matrizR[5] = 1;
+                    matrizR[6] = 1;
+                    matrizR[7] = 1;
+                    matrizR[8] = 1;
+                }
+                
+                //green
+                if(gMedio <= 25.5){
+                    matrizG[0] = 0;
+                    matrizG[1] = 0;
+                    matrizG[2] = 0;
+                    matrizG[3] = 0;
+                    matrizG[4] = 0;
+                    matrizG[5] = 0;
+                    matrizG[6] = 0;
+                    matrizG[7] = 0;
+                    matrizG[8] = 0;
+                }
+                else if(gMedio <= 51){
+                    matrizG[0] = 0;
+                    matrizG[1] = 0;
+                    matrizG[2] = 0;
+                    matrizG[3] = 0;
+                    matrizG[4] = 1;
+                    matrizG[5] = 0;
+                    matrizG[6] = 0;
+                    matrizG[7] = 0;
+                    matrizG[8] = 0;
+                }
+                else if(gMedio <= 76.5){
+                    matrizG[0] = 0;
+                    matrizG[1] = 0;
+                    matrizG[2] = 0;
+                    matrizG[3] = 1;
+                    matrizG[4] = 1;
+                    matrizG[5] = 0;
+                    matrizG[6] = 0;
+                    matrizG[7] = 0;
+                    matrizG[8] = 0;
+                }
+                else if(gMedio <= 102){
+                    matrizG[0] = 0;
+                    matrizG[1] = 0;
+                    matrizG[2] = 0;
+                    matrizG[3] = 1;
+                    matrizG[4] = 1;
+                    matrizG[5] = 0;
+                    matrizG[6] = 0;
+                    matrizG[7] = 1;
+                    matrizG[8] = 0;
+                }
+                else if(gMedio <= 127.5){
+                    matrizG[0] = 0;
+                    matrizG[1] = 0;
+                    matrizG[2] = 0;
+                    matrizG[3] = 1;
+                    matrizG[4] = 1;
+                    matrizG[5] = 1;
+                    matrizG[6] = 0;
+                    matrizG[7] = 1;
+                    matrizG[8] = 0;
+                }
+                else if(gMedio <= 153){
+                    matrizG[0] = 0;
+                    matrizG[1] = 0;
+                    matrizG[2] = 1;
+                    matrizG[3] = 1;
+                    matrizG[4] = 1;
+                    matrizG[5] = 1;
+                    matrizG[6] = 0;
+                    matrizG[7] = 1;
+                    matrizG[8] = 0;
+                }
+                else if(gMedio <= 178.5){
+                    matrizG[0] = 0;
+                    matrizG[1] = 0;
+                    matrizG[2] = 1;
+                    matrizG[3] = 1;
+                    matrizG[4] = 1;
+                    matrizG[5] = 1;
+                    matrizG[6] = 1;
+                    matrizG[7] = 1;
+                    matrizG[8] = 0;
+                }
+                else if(gMedio <= 204){
+                    matrizG[0] = 1;
+                    matrizG[1] = 0;
+                    matrizG[2] = 1;
+                    matrizG[3] = 1;
+                    matrizG[4] = 1;
+                    matrizG[5] = 1;
+                    matrizG[6] = 1;
+                    matrizG[7] = 1;
+                    matrizG[8] = 0;
+                }
+                else if(gMedio <= 229.5){
+                    matrizG[0] = 1;
+                    matrizG[1] = 0;
+                    matrizG[2] = 1;
+                    matrizG[3] = 1;
+                    matrizG[4] = 1;
+                    matrizG[5] = 1;
+                    matrizG[6] = 1;
+                    matrizG[7] = 1;
+                    matrizG[8] = 1;
+                }
+                else if(gMedio <= 255){
+                    matrizG[0] = 1;
+                    matrizG[1] = 1;
+                    matrizG[2] = 1;
+                    matrizG[3] = 1;
+                    matrizG[4] = 1;
+                    matrizG[5] = 1;
+                    matrizG[6] = 1;
+                    matrizG[7] = 1;
+                    matrizG[8] = 1;
+                }
+                
+                //blue
+                if(bMedio <= 25.5){
+                    matrizB[0] = 0;
+                    matrizB[1] = 0;
+                    matrizB[2] = 0;
+                    matrizB[3] = 0;
+                    matrizB[4] = 0;
+                    matrizB[5] = 0;
+                    matrizB[6] = 0;
+                    matrizB[7] = 0;
+                    matrizB[8] = 0;
+                }
+                else if(bMedio <= 51){
+                    matrizB[0] = 0;
+                    matrizB[1] = 0;
+                    matrizB[2] = 0;
+                    matrizB[3] = 0;
+                    matrizB[4] = 1;
+                    matrizB[5] = 0;
+                    matrizB[6] = 0;
+                    matrizB[7] = 0;
+                    matrizB[8] = 0;
+                }
+                else if(bMedio <= 76.5){
+                    matrizB[0] = 0;
+                    matrizB[1] = 0;
+                    matrizB[2] = 0;
+                    matrizB[3] = 1;
+                    matrizB[4] = 1;
+                    matrizB[5] = 0;
+                    matrizB[6] = 0;
+                    matrizB[7] = 0;
+                    matrizB[8] = 0;
+                }
+                else if(bMedio <= 102){
+                    matrizB[0] = 0;
+                    matrizB[1] = 0;
+                    matrizB[2] = 0;
+                    matrizB[3] = 1;
+                    matrizB[4] = 1;
+                    matrizB[5] = 0;
+                    matrizB[6] = 0;
+                    matrizB[7] = 1;
+                    matrizB[8] = 0;
+                }
+                else if(bMedio <= 127.5){
+                    matrizB[0] = 0;
+                    matrizB[1] = 0;
+                    matrizB[2] = 0;
+                    matrizB[3] = 1;
+                    matrizB[4] = 1;
+                    matrizB[5] = 1;
+                    matrizB[6] = 0;
+                    matrizB[7] = 1;
+                    matrizB[8] = 0;
+                }
+                else if(bMedio <= 153){
+                    matrizB[0] = 0;
+                    matrizB[1] = 0;
+                    matrizB[2] = 1;
+                    matrizB[3] = 1;
+                    matrizB[4] = 1;
+                    matrizB[5] = 1;
+                    matrizB[6] = 0;
+                    matrizB[7] = 1;
+                    matrizB[8] = 0;
+                }
+                else if(bMedio <= 178.5){
+                    matrizB[0] = 0;
+                    matrizB[1] = 0;
+                    matrizB[2] = 1;
+                    matrizB[3] = 1;
+                    matrizB[4] = 1;
+                    matrizB[5] = 1;
+                    matrizB[6] = 1;
+                    matrizB[7] = 1;
+                    matrizB[8] = 0;
+                }
+                else if(bMedio <= 204){
+                    matrizB[0] = 1;
+                    matrizB[1] = 0;
+                    matrizB[2] = 1;
+                    matrizB[3] = 1;
+                    matrizB[4] = 1;
+                    matrizB[5] = 1;
+                    matrizB[6] = 1;
+                    matrizB[7] = 1;
+                    matrizB[8] = 0;
+                }
+                else if(bMedio <= 229.5){
+                    matrizB[0] = 1;
+                    matrizB[1] = 0;
+                    matrizB[2] = 1;
+                    matrizB[3] = 1;
+                    matrizB[4] = 1;
+                    matrizB[5] = 1;
+                    matrizB[6] = 1;
+                    matrizB[7] = 1;
+                    matrizB[8] = 1;
+                }
+                else if(bMedio <= 255){
+                    matrizB[0] = 1;
+                    matrizB[1] = 1;
+                    matrizB[2] = 1;
+                    matrizB[3] = 1;
+                    matrizB[4] = 1;
+                    matrizB[5] = 1;
+                    matrizB[6] = 1;
+                    matrizB[7] = 1;
+                    matrizB[8] = 1;
+                }
+                
+                tmp.setRGB(x, y,         matrizR[0], matrizG[0], matrizB[0]);
+                tmp.setRGB(x + 1, y,     matrizR[1], matrizG[1], matrizB[1]);
+                tmp.setRGB(x + 2, y,     matrizR[2], matrizG[2], matrizB[2]);
+                
+                tmp.setRGB(x, y + 1,     matrizR[3], matrizG[3], matrizB[3]);
+                tmp.setRGB(x + 1, y + 1, matrizR[4], matrizG[4], matrizB[4]);
+                tmp.setRGB(x + 2, y + 1, matrizR[5], matrizG[5], matrizB[5]);
+                
+                tmp.setRGB(x, y + 2,     matrizR[6], matrizG[6], matrizB[6]);
+                tmp.setRGB(x + 1, y + 2, matrizR[7], matrizG[7], matrizB[7]);
+                tmp.setRGB(x + 2, y + 2, matrizR[8], matrizG[8], matrizB[8]);
+                
+            }
+        
+        tmp.setImgPlus();
+        tmp.getImgPlus().setTitle( "Ponto Ordenado 3x3" );
+        tmp.getImgPlus().show();
+    }
+    
 }
