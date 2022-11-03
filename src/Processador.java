@@ -86,12 +86,13 @@ public class Processador {
 
     private BufferedImage arquivo;
     private ImagePlus imagePlus;
+    private String path;
     
     public boolean carregarImg(){
-        String path;
+        
         arquivo = null;
         imagePlus = null;
-        
+      
         imagePlus = IJ.openImage(); //abre o explorador de arquivo
        
         if(imagePlus != null){  //verifica se obteve sucesso na abertura do arquivo
@@ -303,8 +304,11 @@ public class Processador {
     	return retorno;
     }
     
+    public String getPath() {
+        return path;
+    }
+    
     public void salvarImagem() {
-        String path = "C:/Users/pedro/OneDrive/Documents/Processador_de_Imagens/PDI/assets/kkk.png";
         FileSaver fSaver = new FileSaver(imagePlus);
         
         fSaver.saveAsPng(path);

@@ -35,7 +35,6 @@
                   <MenuItem fx:id="botaoAbrirCamada" disable="true" mnemonicParsing="false" onAction="#abrirImgSec" text="Abrir como camada" />
                   <MenuItem fx:id="botaoHistograma" disable="true" mnemonicParsing="false" onAction="#gerarHistograma" text="Gerar Histograma" />
                   <MenuItem fx:id="botaoSalvar" disable="true" mnemonicParsing="false" onAction="#salvar" text="Salvar" />
-                  <MenuItem fx:id="botaoSalvarComo" disable="true" mnemonicParsing="false" onAction="#salvarComo" text="Salvar como" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#Sair" text="Sair" />
             </items>
@@ -170,6 +169,15 @@
                               <MenuItem mnemonicParsing="false" onAction="#ht2x2" text="2x2" />
                               <MenuItem mnemonicParsing="false" onAction="#ht3x2" text="3x2" />
                               <MenuItem mnemonicParsing="false" onAction="#ht3x3" text="3x3" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Pontilhado Com difusão">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#floydSteinberg" text="Floyd e Steinberg" />
+                              <MenuItem mnemonicParsing="false" onAction="#rogers" text="Rogers" />
+                              <MenuItem mnemonicParsing="false" onAction="#jarvisJudiceNinke" text="Jarvis, Judice &amp; Ninke" />
+                              <MenuItem mnemonicParsing="false" onAction="#stucki" text="Stucki" />
+                              <MenuItem mnemonicParsing="false" onAction="#stevensonArce" text="Stevenson e Arce" />
                            </items>
                         </Menu>
                      </items>

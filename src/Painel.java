@@ -1,11 +1,13 @@
 package src;
 
+import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javax.swing.JFileChooser;
-import ij.io.FileSaver;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -78,9 +80,6 @@ public class Painel implements Initializable{
     
     @FXML
     private MenuItem botaoHistograma;
-
-    @FXML
-    private MenuItem botaoSalvarComo;
 
     @FXML
     private ImageView imagemFinal;
@@ -187,6 +186,9 @@ public class Painel implements Initializable{
     private Processador imagem = new Processador();
     private Processador imgSec = new Processador();
     private Image img;
+    
+    //lista com as alterações feitas para permitir desfazer uma ação
+    private List<BufferedImage> alteracoes = new ArrayList<BufferedImage>();
     
     //Posição inicial da imagem exibida na área de trabalho do software
     private double posXInit = 100.0;
@@ -330,7 +332,6 @@ public class Painel implements Initializable{
        
         lstAct = 1;
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
 
     }
 
@@ -353,7 +354,6 @@ public class Painel implements Initializable{
         
         lstAct = 2;
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
 
     }
 
@@ -376,7 +376,6 @@ public class Painel implements Initializable{
        
         lstAct = 3;
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
 
     }
 
@@ -398,7 +397,6 @@ public class Painel implements Initializable{
         lstAct = 0;
        
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
 
     }
 
@@ -421,7 +419,6 @@ public class Painel implements Initializable{
         
         lstAct = 4;
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
 
     }
 
@@ -444,7 +441,6 @@ public class Painel implements Initializable{
        
         lstAct = 5;
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
 
     }
 
@@ -467,7 +463,6 @@ public class Painel implements Initializable{
        
         lstAct = 6;
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
 
     }
 
@@ -490,7 +485,6 @@ public class Painel implements Initializable{
         imagemFinal.setFitWidth( imgFinal.getWidth() );
         
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
 
     }
 
@@ -510,7 +504,6 @@ public class Painel implements Initializable{
         imagemFinal.setFitWidth( imgFinal.getWidth() );
        
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
     }
     
     @FXML
@@ -545,7 +538,6 @@ public class Painel implements Initializable{
         }
         
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
     }
 
     @FXML
@@ -580,7 +572,6 @@ public class Painel implements Initializable{
         }
         
         botaoLimparFinal.setDisable(false);
-        botaoSalvarComo.setDisable(false);
     }
 
     @FXML
@@ -804,82 +795,194 @@ public class Painel implements Initializable{
     
     @FXML
     void media3x3(ActionEvent event) {
-        Filtros.media3x3(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.media3x3(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.media3x3(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
 
     @FXML
     void media5x5(ActionEvent event) {
-        Filtros.media5x5(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.media5x5(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.media5x5(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
 
     @FXML
     void mediana3x3(ActionEvent event) {
-        Filtros.mediana3x3(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.mediana3x3(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.mediana3x3(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
 
     @FXML
     void mediana5x5(ActionEvent event) {
-        Filtros.mediana5x5(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.mediana5x5(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.mediana5x5(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void maximo(ActionEvent event) {
-        Filtros.maximo(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.maximo(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.maximo(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
 
     @FXML
     void minimo(ActionEvent event) {
-        Filtros.minimo(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.minimo(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.minimo(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void moda(ActionEvent event) {
-        Filtros.moda(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.moda(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.moda(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void kuwahara(ActionEvent event) {
-        Filtros.kuwahara(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.kuwahara(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.kuwahara(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void tomitaTsuji(ActionEvent event) {
-        Filtros.tomitaTsuji(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.tomitaTsuji(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.tomitaTsuji(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void nagaoMatsuyama(ActionEvent event) {
-        Filtros.nagaoMatsuyama(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.nagaoMatsuyama(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.nagaoMatsuyama(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void somboonkaew(ActionEvent event) {
-        Filtros.somboonkaew(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.somboonkaew(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.somboonkaew(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void h1(ActionEvent event) {
-        Filtros.h1(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.h1(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.h1(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void h2(ActionEvent event) {
-        Filtros.h2(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.h2(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.h2(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void m1(ActionEvent event) {
-        Filtros.m1(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.m1(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.m1(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void m2(ActionEvent event) {
-        Filtros.m2(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.m2(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.m2(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void m3(ActionEvent event) {
-        Filtros.m3(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.m3(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.m3(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
@@ -889,17 +992,105 @@ public class Painel implements Initializable{
     
     @FXML
     void ht2x2(ActionEvent event) {
-        Filtros.ht2x2(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.ht2x2(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.ht2x2(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
     }
     
     @FXML
     void ht3x2(ActionEvent event) {
-        Filtros.ht3x2(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.ht3x2(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.ht3x2(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
     }
     
     @FXML
     void ht3x3(ActionEvent event) {
-        Filtros.ht3x3(imgFinal);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.ht3x3(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.ht3x3(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+    }
+    
+    @FXML
+    void floydSteinberg(ActionEvent event) {
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.floydSteinberg(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.floydSteinberg(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+    }
+    
+    @FXML
+    void rogers(ActionEvent event) {
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.rogers(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.rogers(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+    }
+    
+    @FXML
+    void jarvisJudiceNinke(ActionEvent event) {
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.jarvisJudiceNinke(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.jarvisJudiceNinke(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+    }
+    
+    @FXML
+    void stucki(ActionEvent event) {
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.stucki(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.stucki(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+    }
+    
+    @FXML
+    void stevensonArce(ActionEvent event) {
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.stevensonArce(imgFinal) );    
+        else
+            imgFinal.setImg( Filtros.stevensonArce(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
     }
     
     //--------------------------------------------------------------
@@ -1094,7 +1285,16 @@ public class Painel implements Initializable{
     
     @FXML
     void botaoAmplificar(ActionEvent event) {
-        Filtros.highBoost(imgFinal, Float.valueOf( textoAmplificar.getText() ));
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Filtros.highBoost(imgFinal, Float.valueOf( textoAmplificar.getText() )));    
+        else
+            imgFinal.setImg( Filtros.highBoost(imagem, Float.valueOf( textoAmplificar.getText() )));
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
         popupAmplificacao.setVisible(false);
         textoAmplificar.setText("1");
     }
@@ -1141,6 +1341,7 @@ public class Painel implements Initializable{
         botaoHistograma.setDisable(true);
         menuRealce.setDisable(true);
         menuFiltragem.setDisable(true);
+        botaoSalvar.setDisable(true);
         
         /*
          * Se restar apenas a imagem primária na 
@@ -1216,6 +1417,7 @@ public class Painel implements Initializable{
         botaoHistograma.setDisable(false);
         menuRealce.setDisable(false);
         menuFiltragem.setDisable(false);
+        botaoSalvar.setDisable(false);
         dragMode = false;
         
     }
@@ -1228,16 +1430,6 @@ public class Painel implements Initializable{
     @FXML
     void salvar(ActionEvent event) {
         imgFinal.salvarImagem();
-    }
-
-    @FXML
-    void salvarComo(ActionEvent event) {
-        int response = fileChooser.showSaveDialog(null); 
-       
-        if(response == JFileChooser.APPROVE_OPTION) {
-            FileSaver fSaver = new FileSaver( imgFinal.getImgPlus());
-            fSaver.saveAsPng(fileChooser.getSelectedFile().getAbsolutePath());
-        }
     }
 
     @FXML

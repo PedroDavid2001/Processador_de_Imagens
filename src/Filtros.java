@@ -1,5 +1,7 @@
 package src;
 
+import java.awt.image.BufferedImage;
+
 public class Filtros {
     
     //FILTROS PASSA-BAIXA
@@ -9,7 +11,7 @@ public class Filtros {
      * calcula a média da vizinhança e substitui o pixel
      */
     
-    public static void media3x3(Processador img ) {
+    public static BufferedImage media3x3(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -51,9 +53,7 @@ public class Filtros {
                 tmp.setRGB(x, y, rMedio, gMedio, bMedio);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Média 3x3" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     /**
@@ -61,7 +61,7 @@ public class Filtros {
      * calcula a média da vizinhança e substitui o pixel
      */
     
-    public static void media5x5(Processador img ) {
+    public static BufferedImage media5x5(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -103,9 +103,7 @@ public class Filtros {
                 tmp.setRGB(x, y, rMedio, gMedio, bMedio);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Média 5x5" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
 
@@ -114,7 +112,7 @@ public class Filtros {
      * verifica a mediana da vizinhança e substitui o pixel
      */
     
-    public static void mediana3x3(Processador img ) {
+    public static BufferedImage mediana3x3(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -163,9 +161,7 @@ public class Filtros {
                 tmp.setRGB(x, y, rMedio, gMedio, bMedio);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Mediana 3x3" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     /**
@@ -173,7 +169,7 @@ public class Filtros {
      * verifica a mediana da vizinhança e substitui o pixel
      */
     
-    public static void mediana5x5(Processador img ) {
+    public static BufferedImage mediana5x5(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -222,9 +218,7 @@ public class Filtros {
                 tmp.setRGB(x, y, rMedio, gMedio, bMedio);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Mediana 5x5" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     //método usado para organizar de forma crescente um vetor e retornar a mediana
@@ -266,7 +260,7 @@ public class Filtros {
      * na vizinhança
      */
     
-    public static void minimo(Processador img ) {
+    public static BufferedImage minimo(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -302,9 +296,7 @@ public class Filtros {
                 tmp.setRGB(x, y, rMenor, gMenor, bMenor);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Mínimo" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     /**
@@ -313,7 +305,7 @@ public class Filtros {
      * na vizinhança
      */
     
-    public static void maximo(Processador img ) {
+    public static BufferedImage maximo(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -349,9 +341,7 @@ public class Filtros {
                 tmp.setRGB(x, y, rMaior, gMaior, bMaior);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Máximo" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     /**
@@ -360,7 +350,7 @@ public class Filtros {
      * na vizinhança
      */
     
-    public static void moda(Processador img ) {
+    public static BufferedImage moda(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -415,9 +405,7 @@ public class Filtros {
                 tmp.setRGB(x, y, rMedio, gMedio, bMedio);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Moda" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     //método usado para retornar a moda de um vetor
@@ -451,7 +439,7 @@ public class Filtros {
      * com menor variância
      */
     
-    public static void kuwahara(Processador img ) {
+    public static BufferedImage kuwahara(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -562,9 +550,7 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Kuwahara" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     private static float media(float valores[]) {
@@ -620,7 +606,7 @@ public class Filtros {
      * média da máscara com menor variância
      */
     
-    public static void tomitaTsuji(Processador img ) {
+    public static BufferedImage tomitaTsuji(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -750,9 +736,7 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Tomita e Tsuji" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     /**
@@ -761,7 +745,7 @@ public class Filtros {
      * média da máscara com menor variância
      */
     
-    public static void nagaoMatsuyama(Processador img ) {
+    public static BufferedImage nagaoMatsuyama(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -1031,9 +1015,7 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Nagao e Matsuyama" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     /**
@@ -1042,7 +1024,7 @@ public class Filtros {
      * média da máscara com menor variância
      */
     
-    public static void somboonkaew(Processador img ) {
+    public static BufferedImage somboonkaew(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -1473,14 +1455,12 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Somboonkaew" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     //FILTROS PASSA-ALTA
     
-    public static void h1(Processador img ) {
+    public static BufferedImage h1(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -1529,12 +1509,10 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "H1" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
-    public static void h2(Processador img ) {
+    public static BufferedImage h2(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -1575,12 +1553,10 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "H2" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
-    public static void m1(Processador img ) {
+    public static BufferedImage m1(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -1621,12 +1597,10 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "M1" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
-    public static void m2(Processador img ) {
+    public static BufferedImage m2(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -1675,12 +1649,10 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "M2" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
-    public static void m3(Processador img ) {
+    public static BufferedImage m3(Processador img ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -1729,9 +1701,7 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "M3" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     private static int somatorio(int[] valores) {
@@ -1750,7 +1720,7 @@ public class Filtros {
         return total;
     }
     
-    public static void highBoost(Processador img, float a) {
+    public static BufferedImage highBoost(Processador img, float a) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -1792,9 +1762,7 @@ public class Filtros {
                 tmp.setRGB(x, y, r, g, b);
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "High-Boost" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     private static float somatorio(float[] valores) {
@@ -1815,7 +1783,7 @@ public class Filtros {
     
     //MEIO TOM (HALFTONING)
     
-    public static void ht2x2(Processador img) {
+    public static BufferedImage ht2x2(Processador img) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -1952,12 +1920,10 @@ public class Filtros {
                 
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Ponto Ordenado 2x2" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
-    public static void ht3x2(Processador img) {
+    public static BufferedImage ht3x2(Processador img) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -2174,12 +2140,10 @@ public class Filtros {
                 
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Ponto Ordenado 3x2" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
 
-    public static void ht3x3(Processador img) {
+    public static BufferedImage ht3x3(Processador img) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
@@ -2563,9 +2527,669 @@ public class Filtros {
                 
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Ponto Ordenado 3x3" );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
+    public static BufferedImage floydSteinberg(Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        float valR[], valG[], valB[];
+        float erroR, erroG, erroB;
+        
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+                
+                valR = new float[5];
+                valG = new float[5];
+                valB = new float[5];
+                
+                if(tmp.nivelRed(x, y) < 128)
+                    valR[0] = 0;
+                else
+                    valR[0] = 255;
+                
+                if(tmp.nivelGreen(x, y) < 128)
+                    valG[0] = 0;
+                else
+                    valG[0] = 255;
+                
+                if(tmp.nivelBlue(x, y) < 128)
+                    valB[0] = 0;
+                else
+                    valB[0] = 255;
+                
+                erroR = (float)tmp.nivelRed(   x, y) - valR[0];
+                erroG = (float)tmp.nivelGreen( x, y) - valG[0];
+                erroB = (float)tmp.nivelBlue(  x, y) - valB[0];
+                
+                if(x < (img.getWidth() - 1) ) {
+                    valR[1] = (float)tmp.nivelRed(   x + 1, y) + ((7.0f / 16.0f) * erroR);
+                    valG[1] = (float)tmp.nivelGreen( x + 1, y) + ((7.0f / 16.0f) * erroG);
+                    valB[1] = (float)tmp.nivelBlue(  x + 1, y) + ((7.0f / 16.0f) * erroB);
+                }
+                
+                if(x >= 1) {
+                    valR[2] = (float)tmp.nivelRed(   x - 1, y + 1) + ((3.0f / 16.0f) * erroR);
+                    valG[2] = (float)tmp.nivelGreen( x - 1, y + 1) + ((3.0f / 16.0f) * erroG);
+                    valB[2] = (float)tmp.nivelBlue(  x - 1, y + 1) + ((3.0f / 16.0f) * erroB);
+                }
+                
+                if(y < (img.getHeight() -1) ) {
+                    valR[3] = (float)tmp.nivelRed(   x, y + 1) + ((5.0f / 16.0f) * erroR);
+                    valG[3] = (float)tmp.nivelGreen( x, y + 1) + ((5.0f / 16.0f) * erroG);
+                    valB[3] = (float)tmp.nivelBlue(  x, y + 1) + ((5.0f / 16.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
+                    valR[4] = (float)tmp.nivelRed(   x + 1, y + 1) + ((erroR / 16.0f));
+                    valG[4] = (float)tmp.nivelGreen( x + 1, y + 1) + ((erroG / 16.0f));
+                    valB[4] = (float)tmp.nivelBlue(  x + 1, y + 1) + ((erroB / 16.0f));
+                }
+                
+                for(int i = 0; i < valR.length; i++) {
+                    
+                    if( valR[i] > 255 )
+                        valR[i] = 255;
+                    else if( valR[i] < 0 )
+                        valR[i] = 0;
+                    
+                    if( valG[i] > 255 )
+                        valG[i] = 255;
+                    else if( valG[i] < 0 )
+                        valG[i] = 0;
+                    
+                    if( valB[i] > 255 )
+                        valB[i] = 255;
+                    else if( valB[i] < 0 )
+                        valB[i] = 0;
+                    
+                    valR[i] /= 255;
+                    valG[i] /= 255;
+                    valB[i] /= 255;
+                }
+                
+                tmp.setRGB(x,     y,     valR[0], valG[0], valB[0]);
+                tmp.setRGB(x + 1, y,     valR[1], valG[1], valB[1]);
+
+                if(x >= 1) 
+                    tmp.setRGB(x - 1, y + 1, valR[2], valG[2], valB[2]);
+                
+                tmp.setRGB(x,     y + 1, valR[3], valG[3], valB[3]);
+                tmp.setRGB(x + 1, y + 1, valR[4], valG[4], valB[4]);
+                
+            }
+                
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage rogers(Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        float valR[], valG[], valB[];
+        float erroR, erroG, erroB;
+        
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+                
+                valR = new float[4];
+                valG = new float[4];
+                valB = new float[4];
+                
+                if(tmp.nivelRed(x, y) < 128)
+                    valR[0] = 0;
+                else
+                    valR[0] = 255;
+                
+                if(tmp.nivelGreen(x, y) < 128)
+                    valG[0] = 0;
+                else
+                    valG[0] = 255;
+                
+                if(tmp.nivelBlue(x, y) < 128)
+                    valB[0] = 0;
+                else
+                    valB[0] = 255;
+                
+                erroR = (float)tmp.nivelRed(   x, y) - valR[0];
+                erroG = (float)tmp.nivelGreen( x, y) - valG[0];
+                erroB = (float)tmp.nivelBlue(  x, y) - valB[0];
+                
+                if(x < (img.getWidth() - 1) ) {
+                    valR[1] = (float)tmp.nivelRed(   x + 1, y) + ((3.0f / 8.0f) * erroR);
+                    valG[1] = (float)tmp.nivelGreen( x + 1, y) + ((3.0f / 8.0f) * erroG);
+                    valB[1] = (float)tmp.nivelBlue(  x + 1, y) + ((3.0f / 8.0f) * erroB);
+                }
+                
+                if(y < (img.getHeight() - 1) ) {
+                    valR[2] = (float)tmp.nivelRed(   x, y + 1) + ((3.0f / 8.0f) * erroR);
+                    valG[2] = (float)tmp.nivelGreen( x, y + 1) + ((3.0f / 8.0f) * erroG);
+                    valB[2] = (float)tmp.nivelBlue(  x, y + 1) + ((3.0f / 8.0f) * erroB);
+                    
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
+                    valR[3] = (float)tmp.nivelRed(   x + 1, y + 1) + ((2.0f / 8.0f) * erroR);
+                    valG[3] = (float)tmp.nivelGreen( x + 1, y + 1) + ((2.0f / 8.0f) * erroG);
+                    valB[3] = (float)tmp.nivelBlue(  x + 1, y + 1) + ((2.0f / 8.0f) * erroB);
+                    
+                }
+                
+                for(int i = 0; i < valR.length; i++) {
+                    
+                    if( valR[i] > 255 )
+                        valR[i] = 255;
+                    else if( valR[i] < 0 )
+                        valR[i] = 0;
+                    
+                    if( valG[i] > 255 )
+                        valG[i] = 255;
+                    else if( valG[i] < 0 )
+                        valG[i] = 0;
+                    
+                    if( valB[i] > 255 )
+                        valB[i] = 255;
+                    else if( valB[i] < 0 )
+                        valB[i] = 0;
+                    
+                    valR[i] /= 255;
+                    valG[i] /= 255;
+                    valB[i] /= 255;
+                }
+                
+                tmp.setRGB(x,     y,     valR[0], valG[0], valB[0]);
+                
+                if(x < (img.getWidth() - 1) )
+                    tmp.setRGB(x + 1, y,     valR[1], valG[1], valB[1]); 
+                
+                if(y < (img.getHeight() -1) )
+                    tmp.setRGB(x,     y + 1, valR[2], valG[2], valB[2]);
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1))    
+                    tmp.setRGB(x + 1, y + 1, valR[3], valG[3], valB[3]);
+                
+            }
+                
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage jarvisJudiceNinke(Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        float valR[], valG[], valB[];
+        float erroR, erroG, erroB;
+        
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+                
+                valR = new float[13];
+                valG = new float[13];
+                valB = new float[13];
+                
+                if(tmp.nivelRed(x, y) < 128)
+                    valR[0] = 0;
+                else
+                    valR[0] = 255;
+                
+                if(tmp.nivelGreen(x, y) < 128)
+                    valG[0] = 0;
+                else
+                    valG[0] = 255;
+                
+                if(tmp.nivelBlue(x, y) < 128)
+                    valB[0] = 0;
+                else
+                    valB[0] = 255;
+                
+                erroR = (float)tmp.nivelRed(   x, y) - valR[0];
+                erroG = (float)tmp.nivelGreen( x, y) - valG[0];
+                erroB = (float)tmp.nivelBlue(  x, y) - valB[0];
+                
+                if(x < (img.getWidth() - 1) ) {
+                    valR[1] = (float)tmp.nivelRed(   x + 1, y) + ((7.0f / 48.0f) * erroR);
+                    valG[1] = (float)tmp.nivelGreen( x + 1, y) + ((7.0f / 48.0f) * erroG);
+                    valB[1] = (float)tmp.nivelBlue(  x + 1, y) + ((7.0f / 48.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 2) ) {
+                    valR[2] = (float)tmp.nivelRed(   x + 2, y) + ((5.0f / 48.0f) * erroR);
+                    valG[2] = (float)tmp.nivelGreen( x + 2, y) + ((5.0f / 48.0f) * erroG);
+                    valB[2] = (float)tmp.nivelBlue(  x + 2, y) + ((5.0f / 48.0f) * erroB);
+                }
+                
+                if(x >= 2 && y < (img.getHeight() - 1)) {
+                    valR[3] = (float)tmp.nivelRed(   x - 2, y + 1) + ((3.0f / 48.0f) * erroR);
+                    valG[3] = (float)tmp.nivelGreen( x - 2, y + 1) + ((3.0f / 48.0f) * erroG);
+                    valB[3] = (float)tmp.nivelBlue(  x - 2, y + 1) + ((3.0f / 48.0f) * erroB);
+                }
+                
+                if(x >= 1 && y < (img.getHeight() - 1)) {
+                    valR[4] = (float)tmp.nivelRed(   x - 1, y + 1) + ((5.0f / 48.0f) * erroR);
+                    valG[4] = (float)tmp.nivelGreen( x - 1, y + 1) + ((5.0f / 48.0f) * erroG);
+                    valB[4] = (float)tmp.nivelBlue(  x - 1, y + 1) + ((5.0f / 48.0f) * erroB);
+                }
+                
+                if(y < (img.getHeight() - 1)) {
+                    valR[5] = (float)tmp.nivelRed(   x, y + 1) + ((7.0f / 48.0f) * erroR);
+                    valG[5] = (float)tmp.nivelGreen( x, y + 1) + ((7.0f / 48.0f) * erroG);
+                    valB[5] = (float)tmp.nivelBlue(  x, y + 1) + ((7.0f / 48.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
+                    valR[6] = (float)tmp.nivelRed(   x + 1, y + 1) + ((5.0f / 48.0f) * erroR);
+                    valG[6] = (float)tmp.nivelGreen( x + 1, y + 1) + ((5.0f / 48.0f) * erroG);
+                    valB[6] = (float)tmp.nivelBlue(  x + 1, y + 1) + ((5.0f / 48.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 1)) {
+                    valR[7] = (float)tmp.nivelRed(   x + 2, y + 1) + ((3.0f / 48.0f) * erroR);
+                    valG[7] = (float)tmp.nivelGreen( x + 2, y + 1) + ((3.0f / 48.0f) * erroG);
+                    valB[7] = (float)tmp.nivelBlue(  x + 2, y + 1) + ((3.0f / 48.0f) * erroB);
+                }
+                
+                if(x >= 2 && y < (img.getHeight() - 2)) {
+                    valR[8] = (float)tmp.nivelRed(   x - 2, y + 2) + ((erroR / 48.0f));
+                    valG[8] = (float)tmp.nivelGreen( x - 2, y + 2) + ((erroG / 48.0f));
+                    valB[8] = (float)tmp.nivelBlue(  x - 2, y + 2) + ((erroB / 48.0f));
+                }
+                
+                if(x >= 1 && y < (img.getHeight() - 2)) {
+                    valR[9] = (float)tmp.nivelRed(   x - 1, y + 2) + ((3.0f / 48.0f) * erroR);
+                    valG[9] = (float)tmp.nivelGreen( x - 1, y + 2) + ((3.0f / 48.0f) * erroG);
+                    valB[9] = (float)tmp.nivelBlue(  x - 1, y + 2) + ((3.0f / 48.0f) * erroB);
+                }
+                
+                if(y < (img.getHeight() - 2)) {
+                    valR[10] = (float)tmp.nivelRed(   x, y + 2) + ((5.0f / 48.0f) * erroR);
+                    valG[10] = (float)tmp.nivelGreen( x, y + 2) + ((5.0f / 48.0f) * erroG);
+                    valB[10] = (float)tmp.nivelBlue(  x, y + 2) + ((5.0f / 48.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 2)) {
+                    valR[11] = (float)tmp.nivelRed(   x + 1, y + 2) + ((3.0f / 48.0f) * erroR);
+                    valG[11] = (float)tmp.nivelGreen( x + 1, y + 2) + ((3.0f / 48.0f) * erroG);
+                    valB[11] = (float)tmp.nivelBlue(  x + 1, y + 2) + ((3.0f / 48.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 2)) {
+                    valR[12] = (float)tmp.nivelRed(   x + 2, y + 2) + ((erroR / 48.0f));
+                    valG[12] = (float)tmp.nivelGreen( x + 2, y + 2) + ((erroG / 48.0f));
+                    valB[12] = (float)tmp.nivelBlue(  x + 2, y + 2) + ((erroB / 48.0f));
+                }
+                
+                for(int i = 0; i < valR.length; i++) {
+                    
+                    if( valR[i] > 255 )
+                        valR[i] = 255;
+                    else if( valR[i] < 0 )
+                        valR[i] = 0;
+                    
+                    if( valG[i] > 255 )
+                        valG[i] = 255;
+                    else if( valG[i] < 0 )
+                        valG[i] = 0;
+                    
+                    if( valB[i] > 255 )
+                        valB[i] = 255;
+                    else if( valB[i] < 0 )
+                        valB[i] = 0;
+                    
+                    valR[i] /= 255;
+                    valG[i] /= 255;
+                    valB[i] /= 255;
+                }
+                
+                tmp.setRGB( x, y, valR[0], valG[0], valB[0] );
+                
+                if(x < (img.getWidth() - 1) ) {
+                    tmp.setRGB( x + 1, y, valR[1], valG[1], valB[1] );
+                }
+                
+                if(x < (img.getWidth() - 2) ) {
+                    tmp.setRGB( x + 2, y, valR[2], valG[2], valB[2] );
+                }
+                
+                if(x >= 2 && y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x - 2, y + 1, valR[3], valG[3], valB[3] );
+                }
+                
+                if(x >= 1 && y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x - 1, y + 1, valR[4], valG[4], valB[4] );
+                }
+                
+                if(y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x, y + 1, valR[5], valG[5], valB[5] );
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x + 1, y + 1, valR[6], valG[6], valB[6] );
+                }
+                
+                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x + 2, y + 1, valR[7], valG[7], valB[7] );
+                }
+                
+                if(x >= 2 && y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x - 2, y + 2, valR[8], valG[8], valB[8] );
+                }
+                
+                if(x >= 1 && y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x - 1, y + 2, valR[9], valG[9], valB[9] );
+                }
+                
+                if(y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x, y + 2, valR[10], valG[10], valB[10] );
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x + 1, y + 2, valR[11], valG[11], valB[11] );
+                }
+                
+                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x + 2, y + 2, valR[12], valG[12], valB[12] );
+                }
+                
+            }
+                
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage stucki(Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        float valR[], valG[], valB[];
+        float erroR, erroG, erroB;
+        
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+                
+                valR = new float[13];
+                valG = new float[13];
+                valB = new float[13];
+                
+                if(tmp.nivelRed(x, y) < 128)
+                    valR[0] = 0;
+                else
+                    valR[0] = 255;
+                
+                if(tmp.nivelGreen(x, y) < 128)
+                    valG[0] = 0;
+                else
+                    valG[0] = 255;
+                
+                if(tmp.nivelBlue(x, y) < 128)
+                    valB[0] = 0;
+                else
+                    valB[0] = 255;
+                
+                erroR = (float)tmp.nivelRed(   x, y) - valR[0];
+                erroG = (float)tmp.nivelGreen( x, y) - valG[0];
+                erroB = (float)tmp.nivelBlue(  x, y) - valB[0];
+                
+                if(x < (img.getWidth() - 1) ) {
+                    valR[1] = (float)tmp.nivelRed(   x + 1, y) + ((8.0f / 42.0f) * erroR);
+                    valG[1] = (float)tmp.nivelGreen( x + 1, y) + ((8.0f / 42.0f) * erroG);
+                    valB[1] = (float)tmp.nivelBlue(  x + 1, y) + ((8.0f / 42.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 2) ) {
+                    valR[2] = (float)tmp.nivelRed(   x + 2, y) + ((4.0f / 42.0f) * erroR);
+                    valG[2] = (float)tmp.nivelGreen( x + 2, y) + ((4.0f / 42.0f) * erroG);
+                    valB[2] = (float)tmp.nivelBlue(  x + 2, y) + ((4.0f / 42.0f) * erroB);
+                }
+                
+                if(x >= 2 && y < (img.getHeight() - 1)) {
+                    valR[3] = (float)tmp.nivelRed(   x - 2, y + 1) + ((2.0f / 42.0f) * erroR);
+                    valG[3] = (float)tmp.nivelGreen( x - 2, y + 1) + ((2.0f / 42.0f) * erroG);
+                    valB[3] = (float)tmp.nivelBlue(  x - 2, y + 1) + ((2.0f / 42.0f) * erroB);
+                }
+                
+                if(x >= 1 && y < (img.getHeight() - 1)) {
+                    valR[4] = (float)tmp.nivelRed(   x - 1, y + 1) + ((4.0f / 42.0f) * erroR);
+                    valG[4] = (float)tmp.nivelGreen( x - 1, y + 1) + ((4.0f / 42.0f) * erroG);
+                    valB[4] = (float)tmp.nivelBlue(  x - 1, y + 1) + ((4.0f / 42.0f) * erroB);
+                }
+                
+                if(y < (img.getHeight() - 1)) {
+                    valR[5] = (float)tmp.nivelRed(   x, y + 1) + ((8.0f / 42.0f) * erroR);
+                    valG[5] = (float)tmp.nivelGreen( x, y + 1) + ((8.0f / 42.0f) * erroG);
+                    valB[5] = (float)tmp.nivelBlue(  x, y + 1) + ((8.0f / 42.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
+                    valR[6] = (float)tmp.nivelRed(   x + 1, y + 1) + ((4.0f / 42.0f) * erroR);
+                    valG[6] = (float)tmp.nivelGreen( x + 1, y + 1) + ((4.0f / 42.0f) * erroG);
+                    valB[6] = (float)tmp.nivelBlue(  x + 1, y + 1) + ((4.0f / 42.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 1)) {
+                    valR[7] = (float)tmp.nivelRed(   x + 2, y + 1) + ((2.0f / 42.0f) * erroR);
+                    valG[7] = (float)tmp.nivelGreen( x + 2, y + 1) + ((2.0f / 42.0f) * erroG);
+                    valB[7] = (float)tmp.nivelBlue(  x + 2, y + 1) + ((2.0f / 42.0f) * erroB);
+                }
+                
+                if(x >= 2 && y < (img.getHeight() - 2)) {
+                    valR[8] = (float)tmp.nivelRed(   x - 2, y + 2) + ((erroR / 42.0f));
+                    valG[8] = (float)tmp.nivelGreen( x - 2, y + 2) + ((erroG / 42.0f));
+                    valB[8] = (float)tmp.nivelBlue(  x - 2, y + 2) + ((erroB / 42.0f));
+                }
+                
+                if(x >= 1 && y < (img.getHeight() - 2)) {
+                    valR[9] = (float)tmp.nivelRed(   x - 1, y + 2) + ((2.0f / 42.0f) * erroR);
+                    valG[9] = (float)tmp.nivelGreen( x - 1, y + 2) + ((2.0f / 42.0f) * erroG);
+                    valB[9] = (float)tmp.nivelBlue(  x - 1, y + 2) + ((2.0f / 42.0f) * erroB);
+                }
+                
+                if(y < (img.getHeight() - 2)) {
+                    valR[10] = (float)tmp.nivelRed(   x, y + 2) + ((4.0f / 42.0f) * erroR);
+                    valG[10] = (float)tmp.nivelGreen( x, y + 2) + ((4.0f / 42.0f) * erroG);
+                    valB[10] = (float)tmp.nivelBlue(  x, y + 2) + ((4.0f / 42.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 2)) {
+                    valR[11] = (float)tmp.nivelRed(   x + 1, y + 2) + ((2.0f / 42.0f) * erroR);
+                    valG[11] = (float)tmp.nivelGreen( x + 1, y + 2) + ((2.0f / 42.0f) * erroG);
+                    valB[11] = (float)tmp.nivelBlue(  x + 1, y + 2) + ((2.0f / 42.0f) * erroB);
+                }
+                
+                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 2)) {
+                    valR[12] = (float)tmp.nivelRed(   x + 2, y + 2) + ((erroR / 42.0f));
+                    valG[12] = (float)tmp.nivelGreen( x + 2, y + 2) + ((erroG / 42.0f));
+                    valB[12] = (float)tmp.nivelBlue(  x + 2, y + 2) + ((erroB / 42.0f));
+                }
+                
+                for(int i = 0; i < valR.length; i++) {
+                    
+                    if( valR[i] > 255 )
+                        valR[i] = 255;
+                    else if( valR[i] < 0 )
+                        valR[i] = 0;
+                    
+                    if( valG[i] > 255 )
+                        valG[i] = 255;
+                    else if( valG[i] < 0 )
+                        valG[i] = 0;
+                    
+                    if( valB[i] > 255 )
+                        valB[i] = 255;
+                    else if( valB[i] < 0 )
+                        valB[i] = 0;
+                    
+                    valR[i] /= 255;
+                    valG[i] /= 255;
+                    valB[i] /= 255;
+                }
+                
+                tmp.setRGB( x, y, valR[0], valG[0], valB[0] );
+                
+                if(x < (img.getWidth() - 1) ) {
+                    tmp.setRGB( x + 1, y, valR[1], valG[1], valB[1] );
+                }
+                
+                if(x < (img.getWidth() - 2) ) {
+                    tmp.setRGB( x + 2, y, valR[2], valG[2], valB[2] );
+                }
+                
+                if(x >= 2 && y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x - 2, y + 1, valR[3], valG[3], valB[3] );
+                }
+                
+                if(x >= 1 && y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x - 1, y + 1, valR[4], valG[4], valB[4] );
+                }
+                
+                if(y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x, y + 1, valR[5], valG[5], valB[5] );
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x + 1, y + 1, valR[6], valG[6], valB[6] );
+                }
+                
+                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 1)) {
+                    tmp.setRGB( x + 2, y + 1, valR[7], valG[7], valB[7] );
+                }
+                
+                if(x >= 2 && y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x - 2, y + 2, valR[8], valG[8], valB[8] );
+                }
+                
+                if(x >= 1 && y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x - 1, y + 2, valR[9], valG[9], valB[9] );
+                }
+                
+                if(y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x, y + 2, valR[10], valG[10], valB[10] );
+                }
+                
+                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x + 1, y + 2, valR[11], valG[11], valB[11] );
+                }
+                
+                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 2)) {
+                    tmp.setRGB( x + 2, y + 2, valR[12], valG[12], valB[12] );
+                }
+                
+            }
+                
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage stevensonArce(Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        float valR[], valG[], valB[];
+        float erroR, erroG, erroB;
+        float [] erro;
+        float disp[] = {
+                0, 
+                32, 12, 26,
+                30, 16, 12,
+                26, 12, 5,
+                12, 12, 5
+        }; 
+        
+        int xx[] = {
+             0, 
+             2, -3, -1,
+             1,  3, -2,
+             0,  2, -3,
+            -1,  1,  3
+        };
+        
+        int yy[] = {
+                0, 
+                0, 1, 1,
+                1, 1, 2,
+                2, 2, 3,
+                3, 3, 3
+        };
+        
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+                
+                valR = new float[13];
+                valG = new float[13];
+                valB = new float[13];
+                erro = new float[3];
+                
+                if(tmp.nivelRed(x, y) < 128)
+                    valR[0] = 0;
+                else
+                    valR[0] = 1;
+                
+                if(tmp.nivelGreen(x, y) < 128)
+                    valG[0] = 0;
+                else
+                    valG[0] = 1;
+                
+                if(tmp.nivelBlue(x, y) < 128)
+                    valB[0] = 0;
+                else
+                    valB[0] = 1;
+                
+                erroR = (float)tmp.nivelRed(   x, y) - (valR[0] * 255.0f);
+                erroG = (float)tmp.nivelGreen( x, y) - (valG[0] * 255.0f);
+                erroB = (float)tmp.nivelBlue(  x, y) - (valB[0] * 255.0f);
+                
+                tmp.setRGB(x, y, valR[0], valG[0], valB[0]);
+                
+                for(int i = 1; i < disp.length; i++ ) {
+                    
+                    int posX = x + xx[i];
+                    int posY = y + yy[i];
+                    
+                    if(posX >= 0 && posY >= 0 && posX < img.getWidth() && posY < img.getHeight()) {
+                        
+                        erro[0] = erroR * (disp[i] / 200.0f);
+                        erro[1] = erroG * (disp[i] / 200.0f);
+                        erro[2] = erroB * (disp[i] / 200.0f);
+                        
+                        float [] rgb = dispersao( tmp, posX, posY, erro);
+                        
+                        valR[i] = rgb[0];
+                        valG[i] = rgb[1];
+                        valB[i] = rgb[2];
+                        
+                        if( valR[i] > 255 )
+                            valR[i] = 255;
+                        else if( valR[i] < 0 )
+                            valR[i] = 0;
+                        
+                        if( valG[i] > 255 )
+                            valG[i] = 255;
+                        else if( valG[i] < 0 )
+                            valG[i] = 0;
+                        
+                        if( valB[i] > 255 )
+                            valB[i] = 255;
+                        else if( valB[i] < 0 )
+                            valB[i] = 0;
+                        
+                        valR[i] /= 255;
+                        valG[i] /= 255;
+                        valB[i] /= 255;
+                        
+                        tmp.setRGB(posX, posY, valR[i], valG[i], valB[i]); 
+                    }
+                }
+                
+            }
+                
+        return tmp.getImg();
+    }
+    
+    private static float [] dispersao(Processador img, int x, int y, float [] erro) {
+        float [] rgb = new float[3];
+        
+        rgb[0] = (float)img.nivelRed(x, y) + erro[0];
+        rgb[1] = (float)img.nivelGreen(x, y) + erro[1];
+        rgb[2] = (float)img.nivelBlue(x, y) + erro[2];
+        
+        return rgb;
+    }
 }
