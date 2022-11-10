@@ -242,6 +242,13 @@ public class Processador {
         return arquivo.getRGB(x, y);
     }
     
+    public void setRGB(int x, int y, int rgb){ //[RANGE 0 - 255]
+        
+        if(escalaAlpha(x, y) != 0)
+            arquivo.setRGB(x, y, rgb);
+        
+    }
+    
     public void setRGB(int x, int y, int r, int g, int b){ //[RANGE 0 - 255]
         
         Color cor = new Color(r, g, b);

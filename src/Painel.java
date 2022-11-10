@@ -1,9 +1,6 @@
 package src;
 
-import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.scene.web.HTMLEditor;
 
 /**
  * Classe controladora da tela principal. A priori, o
@@ -39,6 +37,9 @@ public class Painel implements Initializable{
 	@FXML
     private AnchorPane workspace;
 	
+	@FXML
+    private HTMLEditor htmlEditor;
+	
     @FXML
     private Text mousePosText;
     
@@ -53,6 +54,9 @@ public class Painel implements Initializable{
 
     @FXML
     private Menu menuOperacoes;
+    
+    @FXML
+    private Menu menuEstegano;
     
     @FXML
     private Menu menuRealce;
@@ -77,6 +81,9 @@ public class Painel implements Initializable{
     
     @FXML
     private Pane painelLateral;
+    
+    @FXML
+    private Pane paneHTML;
     
     @FXML
     private MenuItem botaoHistograma;
@@ -188,7 +195,7 @@ public class Painel implements Initializable{
     private Image img;
     
     //lista com as alterações feitas para permitir desfazer uma ação
-    private List<BufferedImage> alteracoes = new ArrayList<BufferedImage>();
+    //private List<BufferedImage> alteracoes = new ArrayList<BufferedImage>();
     
     //Posição inicial da imagem exibida na área de trabalho do software
     private double posXInit = 100.0;
@@ -271,8 +278,8 @@ public class Painel implements Initializable{
             imagemIni.setFitHeight( 50.0 );
             imagemIni.setFitWidth(  50.0 );
             
-            //configura a imagem exibida na área de trabalho
-            this.configurarImgFinal();
+            //configura o menu inicial 
+            this.configurarMenu();
 
             grauText.setText( "0.0" );
             rotacaoSlide.setValue( 0.0 );
@@ -308,6 +315,8 @@ public class Painel implements Initializable{
             menuOperacoes.setDisable(false);
             botaoLimparSec.setDisable(false);
         }
+        
+        colarImg(event);
     }
 
     //--------------------------------------------------------------
@@ -331,7 +340,6 @@ public class Painel implements Initializable{
         imagemFinal.setFitWidth( imgFinal.getWidth() );
        
         lstAct = 1;
-        botaoLimparFinal.setDisable(false);
 
     }
 
@@ -353,7 +361,6 @@ public class Painel implements Initializable{
         imagemFinal.setFitWidth( imgFinal.getWidth() );
         
         lstAct = 2;
-        botaoLimparFinal.setDisable(false);
 
     }
 
@@ -375,7 +382,6 @@ public class Painel implements Initializable{
         imagemFinal.setFitWidth( imgFinal.getWidth() );
        
         lstAct = 3;
-        botaoLimparFinal.setDisable(false);
 
     }
 
@@ -396,7 +402,6 @@ public class Painel implements Initializable{
         
         lstAct = 0;
        
-        botaoLimparFinal.setDisable(false);
 
     }
 
@@ -418,7 +423,6 @@ public class Painel implements Initializable{
         imagemFinal.setFitWidth( imgFinal.getWidth() );
         
         lstAct = 4;
-        botaoLimparFinal.setDisable(false);
 
     }
 
@@ -440,7 +444,6 @@ public class Painel implements Initializable{
         imagemFinal.setFitWidth( imgFinal.getWidth() );
        
         lstAct = 5;
-        botaoLimparFinal.setDisable(false);
 
     }
 
@@ -462,10 +465,29 @@ public class Painel implements Initializable{
         imagemFinal.setFitWidth( imgFinal.getWidth() );
        
         lstAct = 6;
-        botaoLimparFinal.setDisable(false);
 
     }
 
+    @FXML
+    void colarImg(ActionEvent event) {
+        img = null;
+
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Operacoes.colarImg(imgFinal, imgSec) );      
+        else
+            imgFinal.setImg( Operacoes.colarImg(imagem, imgSec) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        imagemFinal.setFitHeight( imgFinal.getHeight() );
+        imagemFinal.setFitWidth( imgFinal.getWidth() );
+        
+        lstAct = 0;
+        
+
+    }
+    
     //--------------------------------------------------------------
     //Métodos de transformação geométrica
 
@@ -484,7 +506,6 @@ public class Painel implements Initializable{
         imagemFinal.setFitHeight( imgFinal.getHeight() );
         imagemFinal.setFitWidth( imgFinal.getWidth() );
         
-        botaoLimparFinal.setDisable(false);
 
     }
 
@@ -503,7 +524,6 @@ public class Painel implements Initializable{
         imagemFinal.setFitHeight( imgFinal.getHeight() );
         imagemFinal.setFitWidth( imgFinal.getWidth() );
        
-        botaoLimparFinal.setDisable(false);
     }
     
     @FXML
@@ -537,7 +557,6 @@ public class Painel implements Initializable{
         	imagemFinal.setFitWidth( imgFinal.getWidth() );
         }
         
-        botaoLimparFinal.setDisable(false);
     }
 
     @FXML
@@ -571,7 +590,7 @@ public class Painel implements Initializable{
         	imagemFinal.setFitWidth( imgFinal.getWidth() );
         }
         
-        botaoLimparFinal.setDisable(false);
+        
     }
 
     @FXML
@@ -1097,6 +1116,15 @@ public class Painel implements Initializable{
     //Métodos extras
     
     @FXML
+    void esteganografia(ActionEvent event) {
+        htmlEditor.setHtmlText( BitMapping.esteganalise(imgFinal) );
+        paneHTML.setVisible(true);
+    }
+    
+    //--------------------------------------------------------------
+    //Métodos extras
+    
+    @FXML
     void angulo(ActionEvent event) {
     	rotacaoSlide.setValue( Double.valueOf( grauText.getText() ) );
     	rotacionar();
@@ -1253,14 +1281,14 @@ public class Painel implements Initializable{
     
     @FXML
     void exibirImgPrimaria(ActionEvent event) {
-    	if(imagem.getImgPlus() != null)
-    		imagem.getImgPlus().show();
     	
     	if(imagemFinal.getImage() == null) {
     		img = SwingFXUtils.toFXImage( imagem.getImg(), null);
     		
-    		this.configurarImgFinal();
+    		this.configurarImagemFinal();
     	}
+    	else if(imagem.getImgPlus() != null)
+            imagem.getImgPlus().show();
     		
     }
 
@@ -1268,6 +1296,7 @@ public class Painel implements Initializable{
     void exibirImgSecundaria(ActionEvent event) {
     	if(imgSec.getImgPlus() != null)
     		imgSec.getImgPlus().show();
+    	
     }
     
     @FXML
@@ -1340,6 +1369,7 @@ public class Painel implements Initializable{
         menuCores.setDisable(true);
         botaoHistograma.setDisable(true);
         menuRealce.setDisable(true);
+        menuEstegano.setDisable(true);
         menuFiltragem.setDisable(true);
         botaoSalvar.setDisable(true);
         
@@ -1363,6 +1393,8 @@ public class Painel implements Initializable{
          */
         if( imagemIni.getImage() == null && imagemFinal.getImage() == null )
             menuLimpar.setDisable(true);
+        
+        configurarImagemFinal();
     }
 
     @FXML
@@ -1394,17 +1426,10 @@ public class Painel implements Initializable{
         limparFinal(event);
     }
     
-    //método que setta a imagem final exibida com os atributos da imagem primária
-    void configurarImgFinal() {
-    	
-    	imagemFinal.setFitHeight( imagem.getHeight() );
-        imagemFinal.setFitWidth(  imagem.getWidth() );
+    //método que configura o menu no momento em que abre a imagm primária
+    void configurarMenu() {
         
-        imagemFinal.setX( posXInit );
-        imagemFinal.setY( posYInit );
-        
-        //imagem exibida na área de trabalho do software
-        imagemFinal.setImage(img);
+        configurarImagemFinal();
         
         //habilita os botões da interface caso a imagem abra com sucesso
         botaoAbrirCamada.setDisable(false);
@@ -1417,8 +1442,34 @@ public class Painel implements Initializable{
         botaoHistograma.setDisable(false);
         menuRealce.setDisable(false);
         menuFiltragem.setDisable(false);
+        menuEstegano.setDisable(false);
         botaoSalvar.setDisable(false);
+        
         dragMode = false;
+        
+    }
+    
+    //método que setta a imagem final exibida com os atributos da imagem primária
+    void configurarImagemFinal() {
+        
+        if( imagemSec.getImage() != null) {
+            colarImg(null);
+        }
+        else {
+            img = null;
+            img = SwingFXUtils.toFXImage(imagem.getImg(), null);
+            
+            imagemFinal.setFitHeight( imagem.getHeight() );
+            imagemFinal.setFitWidth(  imagem.getWidth() );
+            
+            imagemFinal.setX( posXInit );
+            imagemFinal.setY( posYInit );
+            
+            //imagem exibida na área de trabalho do software
+            imagemFinal.setImage(img);
+        }
+        
+        botaoLimparFinal.setDisable(false);
         
     }
     
@@ -1430,6 +1481,30 @@ public class Painel implements Initializable{
     @FXML
     void salvar(ActionEvent event) {
         imgFinal.salvarImagem();
+    }
+    
+    @FXML
+    void salvarHTML(ActionEvent event) {
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( BitMapping.esteganografia(imgFinal, htmlEditor.getHtmlText()) );    
+        else
+            imgFinal.setImg( BitMapping.esteganografia(imagem, htmlEditor.getHtmlText()) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        paneHTML.setVisible(false);
+    }
+    
+    @FXML
+    void fecharHTML(ActionEvent event) {
+        paneHTML.setVisible(false);
+    }
+    
+    @FXML
+    void carregarURL(ActionEvent event) {
+
     }
 
     @FXML

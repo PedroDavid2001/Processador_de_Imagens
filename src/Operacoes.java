@@ -113,21 +113,21 @@ public class Operacoes {
                 b = imgA.nivelBlue(x, y) - imgB.nivelBlue(x, y);
                 
                 //-------------------------------------------------------------
-                //verificaÁıes necess·rias para evitar divisıes por 0 (zero)!!!
+                //verificaÔøΩÔøΩes necessÔøΩrias para evitar divisÔøΩes por 0 (zero)!!!
                 if(maiorR > menorR)
-                	r = ( ( ( 255 * (r - menorR) ) / (maiorR - menorR) ) );
+                    r = ( ( ( 255 * (r - menorR) ) / (maiorR - menorR) ) );
                 else
-                	r = 0;
+                    r = 0;
                 
                 if(maiorG > menorG)
-                	g = ( ( ( 255 * (g - menorG) ) / (maiorG - menorG) ) );
+                    g = ( ( ( 255 * (g - menorG) ) / (maiorG - menorG) ) );
                 else
-                	g = 0;
+                    g = 0;
                 
                 if(maiorB > menorB)
-                	b = ( ( ( 255 * (b - menorB) ) / (maiorB - menorB) ) );
+                    b = ( ( ( 255 * (b - menorB) ) / (maiorB - menorB) ) );
                 else
-                	b = 0;
+                    b = 0;
                 //-------------------------------------------------------------
                 
                 imgF.setRGB( x, y, r, g, b );
@@ -178,21 +178,21 @@ public class Operacoes {
                 b = imgA.nivelBlue(x, y) * imgB.nivelBlue(x, y);
              
                 //-------------------------------------------------------------
-                //verificaÁıes necess·rias para evitar divisıes por 0 (zero)!!!
+                //verificaÔøΩÔøΩes necessÔøΩrias para evitar divisÔøΩes por 0 (zero)!!!
                 if(maiorR > menorR)
-                	r = ( ( ( 255 * (r - menorR) ) / (maiorR - menorR) ) );
+                    r = ( ( ( 255 * (r - menorR) ) / (maiorR - menorR) ) );
                 else
-                	r = 0;
+                    r = 0;
                 
                 if(maiorG > menorG)
-                	g = ( ( ( 255 * (g - menorG) ) / (maiorG - menorG) ) );
+                    g = ( ( ( 255 * (g - menorG) ) / (maiorG - menorG) ) );
                 else
-                	g = 0;
+                    g = 0;
                 
                 if(maiorB > menorB)
-                	b = ( ( ( 255 * (b - menorB) ) / (maiorB - menorB) ) );
+                    b = ( ( ( 255 * (b - menorB) ) / (maiorB - menorB) ) );
                 else
-                	b = 0;
+                    b = 0;
                 //-------------------------------------------------------------
 
                 imgF.setRGB( x, y, r, g, b );
@@ -571,4 +571,30 @@ public class Operacoes {
         return imgF.getImg();
     }
 
+    //--------------------------------------------------------------
+    //Opera√ß√µes extras
+    public static BufferedImage colarImg( Processador imgA, Processador imgB ){
+        
+        Processador imgF = new Processador();
+        
+        imgF.setImg( imgA.getImg() );
+
+        int r, g, b;
+        
+        for(int x = 0; x < imgA.getWidth() && x < imgB.getWidth(); x++) {
+            for(int y = 0; y < imgA.getHeight() && y < imgB.getHeight(); y++) {
+
+                if(imgB.escalaAlpha(x, y) != 0){
+                    r = imgB.nivelRed(x, y); 
+                    g = imgB.nivelGreen(x, y); 
+                    b = imgB.nivelBlue(x, y);
+                    
+                    imgF.setRGB( x, y, r, g, b );
+                }
+
+            }
+        }
+
+        return imgF.getImg();
+    }
 }

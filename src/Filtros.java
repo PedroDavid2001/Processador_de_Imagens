@@ -18,14 +18,15 @@ public class Filtros {
         float rTotal, gTotal, bTotal;
         float rMedio, gMedio, bMedio;
         
-        for(int y = 1; y < (img.getHeight() - 1); y++) 
-            for(int x = 1; x < (img.getWidth() - 1); x++) {
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
 
               //red
                 rTotal = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        rTotal += img.nivelRed(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            rTotal += img.nivelRed(i, j);
                     }
                 
                 rTotal /= 255;
@@ -35,7 +36,8 @@ public class Filtros {
                 gTotal = 0; 
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        gTotal += img.nivelGreen(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            gTotal += img.nivelGreen(i, j);
                     }
                 
                 gTotal /= 255;
@@ -45,7 +47,8 @@ public class Filtros {
                 bTotal = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        bTotal += img.nivelBlue(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            bTotal += img.nivelBlue(i, j);
                     }
                 bTotal /= 255;
                 bMedio = bTotal / 9;
@@ -68,14 +71,15 @@ public class Filtros {
         float rTotal, gTotal, bTotal;
         float rMedio, gMedio, bMedio;
         
-        for(int y = 2; y < (img.getHeight() - 2); y++) 
-            for(int x = 2; x < (img.getWidth() - 2); x++) {
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
                 
                 //red
                 rTotal = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        rTotal += img.nivelRed(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            rTotal += img.nivelRed(i, j);
                     }
                 
                 rTotal /= 255;
@@ -85,7 +89,8 @@ public class Filtros {
                 gTotal = 0; 
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        gTotal += img.nivelGreen(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            gTotal += img.nivelGreen(i, j);
                     }
                 
                 gTotal /= 255;
@@ -95,7 +100,8 @@ public class Filtros {
                 bTotal = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        bTotal += img.nivelBlue(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            bTotal += img.nivelBlue(i, j);
                     }
                 bTotal /= 255;
                 bMedio = bTotal / 25;
@@ -120,15 +126,16 @@ public class Filtros {
         int rMedio, gMedio, bMedio;
         int rI, gI, bI; //identadores
         
-        for(int y = 1; y < (img.getHeight() - 1); y++) 
-            for(int x = 1; x < (img.getWidth() - 1); x++) {
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
                 
                 //red
                 rTotal = new int[9];
                 rI = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        rTotal[rI] = img.nivelRed(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            rTotal[rI] = img.nivelRed(i, j);
                         rI++;
                     }
                 
@@ -139,7 +146,8 @@ public class Filtros {
                 gI = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        gTotal[gI] = img.nivelGreen(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            gTotal[gI] = img.nivelGreen(i, j);
                         gI++;
                             
                     }
@@ -151,7 +159,8 @@ public class Filtros {
                 bI = 0;
                 for(int j = y - 1; j < y + 2; j++)
                     for(int i = x - 1; i < x + 2; i++) {
-                        bTotal[bI] = img.nivelBlue(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            bTotal[bI] = img.nivelBlue(i, j);
                         bI++;
                             
                     }
@@ -177,15 +186,16 @@ public class Filtros {
         int rMedio, gMedio, bMedio;
         int rI, gI, bI; //identadores
         
-        for(int y = 2; y < (img.getHeight() - 2); y++) 
-            for(int x = 2; x < (img.getWidth() - 2); x++) {
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
                 
                 //red
                 rTotal = new int[25];
                 rI = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        rTotal[rI] = img.nivelRed(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            rTotal[rI] = img.nivelRed(i, j);
                         rI++;
                     }
                 
@@ -196,7 +206,8 @@ public class Filtros {
                 gI = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        gTotal[gI] = img.nivelGreen(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            gTotal[gI] = img.nivelGreen(i, j);
                         gI++;
                             
                     }
@@ -208,7 +219,8 @@ public class Filtros {
                 bI = 0;
                 for(int j = y - 2; j < y + 3; j++)
                     for(int i = x - 2; i < x + 3; i++) {
-                        bTotal[bI] = img.nivelBlue(i, j);
+                        if(i >= 0 && j >= 0 && i < img.getWidth() && j < img.getHeight())
+                            bTotal[bI] = img.nivelBlue(i, j);
                         bI++;
                             
                     }
