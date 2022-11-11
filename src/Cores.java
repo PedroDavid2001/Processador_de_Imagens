@@ -1,5 +1,7 @@
 package src;
 
+import java.awt.image.BufferedImage;
+
 public class Cores {
     
     //exibe os components RGB
@@ -223,7 +225,7 @@ public class Cores {
     }
     
     //exibe a imagem em escala de cinza equivalente
-    public static void grayScale(Processador img) {
+    public static BufferedImage grayScale(Processador img) {
         
         Processador gray = new Processador(); 
         
@@ -238,12 +240,31 @@ public class Cores {
             }
         }
         
-        //inicializa as image plus
-        gray.setImgPlus();
+        return gray.getImg();
+    }
+    
+  //exibe o negativo da imagem 
+    public static BufferedImage negativo(Processador img) {
         
-        //exibe as image plus
-        gray.getImgPlus().setTitle("Gray Scale");
-        gray.getImgPlus().show();
+        Processador tmp = new Processador(); 
+        
+        tmp.setImg( img.getImg() );
+        
+        int r, g, b;
+        
+        for(int y = 0; y < img.getHeight(); y++){
+            for(int x = 0; x < img.getWidth(); x++){
+                
+                r = 255 - img.nivelRed(x, y);
+                g = 255 - img.nivelGreen(x, y);
+                b = 255 - img.nivelBlue(x, y);
+                
+                tmp.setRGB(x, y, r, g, b); 
+                
+            }
+        }
+        
+        return tmp.getImg();
     }
     
     //exibe os components YUV
@@ -441,14 +462,13 @@ public class Cores {
      * azul será mais destacado.
      **/
     
-    public static void pseudoColorGrayScale( Processador img, int opt ) {
+    public static BufferedImage pseudoColorGrayScale( Processador img, int opt ) {
         
         Processador tmp = new Processador();
         
         tmp.setImg( img.getImg() );
         
         int brilho;
-        String result = "";
         
         //  prim = camada mais clara
         //  seg  = camada intermediaria 
@@ -520,34 +540,26 @@ public class Cores {
                  **/
                 
                 if(opt == 1) {
-                    result = "RGB";
                     tmp.setRGB(x, y, prim/255, seg/255, ter/255);
                 }
                 else if(opt == 2) {
-                    result = "RBG";
                     tmp.setRGB(x, y, prim/255, ter/255, seg/255);
                 }
                 else if(opt == 3) {
-                    result = "BGR";
                     tmp.setRGB(x, y, ter/255, seg/255, prim/255);
                 }
                 else if(opt == 4) {
-                    result = "BRG";
                     tmp.setRGB(x, y, ter/255, prim/255, seg/255);
                 }
                 else if(opt == 5) {
-                    result = "GRB";
                     tmp.setRGB(x, y, seg/255, prim/255, ter/255);
                 }
                 else if(opt == 6) {
-                    result = "GBR";
                     tmp.setRGB(x, y, seg/255, ter/255, prim/255);
                 }
             }
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( result );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
     /**
@@ -559,17 +571,15 @@ public class Cores {
      * 
      **/
     
-    public static void pseudoColorIgnoring( Processador img, int opt ) {
+    public static BufferedImage pseudoColorIgnoring( Processador img, int opt ) {
         
         Processador tmp = new Processador();
         
         tmp.setImg( img.getImg() );
         
-        String result = "";
-        
-        int r = 0;
-        int g = 0;
-        int b = 0;
+        int r;
+        int g;
+        int b;
         
         for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
@@ -578,82 +588,69 @@ public class Cores {
                 b = img.nivelBlue(x, y);
                 
                 if(opt == 1) {
-                    result = "Ignorando Blue";
-                    if(b > 128)
-                        b = 0;
+                    b = 0;
+                        
                 }
                 else if(opt == 2) {
-                    result = "Ignorando Red";
-                    if(r > 128)
-                        r = 0;
+                    r = 0;
+                        
                 }
                 else if(opt == 3) {
-                    result = "Ignorando Green";
-                    if(g > 128)
-                        g = 0;
+                    g = 0;
+                        
                 }
                 
                 tmp.setRGB(x, y, r, g, b);
             }
     
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( result );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
-    public static void pseudoColorReducing( Processador img, int opt ) {
+    public static BufferedImage pseudoColorReducing( Processador img, int opt ) {
         
         Processador tmp = new Processador();
         
         tmp.setImg( img.getImg() );
         
-        String result = "";
-        
-        int r = 0;
-        int g = 0;
-        int b = 0;
+        float r;
+        float g;
+        float b;
         
         for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
-                r = img.nivelRed(x, y);
-                g = img.nivelGreen(x, y);
-                b = img.nivelBlue(x, y);
+                r = (float)img.nivelRed(x, y) / 255.0f;
+                g = (float)img.nivelGreen(x, y) / 255.0f;
+                b = (float)img.nivelBlue(x, y) / 255.0f;
                 
                 if(opt == 1) {
-                    result = "Reduzindo Blue";
-                    if(b > 128)
-                        b = b / 2;
+                    b = b / 2;
+                        
                 }
                 else if(opt == 2) {
-                    result = "Reduzindo Red";
-                    if(r > 128)
-                        r = r / 2;
+                    r = r / 2;
+                        
                 }
                 else if(opt == 3) {
-                    result = "Reduzindo Green";
-                    if(g > 128)
-                        g = g / 2;
+                    g = g / 2;
+                        
                 }
                 
                 tmp.setRGB(x, y, r, g, b);
             }
     
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( result );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
     
-    public static void pseudoColorIncreasing( Processador img, int opt ) {
+    public static BufferedImage pseudoColorIncreasing( Processador img, int opt ) {
         
         Processador tmp = new Processador();
         
         tmp.setImg( img.getImg() );
+       
         
-        String result = "";
-        
-        int r = 0;
-        int g = 0;
-        int b = 0;
+        int r;
+        int g;
+        int b;
         
         for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
@@ -662,17 +659,14 @@ public class Cores {
                 b = img.nivelBlue(x, y);
                 
                 if(opt == 1) {
-                    result = "Aumentando Blue";
                     if(b < 127)
                         b = (b * 2) + 1;
                 }
                 else if(opt == 2) {
-                    result = "Aumentando Red";
                     if(r < 127)
                         r = (r * 2) + 1;
                 }
                 else if(opt == 3) {
-                    result = "Aumentando Green";
                     if(g < 127)
                         g = (g * 2) + 1;
                 }
@@ -680,8 +674,6 @@ public class Cores {
                 tmp.setRGB(x, y, r, g, b);
             }
     
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( result );
-        tmp.getImgPlus().show();
+        return tmp.getImg();
     }
 }

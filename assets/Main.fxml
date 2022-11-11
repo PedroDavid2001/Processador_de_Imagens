@@ -42,13 +42,12 @@
                   <MenuItem mnemonicParsing="false" onAction="#cisalharY" text="Cisalhar eixo Y" />
             </items>
           </Menu>
-            <Menu fx:id="menuCores" disable="true" mnemonicParsing="false" text="Gerar componentes">
+            <Menu fx:id="menuCores" disable="true" mnemonicParsing="false" text="Componentes de cor">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#exibirRGB" text="RGB" />
                   <MenuItem mnemonicParsing="false" onAction="#exibirCMY" text="CMY" />
                   <MenuItem mnemonicParsing="false" onAction="#exibirCMYK" text="CMY-K" />
                   <MenuItem mnemonicParsing="false" onAction="#exibirYUV" text="YUV" />
-                  <MenuItem mnemonicParsing="false" onAction="#exibirGray" text="Gray Scale" />
               </items>
             </Menu>
             <Menu fx:id="menuPseudoCor" disable="true" mnemonicParsing="false" text="Pseudocoloração">
@@ -165,6 +164,9 @@
                         </Menu>
                      </items>
                   </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#exibirGray" text="Gray Scale" />
+                  <MenuItem mnemonicParsing="false" onAction="#negativo" text="Negativo" />
                </items>
             </Menu>
             <Menu fx:id="menuEstegano" disable="true" mnemonicParsing="false" text="Manipulação de bits">
