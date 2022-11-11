@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class Realce {
 	
-	public static void Linear(Processador img, int min, int max, boolean invert ) {
+	public static BufferedImage Linear(Processador img, int min, int max, boolean invert ) {
 		Processador tmp = new Processador();
 		
 		tmp.setImg( img.getImg() );
@@ -72,12 +72,10 @@ public class Realce {
             	tmp.setRGB(x, y, red, green, blue);
             }
 		
-		tmp.setImgPlus();
-		tmp.getImgPlus().setTitle( "Transformação linear" );
-		tmp.getImgPlus().show();
+		return tmp.getImg();
 	}
 	
-	public static void NaoLinear(Processador img, int calculo ) {
+	public static BufferedImage NaoLinear(Processador img, int calculo ) {
 		
 		Processador tmp = new Processador();
 		tmp.setImg( img.getImg() );
@@ -193,9 +191,7 @@ public class Realce {
 	            }
 		}
 		
-		tmp.setImgPlus();
-		tmp.getImgPlus().setTitle( "Transformação não-linear" );
-		tmp.getImgPlus().show();
+		return tmp.getImg();
 		
 	}
 	
@@ -241,7 +237,7 @@ public class Realce {
         return mapaDeCores;
     }
 
-    public static void EqualizarHistoGrama(BufferedImage img) { //iniciando equalização do histograma
+    public static BufferedImage EqualizarHistoGrama(BufferedImage img) { //iniciando equalização do histograma
         
         int[] histograma = calculaHistograma(img); //definindo valor ao vetor histograma
         
@@ -261,14 +257,12 @@ public class Realce {
         Processador tmp = new Processador();
         tmp.setImg( out );
         
-        tmp.setImgPlus();
-        tmp.getImgPlus().setTitle( "Equalização do histograma" );
-        tmp.getImgPlus().show();
         tmp.getImgPlus().plotHistogram();
+        return tmp.getImg();
     }
 
 	
-	public static void corrigirGama(Processador img, double c, double gama) {
+	public static BufferedImage corrigirGama(Processador img, double c, double gama) {
 		Processador tmp = new Processador();
 		tmp.setImg( img.getImg() );
 		
@@ -301,9 +295,7 @@ public class Realce {
             	tmp.setRGB(x, y, red, green, blue);
             }
 		
-		tmp.setImgPlus();
-		tmp.getImgPlus().setTitle( "Correção de gama" );
-		tmp.getImgPlus().show();
+		return tmp.getImg();
 	}
 	
 	//fatia a imagem em camadas que se distinguem de acordo com a intensidade dos campos do RGB

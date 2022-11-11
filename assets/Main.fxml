@@ -108,7 +108,6 @@
                   </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#equalHisto" text="Equalizar Histograma" />
                   <MenuItem mnemonicParsing="false" onAction="#corrigirGama" text="Corrigir  Gama" />
-                  <MenuItem mnemonicParsing="false" onAction="#fatiarBits" text="Fatiar Bits" />
                </items>
             </Menu>
             <Menu fx:id="menuFiltragem" disable="true" mnemonicParsing="false" text="Filtros">
@@ -168,18 +167,18 @@
                   </Menu>
                </items>
             </Menu>
-            <Menu fx:id="menuEstegano" disable="true" mnemonicParsing="false" text="Esteganografia">
+            <Menu fx:id="menuEstegano" disable="true" mnemonicParsing="false" text="Manipulação de bits">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#esteganografia" text="Esconder" />
-                  <MenuItem mnemonicParsing="false" text="Esteganálise" />
+                  <MenuItem mnemonicParsing="false" onAction="#fatiarBits" text="Fatiar Bits" />
+                  <MenuItem mnemonicParsing="false" onAction="#esteganografia" text="Esteganografia">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@anonymous.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
                </items>
-               <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@anonymous.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
             </Menu>
             <Menu fx:id="menuLimpar" disable="true" mnemonicParsing="false" text="Limpeza">
                <items>
@@ -306,19 +305,23 @@
                         </Button>
                      </children>
                   </Pane>
-                  <Pane fx:id="paneHTML" layoutX="14.0" layoutY="10.0" prefHeight="630.0" prefWidth="823.0" visible="false">
-                     <children>
-                        <HTMLEditor fx:id="htmlEditor" htmlText="" prefHeight="630.0" prefWidth="823.0" />
-                        <Button layoutX="755.0" layoutY="4.0" mnemonicParsing="false" onAction="#fecharHTML" prefHeight="25.0" prefWidth="53.0" text="Fechar" />
-                        <AnchorPane layoutY="573.0" prefHeight="57.0" prefWidth="823.0" style="-fx-background-color: #eee; -fx-border-width: 1px; -fx-border-color: #bbb;">
+                  <ScrollPane fx:id="paneHTML" layoutX="14.0" layoutY="10.0" visible="false">
+                     <content>
+                        <Pane prefHeight="600.0" prefWidth="700.0">
                            <children>
-                              <TextField layoutX="14.0" layoutY="16.0" promptText="Insira uma URL" />
-                              <Button layoutX="181.0" layoutY="16.0" mnemonicParsing="false" onAction="#carregarURL" text="Carregar URL" />
-                              <Button layoutX="748.0" layoutY="16.0" mnemonicParsing="false" onAction="#salvarHTML" prefHeight="25.0" prefWidth="53.0" text="Salvar" />
+                              <HTMLEditor fx:id="htmlEditor" htmlText="" prefHeight="550.0" prefWidth="700.0" />
+                              <Button layoutX="630.0" layoutY="5.0" mnemonicParsing="false" onAction="#fecharHTML" prefHeight="25.0" prefWidth="53.0" text="Fechar" />
+                              <AnchorPane layoutY="550.0" prefHeight="50.0" prefWidth="700.0" style="-fx-background-color: #eee; -fx-border-width: 1px; -fx-border-color: #bbb;">
+                                 <children>
+                                    <TextField layoutX="20.0" layoutY="13.0" promptText="Insira uma URL" />
+                                    <Button layoutX="180.0" layoutY="13.0" mnemonicParsing="false" onAction="#carregarURL" text="Carregar URL" />
+                                    <Button layoutX="630.0" layoutY="13.0" mnemonicParsing="false" onAction="#salvarHTML" prefHeight="25.0" prefWidth="53.0" text="Salvar" />
+                                 </children>
+                              </AnchorPane>
                            </children>
-                        </AnchorPane>
-                     </children>
-                  </Pane>
+                        </Pane>
+                     </content>
+                  </ScrollPane>
                </children>
             </AnchorPane>
          </content>

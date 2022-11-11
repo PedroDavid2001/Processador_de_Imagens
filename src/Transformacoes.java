@@ -74,11 +74,11 @@ public class Transformacoes {
         * controle apenas desse valor para não ficar abaixo de zero e 
         * resultar em index out of bound!!!
         **/
-    	
-    	boolean negative = sx < 0 ? true : false; //verifica se o valor de cisalhamento digitado � negativo
-    	
-    	if(negative)
-    		sx = -sx;//teste necess�rio para evitar acessar coordenada negativa!!!
+        
+        boolean negative = sx < 0 ? true : false; //verifica se o valor de cisalhamento digitado � negativo
+        
+        if(negative)
+            sx = -sx;//teste necess�rio para evitar acessar coordenada negativa!!!
 
         BufferedImage tmp = new BufferedImage(((int)(img.getHeight() * sx) + img.getWidth()), img.getHeight(), img.getType());
         int newX;
@@ -91,7 +91,7 @@ public class Transformacoes {
 
         for(int y = 0; y < img.getHeight(); y++){
             for(int x = 0; x < img.getWidth(); x++){
-            	
+                
                 newY = negative ? y : ( img.getHeight() - 1 ) - y; 
                 
                 newX = (int)(newY * sx) + x;
@@ -118,10 +118,10 @@ public class Transformacoes {
         * controle apenas desse valor para não ficar abaixo de zero e 
         * resultar em index out of bound!!!
         **/
-    	boolean negative = sy < 0 ? true : false; //verifica se o valor de cisalhamento digitado � negativo
-    	
-    	if(negative)
-    		sy = -sy;//teste necess�rio para evitar acessar coordenada negativa!!!
+        boolean negative = sy < 0 ? true : false; //verifica se o valor de cisalhamento digitado � negativo
+        
+        if(negative)
+            sy = -sy;//teste necess�rio para evitar acessar coordenada negativa!!!
 
         BufferedImage tmp = new BufferedImage( img.getWidth() ,((int)(img.getWidth() * sy) + img.getHeight()), img.getType());
         int newY;
@@ -135,8 +135,8 @@ public class Transformacoes {
         for(int y = 0; y < img.getHeight(); y++){
             for(int x = 0; x < img.getWidth(); x++){
                 
-            	newX = negative ? x : ( img.getWidth() - 1 ) - x;
-            	
+                newX = negative ? x : ( img.getWidth() - 1 ) - x;
+                
                 newY = (int)(newX * sy) + y;
                 tmp.setRGB( x, newY, img.getRGB(x, y) );
             }

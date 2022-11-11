@@ -2548,6 +2548,18 @@ public class Filtros {
         
         float valR[], valG[], valB[];
         float erroR, erroG, erroB;
+        float [] erro;
+        float disp[] = {
+                0, 7, 3, 5, 1
+        }; 
+        
+        int xx[] = {
+                0, 1, -1, 0, 1
+        };
+        
+        int yy[] = {
+                0, 0, 1, 1, 1
+        };
         
         for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
@@ -2555,80 +2567,68 @@ public class Filtros {
                 valR = new float[5];
                 valG = new float[5];
                 valB = new float[5];
+                erro = new float[3];
                 
                 if(tmp.nivelRed(x, y) < 128)
                     valR[0] = 0;
                 else
-                    valR[0] = 255;
+                    valR[0] = 1;
                 
                 if(tmp.nivelGreen(x, y) < 128)
                     valG[0] = 0;
                 else
-                    valG[0] = 255;
+                    valG[0] = 1;
                 
                 if(tmp.nivelBlue(x, y) < 128)
                     valB[0] = 0;
                 else
-                    valB[0] = 255;
+                    valB[0] = 1;
                 
-                erroR = (float)tmp.nivelRed(   x, y) - valR[0];
-                erroG = (float)tmp.nivelGreen( x, y) - valG[0];
-                erroB = (float)tmp.nivelBlue(  x, y) - valB[0];
+                erroR = (float)tmp.nivelRed(   x, y) - (valR[0] * 255.0f);
+                erroG = (float)tmp.nivelGreen( x, y) - (valG[0] * 255.0f);
+                erroB = (float)tmp.nivelBlue(  x, y) - (valB[0] * 255.0f);
                 
-                if(x < (img.getWidth() - 1) ) {
-                    valR[1] = (float)tmp.nivelRed(   x + 1, y) + ((7.0f / 16.0f) * erroR);
-                    valG[1] = (float)tmp.nivelGreen( x + 1, y) + ((7.0f / 16.0f) * erroG);
-                    valB[1] = (float)tmp.nivelBlue(  x + 1, y) + ((7.0f / 16.0f) * erroB);
-                }
+                tmp.setRGB(x, y, valR[0], valG[0], valB[0]);
                 
-                if(x >= 1) {
-                    valR[2] = (float)tmp.nivelRed(   x - 1, y + 1) + ((3.0f / 16.0f) * erroR);
-                    valG[2] = (float)tmp.nivelGreen( x - 1, y + 1) + ((3.0f / 16.0f) * erroG);
-                    valB[2] = (float)tmp.nivelBlue(  x - 1, y + 1) + ((3.0f / 16.0f) * erroB);
-                }
-                
-                if(y < (img.getHeight() -1) ) {
-                    valR[3] = (float)tmp.nivelRed(   x, y + 1) + ((5.0f / 16.0f) * erroR);
-                    valG[3] = (float)tmp.nivelGreen( x, y + 1) + ((5.0f / 16.0f) * erroG);
-                    valB[3] = (float)tmp.nivelBlue(  x, y + 1) + ((5.0f / 16.0f) * erroB);
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
-                    valR[4] = (float)tmp.nivelRed(   x + 1, y + 1) + ((erroR / 16.0f));
-                    valG[4] = (float)tmp.nivelGreen( x + 1, y + 1) + ((erroG / 16.0f));
-                    valB[4] = (float)tmp.nivelBlue(  x + 1, y + 1) + ((erroB / 16.0f));
-                }
-                
-                for(int i = 0; i < valR.length; i++) {
+                for(int i = 1; i < disp.length; i++ ) {
                     
-                    if( valR[i] > 255 )
-                        valR[i] = 255;
-                    else if( valR[i] < 0 )
-                        valR[i] = 0;
+                    int posX = x + xx[i];
+                    int posY = y + yy[i];
                     
-                    if( valG[i] > 255 )
-                        valG[i] = 255;
-                    else if( valG[i] < 0 )
-                        valG[i] = 0;
-                    
-                    if( valB[i] > 255 )
-                        valB[i] = 255;
-                    else if( valB[i] < 0 )
-                        valB[i] = 0;
-                    
-                    valR[i] /= 255;
-                    valG[i] /= 255;
-                    valB[i] /= 255;
+                    if(posX >= 0 && posY >= 0 && posX < img.getWidth() && posY < img.getHeight()) {
+                        
+                        erro[0] = erroR * (disp[i] / 16.0f);
+                        erro[1] = erroG * (disp[i] / 16.0f);
+                        erro[2] = erroB * (disp[i] / 16.0f);
+                        
+                        float [] rgb = dispersao( tmp, posX, posY, erro);
+                        
+                        valR[i] = rgb[0];
+                        valG[i] = rgb[1];
+                        valB[i] = rgb[2];
+                        
+                        if( valR[i] > 255 )
+                            valR[i] = 255;
+                        else if( valR[i] < 0 )
+                            valR[i] = 0;
+                        
+                        if( valG[i] > 255 )
+                            valG[i] = 255;
+                        else if( valG[i] < 0 )
+                            valG[i] = 0;
+                        
+                        if( valB[i] > 255 )
+                            valB[i] = 255;
+                        else if( valB[i] < 0 )
+                            valB[i] = 0;
+                        
+                        valR[i] /= 255;
+                        valG[i] /= 255;
+                        valB[i] /= 255;
+                        
+                        tmp.setRGB(posX, posY, valR[i], valG[i], valB[i]); 
+                    }
                 }
-                
-                tmp.setRGB(x,     y,     valR[0], valG[0], valB[0]);
-                tmp.setRGB(x + 1, y,     valR[1], valG[1], valB[1]);
-
-                if(x >= 1) 
-                    tmp.setRGB(x - 1, y + 1, valR[2], valG[2], valB[2]);
-                
-                tmp.setRGB(x,     y + 1, valR[3], valG[3], valB[3]);
-                tmp.setRGB(x + 1, y + 1, valR[4], valG[4], valB[4]);
                 
             }
                 
@@ -2641,6 +2641,18 @@ public class Filtros {
         
         float valR[], valG[], valB[];
         float erroR, erroG, erroB;
+        float [] erro;
+        float disp[] = {
+                0, 3, 3, 2
+        }; 
+        
+        int xx[] = {
+                0, 1, 0, 1
+        };
+        
+        int yy[] = {
+                0, 0, 1, 1
+        };
         
         for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
@@ -2648,78 +2660,68 @@ public class Filtros {
                 valR = new float[4];
                 valG = new float[4];
                 valB = new float[4];
+                erro = new float[3];
                 
                 if(tmp.nivelRed(x, y) < 128)
                     valR[0] = 0;
                 else
-                    valR[0] = 255;
+                    valR[0] = 1;
                 
                 if(tmp.nivelGreen(x, y) < 128)
                     valG[0] = 0;
                 else
-                    valG[0] = 255;
+                    valG[0] = 1;
                 
                 if(tmp.nivelBlue(x, y) < 128)
                     valB[0] = 0;
                 else
-                    valB[0] = 255;
+                    valB[0] = 1;
                 
-                erroR = (float)tmp.nivelRed(   x, y) - valR[0];
-                erroG = (float)tmp.nivelGreen( x, y) - valG[0];
-                erroB = (float)tmp.nivelBlue(  x, y) - valB[0];
+                erroR = (float)tmp.nivelRed(   x, y) - (valR[0] * 255.0f);
+                erroG = (float)tmp.nivelGreen( x, y) - (valG[0] * 255.0f);
+                erroB = (float)tmp.nivelBlue(  x, y) - (valB[0] * 255.0f);
                 
-                if(x < (img.getWidth() - 1) ) {
-                    valR[1] = (float)tmp.nivelRed(   x + 1, y) + ((3.0f / 8.0f) * erroR);
-                    valG[1] = (float)tmp.nivelGreen( x + 1, y) + ((3.0f / 8.0f) * erroG);
-                    valB[1] = (float)tmp.nivelBlue(  x + 1, y) + ((3.0f / 8.0f) * erroB);
+                tmp.setRGB(x, y, valR[0], valG[0], valB[0]);
+                
+                for(int i = 1; i < disp.length; i++ ) {
+                    
+                    int posX = x + xx[i];
+                    int posY = y + yy[i];
+                    
+                    if(posX >= 0 && posY >= 0 && posX < img.getWidth() && posY < img.getHeight()) {
+                        
+                        erro[0] = erroR * (disp[i] / 8.0f);
+                        erro[1] = erroG * (disp[i] / 8.0f);
+                        erro[2] = erroB * (disp[i] / 8.0f);
+                        
+                        float [] rgb = dispersao( tmp, posX, posY, erro);
+                        
+                        valR[i] = rgb[0];
+                        valG[i] = rgb[1];
+                        valB[i] = rgb[2];
+                        
+                        if( valR[i] > 255 )
+                            valR[i] = 255;
+                        else if( valR[i] < 0 )
+                            valR[i] = 0;
+                        
+                        if( valG[i] > 255 )
+                            valG[i] = 255;
+                        else if( valG[i] < 0 )
+                            valG[i] = 0;
+                        
+                        if( valB[i] > 255 )
+                            valB[i] = 255;
+                        else if( valB[i] < 0 )
+                            valB[i] = 0;
+                        
+                        valR[i] /= 255;
+                        valG[i] /= 255;
+                        valB[i] /= 255;
+                        
+                        tmp.setRGB(posX, posY, valR[i], valG[i], valB[i]); 
+                    }
                 }
-                
-                if(y < (img.getHeight() - 1) ) {
-                    valR[2] = (float)tmp.nivelRed(   x, y + 1) + ((3.0f / 8.0f) * erroR);
-                    valG[2] = (float)tmp.nivelGreen( x, y + 1) + ((3.0f / 8.0f) * erroG);
-                    valB[2] = (float)tmp.nivelBlue(  x, y + 1) + ((3.0f / 8.0f) * erroB);
-                    
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
-                    valR[3] = (float)tmp.nivelRed(   x + 1, y + 1) + ((2.0f / 8.0f) * erroR);
-                    valG[3] = (float)tmp.nivelGreen( x + 1, y + 1) + ((2.0f / 8.0f) * erroG);
-                    valB[3] = (float)tmp.nivelBlue(  x + 1, y + 1) + ((2.0f / 8.0f) * erroB);
-                    
-                }
-                
-                for(int i = 0; i < valR.length; i++) {
-                    
-                    if( valR[i] > 255 )
-                        valR[i] = 255;
-                    else if( valR[i] < 0 )
-                        valR[i] = 0;
-                    
-                    if( valG[i] > 255 )
-                        valG[i] = 255;
-                    else if( valG[i] < 0 )
-                        valG[i] = 0;
-                    
-                    if( valB[i] > 255 )
-                        valB[i] = 255;
-                    else if( valB[i] < 0 )
-                        valB[i] = 0;
-                    
-                    valR[i] /= 255;
-                    valG[i] /= 255;
-                    valB[i] /= 255;
-                }
-                
-                tmp.setRGB(x,     y,     valR[0], valG[0], valB[0]);
-                
-                if(x < (img.getWidth() - 1) )
-                    tmp.setRGB(x + 1, y,     valR[1], valG[1], valB[1]); 
-                
-                if(y < (img.getHeight() -1) )
-                    tmp.setRGB(x,     y + 1, valR[2], valG[2], valB[2]);
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1))    
-                    tmp.setRGB(x + 1, y + 1, valR[3], valG[3], valB[3]);
                 
             }
                 
@@ -2732,6 +2734,30 @@ public class Filtros {
         
         float valR[], valG[], valB[];
         float erroR, erroG, erroB;
+        float [] erro;
+        float disp[] = {
+                0, 
+                7, 5, 3,
+                5, 7, 5,
+                3, 1, 3,
+                5, 3, 1
+        }; 
+        
+        int xx[] = {
+             0, 
+             1,  2, -2,
+            -1,  0,  1,
+             2, -2, -1,
+             0,  1,  2
+        };
+        
+        int yy[] = {
+                0, 
+                0, 0, 1,
+                1, 1, 1,
+                1, 2, 2,
+                2, 2, 2
+        };
         
         for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
@@ -2739,168 +2765,67 @@ public class Filtros {
                 valR = new float[13];
                 valG = new float[13];
                 valB = new float[13];
+                erro = new float[3];
                 
                 if(tmp.nivelRed(x, y) < 128)
                     valR[0] = 0;
                 else
-                    valR[0] = 255;
+                    valR[0] = 1;
                 
                 if(tmp.nivelGreen(x, y) < 128)
                     valG[0] = 0;
                 else
-                    valG[0] = 255;
+                    valG[0] = 1;
                 
                 if(tmp.nivelBlue(x, y) < 128)
                     valB[0] = 0;
                 else
-                    valB[0] = 255;
+                    valB[0] = 1;
                 
-                erroR = (float)tmp.nivelRed(   x, y) - valR[0];
-                erroG = (float)tmp.nivelGreen( x, y) - valG[0];
-                erroB = (float)tmp.nivelBlue(  x, y) - valB[0];
+                erroR = (float)tmp.nivelRed(   x, y) - (valR[0] * 255.0f);
+                erroG = (float)tmp.nivelGreen( x, y) - (valG[0] * 255.0f);
+                erroB = (float)tmp.nivelBlue(  x, y) - (valB[0] * 255.0f);
                 
-                if(x < (img.getWidth() - 1) ) {
-                    valR[1] = (float)tmp.nivelRed(   x + 1, y) + ((7.0f / 48.0f) * erroR);
-                    valG[1] = (float)tmp.nivelGreen( x + 1, y) + ((7.0f / 48.0f) * erroG);
-                    valB[1] = (float)tmp.nivelBlue(  x + 1, y) + ((7.0f / 48.0f) * erroB);
-                }
+                tmp.setRGB(x, y, valR[0], valG[0], valB[0]);
                 
-                if(x < (img.getWidth() - 2) ) {
-                    valR[2] = (float)tmp.nivelRed(   x + 2, y) + ((5.0f / 48.0f) * erroR);
-                    valG[2] = (float)tmp.nivelGreen( x + 2, y) + ((5.0f / 48.0f) * erroG);
-                    valB[2] = (float)tmp.nivelBlue(  x + 2, y) + ((5.0f / 48.0f) * erroB);
-                }
-                
-                if(x >= 2 && y < (img.getHeight() - 1)) {
-                    valR[3] = (float)tmp.nivelRed(   x - 2, y + 1) + ((3.0f / 48.0f) * erroR);
-                    valG[3] = (float)tmp.nivelGreen( x - 2, y + 1) + ((3.0f / 48.0f) * erroG);
-                    valB[3] = (float)tmp.nivelBlue(  x - 2, y + 1) + ((3.0f / 48.0f) * erroB);
-                }
-                
-                if(x >= 1 && y < (img.getHeight() - 1)) {
-                    valR[4] = (float)tmp.nivelRed(   x - 1, y + 1) + ((5.0f / 48.0f) * erroR);
-                    valG[4] = (float)tmp.nivelGreen( x - 1, y + 1) + ((5.0f / 48.0f) * erroG);
-                    valB[4] = (float)tmp.nivelBlue(  x - 1, y + 1) + ((5.0f / 48.0f) * erroB);
-                }
-                
-                if(y < (img.getHeight() - 1)) {
-                    valR[5] = (float)tmp.nivelRed(   x, y + 1) + ((7.0f / 48.0f) * erroR);
-                    valG[5] = (float)tmp.nivelGreen( x, y + 1) + ((7.0f / 48.0f) * erroG);
-                    valB[5] = (float)tmp.nivelBlue(  x, y + 1) + ((7.0f / 48.0f) * erroB);
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
-                    valR[6] = (float)tmp.nivelRed(   x + 1, y + 1) + ((5.0f / 48.0f) * erroR);
-                    valG[6] = (float)tmp.nivelGreen( x + 1, y + 1) + ((5.0f / 48.0f) * erroG);
-                    valB[6] = (float)tmp.nivelBlue(  x + 1, y + 1) + ((5.0f / 48.0f) * erroB);
-                }
-                
-                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 1)) {
-                    valR[7] = (float)tmp.nivelRed(   x + 2, y + 1) + ((3.0f / 48.0f) * erroR);
-                    valG[7] = (float)tmp.nivelGreen( x + 2, y + 1) + ((3.0f / 48.0f) * erroG);
-                    valB[7] = (float)tmp.nivelBlue(  x + 2, y + 1) + ((3.0f / 48.0f) * erroB);
-                }
-                
-                if(x >= 2 && y < (img.getHeight() - 2)) {
-                    valR[8] = (float)tmp.nivelRed(   x - 2, y + 2) + ((erroR / 48.0f));
-                    valG[8] = (float)tmp.nivelGreen( x - 2, y + 2) + ((erroG / 48.0f));
-                    valB[8] = (float)tmp.nivelBlue(  x - 2, y + 2) + ((erroB / 48.0f));
-                }
-                
-                if(x >= 1 && y < (img.getHeight() - 2)) {
-                    valR[9] = (float)tmp.nivelRed(   x - 1, y + 2) + ((3.0f / 48.0f) * erroR);
-                    valG[9] = (float)tmp.nivelGreen( x - 1, y + 2) + ((3.0f / 48.0f) * erroG);
-                    valB[9] = (float)tmp.nivelBlue(  x - 1, y + 2) + ((3.0f / 48.0f) * erroB);
-                }
-                
-                if(y < (img.getHeight() - 2)) {
-                    valR[10] = (float)tmp.nivelRed(   x, y + 2) + ((5.0f / 48.0f) * erroR);
-                    valG[10] = (float)tmp.nivelGreen( x, y + 2) + ((5.0f / 48.0f) * erroG);
-                    valB[10] = (float)tmp.nivelBlue(  x, y + 2) + ((5.0f / 48.0f) * erroB);
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 2)) {
-                    valR[11] = (float)tmp.nivelRed(   x + 1, y + 2) + ((3.0f / 48.0f) * erroR);
-                    valG[11] = (float)tmp.nivelGreen( x + 1, y + 2) + ((3.0f / 48.0f) * erroG);
-                    valB[11] = (float)tmp.nivelBlue(  x + 1, y + 2) + ((3.0f / 48.0f) * erroB);
-                }
-                
-                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 2)) {
-                    valR[12] = (float)tmp.nivelRed(   x + 2, y + 2) + ((erroR / 48.0f));
-                    valG[12] = (float)tmp.nivelGreen( x + 2, y + 2) + ((erroG / 48.0f));
-                    valB[12] = (float)tmp.nivelBlue(  x + 2, y + 2) + ((erroB / 48.0f));
-                }
-                
-                for(int i = 0; i < valR.length; i++) {
+                for(int i = 1; i < disp.length; i++ ) {
                     
-                    if( valR[i] > 255 )
-                        valR[i] = 255;
-                    else if( valR[i] < 0 )
-                        valR[i] = 0;
+                    int posX = x + xx[i];
+                    int posY = y + yy[i];
                     
-                    if( valG[i] > 255 )
-                        valG[i] = 255;
-                    else if( valG[i] < 0 )
-                        valG[i] = 0;
-                    
-                    if( valB[i] > 255 )
-                        valB[i] = 255;
-                    else if( valB[i] < 0 )
-                        valB[i] = 0;
-                    
-                    valR[i] /= 255;
-                    valG[i] /= 255;
-                    valB[i] /= 255;
-                }
-                
-                tmp.setRGB( x, y, valR[0], valG[0], valB[0] );
-                
-                if(x < (img.getWidth() - 1) ) {
-                    tmp.setRGB( x + 1, y, valR[1], valG[1], valB[1] );
-                }
-                
-                if(x < (img.getWidth() - 2) ) {
-                    tmp.setRGB( x + 2, y, valR[2], valG[2], valB[2] );
-                }
-                
-                if(x >= 2 && y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x - 2, y + 1, valR[3], valG[3], valB[3] );
-                }
-                
-                if(x >= 1 && y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x - 1, y + 1, valR[4], valG[4], valB[4] );
-                }
-                
-                if(y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x, y + 1, valR[5], valG[5], valB[5] );
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x + 1, y + 1, valR[6], valG[6], valB[6] );
-                }
-                
-                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x + 2, y + 1, valR[7], valG[7], valB[7] );
-                }
-                
-                if(x >= 2 && y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x - 2, y + 2, valR[8], valG[8], valB[8] );
-                }
-                
-                if(x >= 1 && y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x - 1, y + 2, valR[9], valG[9], valB[9] );
-                }
-                
-                if(y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x, y + 2, valR[10], valG[10], valB[10] );
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x + 1, y + 2, valR[11], valG[11], valB[11] );
-                }
-                
-                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x + 2, y + 2, valR[12], valG[12], valB[12] );
+                    if(posX >= 0 && posY >= 0 && posX < img.getWidth() && posY < img.getHeight()) {
+                        
+                        erro[0] = erroR * (disp[i] / 48.0f);
+                        erro[1] = erroG * (disp[i] / 48.0f);
+                        erro[2] = erroB * (disp[i] / 48.0f);
+                        
+                        float [] rgb = dispersao( tmp, posX, posY, erro);
+                        
+                        valR[i] = rgb[0];
+                        valG[i] = rgb[1];
+                        valB[i] = rgb[2];
+                        
+                        if( valR[i] > 255 )
+                            valR[i] = 255;
+                        else if( valR[i] < 0 )
+                            valR[i] = 0;
+                        
+                        if( valG[i] > 255 )
+                            valG[i] = 255;
+                        else if( valG[i] < 0 )
+                            valG[i] = 0;
+                        
+                        if( valB[i] > 255 )
+                            valB[i] = 255;
+                        else if( valB[i] < 0 )
+                            valB[i] = 0;
+                        
+                        valR[i] /= 255;
+                        valG[i] /= 255;
+                        valB[i] /= 255;
+                        
+                        tmp.setRGB(posX, posY, valR[i], valG[i], valB[i]); 
+                    }
                 }
                 
             }
@@ -2914,6 +2839,30 @@ public class Filtros {
         
         float valR[], valG[], valB[];
         float erroR, erroG, erroB;
+        float [] erro;
+        float disp[] = {
+                0, 
+                8, 4, 2,
+                4, 8, 4,
+                2, 1, 2,
+                4, 2, 1
+        }; 
+        
+        int xx[] = {
+                0, 
+                1,  2, -2,
+               -1,  0,  1,
+                2, -2, -1,
+                0,  1,  2
+           };
+           
+           int yy[] = {
+                   0, 
+                   0, 0, 1,
+                   1, 1, 1,
+                   1, 2, 2,
+                   2, 2, 2
+           };
         
         for(int y = 0; y < img.getHeight(); y++) 
             for(int x = 0; x < img.getWidth(); x++) {
@@ -2921,168 +2870,67 @@ public class Filtros {
                 valR = new float[13];
                 valG = new float[13];
                 valB = new float[13];
+                erro = new float[3];
                 
                 if(tmp.nivelRed(x, y) < 128)
                     valR[0] = 0;
                 else
-                    valR[0] = 255;
+                    valR[0] = 1;
                 
                 if(tmp.nivelGreen(x, y) < 128)
                     valG[0] = 0;
                 else
-                    valG[0] = 255;
+                    valG[0] = 1;
                 
                 if(tmp.nivelBlue(x, y) < 128)
                     valB[0] = 0;
                 else
-                    valB[0] = 255;
+                    valB[0] = 1;
                 
-                erroR = (float)tmp.nivelRed(   x, y) - valR[0];
-                erroG = (float)tmp.nivelGreen( x, y) - valG[0];
-                erroB = (float)tmp.nivelBlue(  x, y) - valB[0];
+                erroR = (float)tmp.nivelRed(   x, y) - (valR[0] * 255.0f);
+                erroG = (float)tmp.nivelGreen( x, y) - (valG[0] * 255.0f);
+                erroB = (float)tmp.nivelBlue(  x, y) - (valB[0] * 255.0f);
                 
-                if(x < (img.getWidth() - 1) ) {
-                    valR[1] = (float)tmp.nivelRed(   x + 1, y) + ((8.0f / 42.0f) * erroR);
-                    valG[1] = (float)tmp.nivelGreen( x + 1, y) + ((8.0f / 42.0f) * erroG);
-                    valB[1] = (float)tmp.nivelBlue(  x + 1, y) + ((8.0f / 42.0f) * erroB);
-                }
+                tmp.setRGB(x, y, valR[0], valG[0], valB[0]);
                 
-                if(x < (img.getWidth() - 2) ) {
-                    valR[2] = (float)tmp.nivelRed(   x + 2, y) + ((4.0f / 42.0f) * erroR);
-                    valG[2] = (float)tmp.nivelGreen( x + 2, y) + ((4.0f / 42.0f) * erroG);
-                    valB[2] = (float)tmp.nivelBlue(  x + 2, y) + ((4.0f / 42.0f) * erroB);
-                }
-                
-                if(x >= 2 && y < (img.getHeight() - 1)) {
-                    valR[3] = (float)tmp.nivelRed(   x - 2, y + 1) + ((2.0f / 42.0f) * erroR);
-                    valG[3] = (float)tmp.nivelGreen( x - 2, y + 1) + ((2.0f / 42.0f) * erroG);
-                    valB[3] = (float)tmp.nivelBlue(  x - 2, y + 1) + ((2.0f / 42.0f) * erroB);
-                }
-                
-                if(x >= 1 && y < (img.getHeight() - 1)) {
-                    valR[4] = (float)tmp.nivelRed(   x - 1, y + 1) + ((4.0f / 42.0f) * erroR);
-                    valG[4] = (float)tmp.nivelGreen( x - 1, y + 1) + ((4.0f / 42.0f) * erroG);
-                    valB[4] = (float)tmp.nivelBlue(  x - 1, y + 1) + ((4.0f / 42.0f) * erroB);
-                }
-                
-                if(y < (img.getHeight() - 1)) {
-                    valR[5] = (float)tmp.nivelRed(   x, y + 1) + ((8.0f / 42.0f) * erroR);
-                    valG[5] = (float)tmp.nivelGreen( x, y + 1) + ((8.0f / 42.0f) * erroG);
-                    valB[5] = (float)tmp.nivelBlue(  x, y + 1) + ((8.0f / 42.0f) * erroB);
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
-                    valR[6] = (float)tmp.nivelRed(   x + 1, y + 1) + ((4.0f / 42.0f) * erroR);
-                    valG[6] = (float)tmp.nivelGreen( x + 1, y + 1) + ((4.0f / 42.0f) * erroG);
-                    valB[6] = (float)tmp.nivelBlue(  x + 1, y + 1) + ((4.0f / 42.0f) * erroB);
-                }
-                
-                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 1)) {
-                    valR[7] = (float)tmp.nivelRed(   x + 2, y + 1) + ((2.0f / 42.0f) * erroR);
-                    valG[7] = (float)tmp.nivelGreen( x + 2, y + 1) + ((2.0f / 42.0f) * erroG);
-                    valB[7] = (float)tmp.nivelBlue(  x + 2, y + 1) + ((2.0f / 42.0f) * erroB);
-                }
-                
-                if(x >= 2 && y < (img.getHeight() - 2)) {
-                    valR[8] = (float)tmp.nivelRed(   x - 2, y + 2) + ((erroR / 42.0f));
-                    valG[8] = (float)tmp.nivelGreen( x - 2, y + 2) + ((erroG / 42.0f));
-                    valB[8] = (float)tmp.nivelBlue(  x - 2, y + 2) + ((erroB / 42.0f));
-                }
-                
-                if(x >= 1 && y < (img.getHeight() - 2)) {
-                    valR[9] = (float)tmp.nivelRed(   x - 1, y + 2) + ((2.0f / 42.0f) * erroR);
-                    valG[9] = (float)tmp.nivelGreen( x - 1, y + 2) + ((2.0f / 42.0f) * erroG);
-                    valB[9] = (float)tmp.nivelBlue(  x - 1, y + 2) + ((2.0f / 42.0f) * erroB);
-                }
-                
-                if(y < (img.getHeight() - 2)) {
-                    valR[10] = (float)tmp.nivelRed(   x, y + 2) + ((4.0f / 42.0f) * erroR);
-                    valG[10] = (float)tmp.nivelGreen( x, y + 2) + ((4.0f / 42.0f) * erroG);
-                    valB[10] = (float)tmp.nivelBlue(  x, y + 2) + ((4.0f / 42.0f) * erroB);
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 2)) {
-                    valR[11] = (float)tmp.nivelRed(   x + 1, y + 2) + ((2.0f / 42.0f) * erroR);
-                    valG[11] = (float)tmp.nivelGreen( x + 1, y + 2) + ((2.0f / 42.0f) * erroG);
-                    valB[11] = (float)tmp.nivelBlue(  x + 1, y + 2) + ((2.0f / 42.0f) * erroB);
-                }
-                
-                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 2)) {
-                    valR[12] = (float)tmp.nivelRed(   x + 2, y + 2) + ((erroR / 42.0f));
-                    valG[12] = (float)tmp.nivelGreen( x + 2, y + 2) + ((erroG / 42.0f));
-                    valB[12] = (float)tmp.nivelBlue(  x + 2, y + 2) + ((erroB / 42.0f));
-                }
-                
-                for(int i = 0; i < valR.length; i++) {
+                for(int i = 1; i < disp.length; i++ ) {
                     
-                    if( valR[i] > 255 )
-                        valR[i] = 255;
-                    else if( valR[i] < 0 )
-                        valR[i] = 0;
+                    int posX = x + xx[i];
+                    int posY = y + yy[i];
                     
-                    if( valG[i] > 255 )
-                        valG[i] = 255;
-                    else if( valG[i] < 0 )
-                        valG[i] = 0;
-                    
-                    if( valB[i] > 255 )
-                        valB[i] = 255;
-                    else if( valB[i] < 0 )
-                        valB[i] = 0;
-                    
-                    valR[i] /= 255;
-                    valG[i] /= 255;
-                    valB[i] /= 255;
-                }
-                
-                tmp.setRGB( x, y, valR[0], valG[0], valB[0] );
-                
-                if(x < (img.getWidth() - 1) ) {
-                    tmp.setRGB( x + 1, y, valR[1], valG[1], valB[1] );
-                }
-                
-                if(x < (img.getWidth() - 2) ) {
-                    tmp.setRGB( x + 2, y, valR[2], valG[2], valB[2] );
-                }
-                
-                if(x >= 2 && y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x - 2, y + 1, valR[3], valG[3], valB[3] );
-                }
-                
-                if(x >= 1 && y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x - 1, y + 1, valR[4], valG[4], valB[4] );
-                }
-                
-                if(y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x, y + 1, valR[5], valG[5], valB[5] );
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x + 1, y + 1, valR[6], valG[6], valB[6] );
-                }
-                
-                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 1)) {
-                    tmp.setRGB( x + 2, y + 1, valR[7], valG[7], valB[7] );
-                }
-                
-                if(x >= 2 && y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x - 2, y + 2, valR[8], valG[8], valB[8] );
-                }
-                
-                if(x >= 1 && y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x - 1, y + 2, valR[9], valG[9], valB[9] );
-                }
-                
-                if(y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x, y + 2, valR[10], valG[10], valB[10] );
-                }
-                
-                if(x < (img.getWidth() - 1) && y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x + 1, y + 2, valR[11], valG[11], valB[11] );
-                }
-                
-                if(x < (img.getWidth() - 2) && y < (img.getHeight() - 2)) {
-                    tmp.setRGB( x + 2, y + 2, valR[12], valG[12], valB[12] );
+                    if(posX >= 0 && posY >= 0 && posX < img.getWidth() && posY < img.getHeight()) {
+                        
+                        erro[0] = erroR * (disp[i] / 42.0f);
+                        erro[1] = erroG * (disp[i] / 42.0f);
+                        erro[2] = erroB * (disp[i] / 42.0f);
+                        
+                        float [] rgb = dispersao( tmp, posX, posY, erro);
+                        
+                        valR[i] = rgb[0];
+                        valG[i] = rgb[1];
+                        valB[i] = rgb[2];
+                        
+                        if( valR[i] > 255 )
+                            valR[i] = 255;
+                        else if( valR[i] < 0 )
+                            valR[i] = 0;
+                        
+                        if( valG[i] > 255 )
+                            valG[i] = 255;
+                        else if( valG[i] < 0 )
+                            valG[i] = 0;
+                        
+                        if( valB[i] > 255 )
+                            valB[i] = 255;
+                        else if( valB[i] < 0 )
+                            valB[i] = 0;
+                        
+                        valR[i] /= 255;
+                        valG[i] /= 255;
+                        valB[i] /= 255;
+                        
+                        tmp.setRGB(posX, posY, valR[i], valG[i], valB[i]); 
+                    }
                 }
                 
             }

@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -83,7 +84,7 @@ public class Painel implements Initializable{
     private Pane painelLateral;
     
     @FXML
-    private Pane paneHTML;
+    private ScrollPane paneHTML;
     
     @FXML
     private MenuItem botaoHistograma;
@@ -775,28 +776,75 @@ public class Painel implements Initializable{
     
     @FXML
     void RealceLog(ActionEvent event) {
-        Realce.NaoLinear(imgFinal, 1);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Realce.NaoLinear(imgFinal, 1) );    
+        else
+            imgFinal.setImg( Realce.NaoLinear(imagem, 1) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
+        lstAct = 0;
     }
 
     @FXML
     void RealceQuad(ActionEvent event) {
-        Realce.NaoLinear(imgFinal, 3);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Realce.NaoLinear(imgFinal, 3) );    
+        else
+            imgFinal.setImg( Realce.NaoLinear(imagem, 3) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
+        lstAct = 0;
     }
     
 
     @FXML
     void RealceExp(ActionEvent event) {
-        Realce.NaoLinear(imgFinal, 2);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Realce.NaoLinear(imgFinal, 2) );    
+        else
+            imgFinal.setImg( Realce.NaoLinear(imagem, 2) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
+        lstAct = 0;
     }
 
     @FXML
     void RealceRaiz(ActionEvent event) {
-        Realce.NaoLinear(imgFinal, 4);
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Realce.NaoLinear(imgFinal, 4) );    
+        else
+            imgFinal.setImg( Realce.NaoLinear(imagem, 4) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
+        lstAct = 0;
     }
     
     @FXML
     void equalHisto(ActionEvent event) {
-        Realce.EqualizarHistoGrama(imgFinal.getImg());
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Realce.EqualizarHistoGrama(imgFinal.getImg()) );    
+        else
+            imgFinal.setImg( Realce.EqualizarHistoGrama(imagem.getImg()) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
+        lstAct = 0;
     }
     
     @FXML
@@ -810,7 +858,7 @@ public class Painel implements Initializable{
     }
 
     //--------------------------------------------------------------
-    //Métodos extras
+    //Filtragem
     
     @FXML
     void media3x3(ActionEvent event) {
@@ -822,6 +870,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
 
     @FXML
@@ -834,6 +884,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
 
     @FXML
@@ -846,6 +898,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
 
     @FXML
@@ -858,6 +912,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -870,6 +926,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
 
     @FXML
@@ -882,6 +940,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -894,6 +954,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -906,6 +968,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -918,6 +982,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -930,6 +996,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -942,6 +1010,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -954,6 +1024,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -966,6 +1038,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -978,6 +1052,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -990,6 +1066,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -1002,6 +1080,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -1019,6 +1099,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
     }
     
     @FXML
@@ -1031,6 +1113,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
 
     }
     
@@ -1045,6 +1129,8 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
+        lstAct = 0;
+
     }
     
     @FXML
@@ -1057,6 +1143,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
 
     }
     
@@ -1071,6 +1159,8 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
+        lstAct = 0;
+
     }
     
     @FXML
@@ -1083,6 +1173,8 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
+
+        lstAct = 0;
 
     }
     
@@ -1097,6 +1189,8 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
+        lstAct = 0;
+
     }
     
     @FXML
@@ -1110,10 +1204,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
+        lstAct = 0;
+
     }
     
     //--------------------------------------------------------------
-    //Métodos extras
+    //Mapeamento de bits
     
     @FXML
     void esteganografia(ActionEvent event) {
@@ -1326,6 +1422,8 @@ public class Painel implements Initializable{
         
         popupAmplificacao.setVisible(false);
         textoAmplificar.setText("1");
+        
+        lstAct = 0;
     }
     
     @FXML
@@ -1334,10 +1432,19 @@ public class Painel implements Initializable{
         valorMinimo = Integer.valueOf( valorMin.getText() );
         MinMaxPane.setVisible(false);
         
-        Realce.Linear(imgFinal, valorMinimo, valorMaximo, linearInverso);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Realce.Linear(imgFinal, valorMinimo, valorMaximo, linearInverso) );    
+        else
+            imgFinal.setImg( Realce.Linear(imagem, valorMinimo, valorMaximo, linearInverso) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
         
         valorMax.clear();
         valorMin.clear();
+        
+        lstAct = 0;
     }
     
     @FXML
@@ -1346,7 +1453,16 @@ public class Painel implements Initializable{
         gamma = Double.valueOf( valorGamma.getText() );
         GammaPane.setVisible(false);
         
-        Realce.corrigirGama(imgFinal, fatorC, gamma);
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Realce.corrigirGama(imgFinal, fatorC, gamma) );    
+        else
+            imgFinal.setImg( Realce.corrigirGama(imagem, fatorC, gamma) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
+        lstAct = 0;
     }
     
     @FXML
@@ -1485,6 +1601,8 @@ public class Painel implements Initializable{
     
     @FXML
     void salvarHTML(ActionEvent event) {
+        
+        System.out.println(htmlEditor.getHtmlText());
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( BitMapping.esteganografia(imgFinal, htmlEditor.getHtmlText()) );    

@@ -12,7 +12,7 @@ public class BitMapping {
         int caractere;
         
         for (int y = 0; y < tmp.getHeight(); y++) {
-            for(int x = 0; x < tmp.getWidth(); x += 8) {
+            for(int x = 0; x < tmp.getWidth() - 8; x += 8) {
                 
                 if(index < texto.length())
                     caractere = texto.charAt( index++ );
@@ -24,11 +24,11 @@ public class BitMapping {
                     int bit = caractere & (1 << i);
                     int rgb = img.getRGB(x + i, y);
                     
-                    if(bit == 1) {
-                        rgb = rgb & ~(0);
+                    if(bit != 0) {
+                        rgb = rgb | 1;
                     }
-                    else if(bit == 0) {
-                        rgb = rgb & ~(1);
+                    else {
+                        rgb = rgb & ~1;
                     }
                     
                     tmp.setRGB(x + i, y, rgb);
@@ -47,7 +47,7 @@ public class BitMapping {
         String texto = "";
         
         for (int y = 0; y < tmp.getHeight(); y++) {
-            for(int x = 0; x < tmp.getWidth(); x += 8) {
+            for(int x = 0; x < tmp.getWidth() - 8; x += 8) {
                 
                 String caractere = "";
                 
@@ -56,10 +56,10 @@ public class BitMapping {
                     int bit = img.getRGB(x + i, y) & 1;
                     
                     if(bit == 1) {
-                        caractere = caractere.concat("1");
+                        caractere += "1";
                     }
                     else if(bit == 0) {
-                        caractere = caractere.concat("0");
+                        caractere += "0";
                     }
                     
                 }
@@ -73,12 +73,18 @@ public class BitMapping {
     }
     
     private static String binario( String bin ) {
-        int letra = Integer.parseInt(bin, 2);
+        
+        String newBin = "";
+
+        for (int i = bin.length() - 1; i >= 0; i--) {
+            newBin += Character.toString( bin.charAt(i) );
+        }
+
+        int letra = Integer.parseInt(newBin, 2);
         
         if(letra == 0)
             return "";
         
-        System.out.println((char)letra);
         return Character.toString((char)letra);
     }
 }
