@@ -70,6 +70,9 @@ public class Painel implements Initializable{
 
     @FXML
     private Menu menuFiltragem;
+
+    @FXML
+    private Menu menuSegmentacao;
     
     @FXML
     private Menu menuCores;
@@ -162,6 +165,9 @@ public class Painel implements Initializable{
     private TextField valorMin;
     
     @FXML
+    private TextField textoT;
+    
+    @FXML
     private TextField valorMax;
 
     @FXML
@@ -190,6 +196,9 @@ public class Painel implements Initializable{
 
     @FXML
     private Pane popupValor;
+    
+    @FXML
+    private Pane popupT;
     
     @FXML
     private Pane popupAmplificacao;
@@ -267,9 +276,8 @@ public class Painel implements Initializable{
     @FXML
     void abrirImgPrimaria(ActionEvent event) {
         img = null;
-        imagem.carregarImg();
 
-        if(imagem.getImg() != null){
+        if( imagem.carregarImg() ){
             imgFinal.setImg( imagem.getImg() );
             
             img = SwingFXUtils.toFXImage(imagem.getImg(), null);
@@ -1515,6 +1523,266 @@ public class Painel implements Initializable{
         lstAct = 0;
 
     }
+
+    //--------------------------------------------------------------
+    //Segmentação
+    
+    @FXML
+    void detPonto(ActionEvent event) {
+        popupT.setVisible(true);
+    }
+    
+    @FXML
+    void detRetaHori(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.detRetaHori(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.detRetaHori(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void detRetaVert(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.detRetaVert(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.detRetaVert(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void detReta45(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.detReta45(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.detReta45(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void detReta135(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.detReta135(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.detReta135(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void roberts(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.roberts(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.roberts(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void robertsCruz(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.robertsCruz(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.robertsCruz(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void prewittMag(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.prewittMag(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.prewittMag(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void prewittGX(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.prewittGX(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.prewittGX(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void prewittGY(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.prewittGY(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.prewittGY(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void sobelGX(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.sobelGX(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.sobelGX(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void sobelGY(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.sobelGY(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.sobelGY(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void sobelMag(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.sobelMag(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.sobelMag(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void kirsh(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.kirsh(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.kirsh(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void robison(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.robison(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.robison(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
     
     //--------------------------------------------------------------
     //Mapeamento de bits
@@ -1737,6 +2005,27 @@ public class Painel implements Initializable{
     }
     
     @FXML
+    void botaoT(ActionEvent event) {
+        
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.detPonto(imgFinal, Double.valueOf(textoT.getText())) );    
+        else
+            imgFinal.setImg( Segmentacao.detPonto(imagem, Double.valueOf(textoT.getText())) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        popupT.setVisible(false);
+        textoT.setText("");
+        
+        lstAct = 0;
+    }
+    
+    @FXML
     void botaoRealceLinear(ActionEvent event) {
         img = null;
         alteracoes.add( imgFinal.getImg() );
@@ -1804,6 +2093,7 @@ public class Painel implements Initializable{
         menuEstegano.setDisable(true);
         menuFiltragem.setDisable(true);
         botaoSalvar.setDisable(true);
+        menuSegmentacao.setDisable(true);
         
         /*
          * Se restar apenas a imagem primária na 
@@ -1876,6 +2166,7 @@ public class Painel implements Initializable{
         menuFiltragem.setDisable(false);
         menuEstegano.setDisable(false);
         botaoSalvar.setDisable(false);
+        menuSegmentacao.setDisable(false);
         
         dragMode = false;
         

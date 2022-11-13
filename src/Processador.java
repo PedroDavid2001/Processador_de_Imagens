@@ -84,24 +84,28 @@ import javafx.scene.image.Image;
 
 public class Processador {
 
-    private BufferedImage arquivo;
-    private ImagePlus imagePlus;
-    private String path;
+    private BufferedImage arquivo = null;
+    private ImagePlus imagePlus = null;
+    private String path = null;
     
     public boolean carregarImg(){
         
-        arquivo = null;
-        imagePlus = null;
-      
-        imagePlus = IJ.openImage(); //abre o explorador de arquivo
-       
-        if(imagePlus != null){  //verifica se obteve sucesso na abertura do arquivo
+        ImagePlus opened = IJ.openImage(); //abre o explorador de arquivo
+        
+        if(opened != null) {
             
-            path = imagePlus.getOriginalFileInfo().getFilePath();   /*passa o path da imagem selecionada
-                                                                    para a String*/
+            arquivo = null;
+            imagePlus = null;
+          
+            imagePlus = opened; 
+            
+            path = imagePlus.getOriginalFileInfo().getFilePath();   
+            /*passa o path da imagem selecionada
+            para a String*/
 
-            String format = path.substring(path.length() - 4, path.length());   /*passa os quatro últimos caracteres 
-                                                                                para a String para verificar o formato*/
+            String format = path.substring(path.length() - 4, path.length());   
+            /*passa os quatro últimos caracteres 
+            para a String para verificar o formato*/
             
             try {
                 File file = new File(path);
@@ -112,16 +116,16 @@ public class Processador {
                 else{
                     arquivo = ImageIO.read(file);
                 }
+                
                 return true;
-
-            } catch (Exception exc) {
-
+            } 
+            catch (Exception exc) {
                 exc.printStackTrace();
                 System.out.println("Ocorreu um erro na abertura do arquivo!!");
-              
+            
                 return false;
-
             }
+
         }
         else{
             return false;

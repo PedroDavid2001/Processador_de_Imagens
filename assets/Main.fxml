@@ -169,6 +169,33 @@
                   <MenuItem mnemonicParsing="false" onAction="#negativo" text="Negativo" />
                </items>
             </Menu>
+            <Menu fx:id="menuSegmentacao" disable="true" mnemonicParsing="false" text="Segmentação">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#detPonto" text="Detecção de pontos" />
+                  <Menu mnemonicParsing="false" text="Detecção de retas">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#detRetaHori" text="Horizontal" />
+                        <MenuItem mnemonicParsing="false" onAction="#detRetaVert" text="Vertical" />
+                        <MenuItem mnemonicParsing="false" onAction="#detReta45" text="45 graus" />
+                        <MenuItem mnemonicParsing="false" onAction="#detReta135" text="135 graus" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Detecção de bordas">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#roberts" text="Roberts" />
+                        <MenuItem mnemonicParsing="false" onAction="#robertsCruz" text="Roberts Cruzado" />
+                        <MenuItem mnemonicParsing="false" onAction="#prewittMag" text="Prewitt Magnitude" />
+                        <MenuItem mnemonicParsing="false" onAction="#prewittGX" text="Prewitt Gx" />
+                        <MenuItem mnemonicParsing="false" onAction="#prewittGY" text="Prewitt Gy" />
+                        <MenuItem mnemonicParsing="false" onAction="#sobelGX" text="Sobel Gx" />
+                        <MenuItem mnemonicParsing="false" onAction="#sobelGY" text="Sobel Gy" />
+                        <MenuItem mnemonicParsing="false" onAction="#sobelMag" text="Sobel Magnitude" />
+                        <MenuItem mnemonicParsing="false" onAction="#kirsh" text="Kirsh" />
+                        <MenuItem mnemonicParsing="false" onAction="#robison" text="Robison" />
+                     </items>
+                  </Menu>
+               </items>
+            </Menu>
             <Menu fx:id="menuEstegano" disable="true" mnemonicParsing="false" text="Manipulação de bits">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#fatiarBits" text="Fatiar Bits" />
@@ -324,6 +351,21 @@
                         </Pane>
                      </content>
                   </ScrollPane>
+                  <Pane fx:id="popupT" layoutX="10.0" layoutY="10.0" prefHeight="130.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                     <children>
+                        <Label layoutX="80.0" layoutY="8.0" prefHeight="30.0" prefWidth="98.0" text="Digite o valor ">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textoT" layoutX="75.0" layoutY="48.0" prefWidth="100.0" promptText="T" />
+                        <Button layoutX="70.0" layoutY="87.0" mnemonicParsing="false" onAction="#botaoT" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </Pane>
                </children>
             </AnchorPane>
          </content>
