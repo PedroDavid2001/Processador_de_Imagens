@@ -1784,6 +1784,60 @@ public class Painel implements Initializable{
 
     }
     
+    @FXML
+    void freiChen(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.freiChen(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.freiChen(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void laplacianoH1(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.laplacianoH1(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.laplacianoH1(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void laplacianoH2(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.laplacianoH2(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.laplacianoH2(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
     //--------------------------------------------------------------
     //Mapeamento de bits
     

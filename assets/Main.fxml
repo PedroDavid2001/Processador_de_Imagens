@@ -192,6 +192,9 @@
                         <MenuItem mnemonicParsing="false" onAction="#sobelMag" text="Sobel Magnitude" />
                         <MenuItem mnemonicParsing="false" onAction="#kirsh" text="Kirsh" />
                         <MenuItem mnemonicParsing="false" onAction="#robison" text="Robison" />
+                        <MenuItem mnemonicParsing="false" onAction="#freiChen" text="Frei-Chen" />
+                        <MenuItem mnemonicParsing="false" onAction="#laplacianoH1" text="Laplaciano H1" />
+                        <MenuItem mnemonicParsing="false" onAction="#laplacianoH2" text="Laplaciano H2" />
                      </items>
                   </Menu>
                </items>

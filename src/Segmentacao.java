@@ -946,4 +946,320 @@ public class Segmentacao {
         
         return tmp.getImg();
     }
+    
+    public static BufferedImage freiChen(Processador img ) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        float raiz = (float)Math.sqrt(2.0);
+        
+        for(int y = 1; y < (img.getHeight() - 1); y++) 
+            for(int x = 1; x < (img.getWidth() - 1); x++) {
+                
+                float f = 0;
+                int index;
+                float mask[] = new float[9];
+                
+                //inicializando vetor
+                for(int i = 0; i < mask.length; i++) {
+                    mask[i] = 0;
+                }
+                
+                //calculo das mascaras
+                for(int cur = 1; cur <= mask.length; cur++) {
+                    
+                    switch(cur) {
+                        case 1:
+                            index = 0;
+                            for(int j = y - 1; j <= y + 1; j++)
+                                for(int i = x - 1; i <= x + 1; i++) {
+                                    
+                                    switch(index) {
+                                        case 0:
+                                        case 2:
+                                            mask[cur - 1] += img.nivelCinza(i, j);
+                                            break;
+                                        case 1:
+                                            mask[cur - 1] += (img.nivelCinza(i, j) * raiz);
+                                            break;
+                                        case 7:
+                                            mask[cur - 1] -= (img.nivelCinza(i, j) * raiz);
+                                            break;
+                                        case 6:
+                                        case 8:
+                                            mask[cur - 1] -= img.nivelCinza(i, j);
+                                            break;
+                                    }
+                                    index++;
+                                }
+                            break;
+                        case 2:
+                            index = 0;
+                            for(int j = y - 1; j <= y + 1; j++)
+                                for(int i = x - 1; i <= x + 1; i++) {
+                                    
+                                    switch(index) {
+                                        case 0:
+                                        case 6:
+                                            mask[cur - 1] += img.nivelCinza(i, j);
+                                            break;
+                                        case 3:
+                                            mask[cur - 1] += (img.nivelCinza(i, j) * raiz);
+                                            break;
+                                        case 5:
+                                            mask[cur - 1] -= (img.nivelCinza(i, j) * raiz);
+                                            break;
+                                        case 2:
+                                        case 8:
+                                            mask[cur - 1] -= img.nivelCinza(i, j);
+                                            break;
+                                    }
+                                    index++;
+                                }
+                            break;
+                        case 3:
+                            index = 0;
+                            for(int j = y - 1; j <= y + 1; j++)
+                                for(int i = x - 1; i <= x + 1; i++) {
+                                    
+                                    switch(index) {
+                                        case 3:
+                                        case 7:
+                                            mask[cur - 1] += img.nivelCinza(i, j);
+                                            break;
+                                        case 2:
+                                            mask[cur - 1] += (img.nivelCinza(i, j) * raiz);
+                                            break;
+                                        case 6:
+                                            mask[cur - 1] -= (img.nivelCinza(i, j) * raiz);
+                                            break;
+                                        case 1:
+                                        case 5:
+                                            mask[cur - 1] -= img.nivelCinza(i, j);
+                                            break;
+                                    }
+                                    index++;
+                                }
+                            break;
+                        case 4:
+                            index = 0;
+                            for(int j = y - 1; j <= y + 1; j++)
+                                for(int i = x - 1; i <= x + 1; i++) {
+                                    
+                                    switch(index) {
+                                        case 5:
+                                        case 7:
+                                            mask[cur - 1] += img.nivelCinza(i, j);
+                                            break;
+                                        case 0:
+                                            mask[cur - 1] += (img.nivelCinza(i, j) * raiz);
+                                            break;
+                                        case 8:
+                                            mask[cur - 1] -= (img.nivelCinza(i, j) * raiz);
+                                            break;
+                                        case 1:
+                                        case 3:
+                                            mask[cur - 1] -= img.nivelCinza(i, j);
+                                            break;
+                                    }
+                                    index++;
+                                }
+                            break;
+                        case 5:
+                            index = 0;
+                            for(int j = y - 1; j <= y + 1; j++)
+                                for(int i = x - 1; i <= x + 1; i++) {
+                                    
+                                    switch(index) {
+                                        case 1:
+                                        case 7:
+                                            mask[cur - 1] += img.nivelCinza(i, j);
+                                            break;
+                                        case 3:
+                                        case 5:
+                                            mask[cur - 1] -= img.nivelCinza(i, j);
+                                            break;
+                                    }
+                                    index++;
+                                }
+                            break;
+                        case 6:
+                            index = 0;
+                            for(int j = y - 1; j <= y + 1; j++)
+                                for(int i = x - 1; i <= x + 1; i++) {
+                                    
+                                    switch(index) {
+                                        case 2:
+                                        case 6:
+                                            mask[cur - 1] += img.nivelCinza(i, j);
+                                            break;
+                                        case 0:
+                                        case 8:
+                                            mask[cur - 1] -= img.nivelCinza(i, j);
+                                            break;
+                                    }
+                                    index++;
+                                }
+                            break;
+                        case 7:
+                            index = 0;
+                            for(int j = y - 1; j <= y + 1; j++)
+                                for(int i = x - 1; i <= x + 1; i++) {
+                                    
+                                    switch(index) {
+                                        case 1:
+                                        case 3:
+                                        case 5:
+                                        case 7:
+                                            mask[cur - 1] -= (img.nivelCinza(i, j) * 2);
+                                            break;
+                                        case 4:
+                                            mask[cur - 1] += (img.nivelCinza(i, j) * 4);
+                                            break;
+                                        default:
+                                            mask[cur - 1] += img.nivelCinza(i, j);
+                                            break;
+                                    }
+                                    index++;
+                                }
+                            break;
+                        case 8:
+                            index = 0;
+                            for(int j = y - 1; j <= y + 1; j++)
+                                for(int i = x - 1; i <= x + 1; i++) {
+                                    
+                                    switch(index) {
+                                        case 0:
+                                        case 2:
+                                        case 6:
+                                        case 8:
+                                            mask[cur - 1] -= (img.nivelCinza(i, j) * 2);
+                                            break;
+                                        case 4:
+                                            mask[cur - 1] += (img.nivelCinza(i, j) * 4);
+                                            break;
+                                        default:
+                                            mask[cur - 1] += img.nivelCinza(i, j);
+                                            break;
+                                    }
+                                    index++;
+                                }
+                            break;
+                        case 9:
+                            for(int j = y - 1; j <= y + 1; j++)
+                                for(int i = x - 1; i <= x + 1; i++) {
+                                    mask[cur - 1] += img.nivelCinza(i, j);
+                                }
+                            break;
+                    }
+                }
+                
+                //somatorio ponderado das mascaras
+                for(int i = 0; i <= 3; i++)
+                    f += mask[i] / (2.0 * raiz);
+                
+                for(int i = 4; i <= 5; i++)
+                    f += mask[i] / 2.0;
+                
+                for(int i = 6; i <= 7; i++)
+                    f += mask[i] / 6.0;
+                
+                f += mask[8] / 3.0;
+                
+                //divide por 255 para entrar no intervalo 0-1
+                f /= 255.0f;
+                
+                //truncamento
+                if(f < 0)
+                    f = 0;
+                
+                if(f > 1)
+                    f = 1;
+                
+                tmp.setRGB(x, y, f, f, f);
+            }
+        
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage laplacianoH1(Processador img ) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        for(int y = 1; y < (img.getHeight() - 1); y++) 
+            for(int x = 1; x < (img.getWidth() - 1); x++) {
+                
+                int f = 0, index = 0;
+                
+                for(int j = y - 1; j <= y + 1; j++)
+                    for(int i = x - 1; i <= x + 1; i++) {
+                        
+                        switch(index) {
+                            case 1:
+                            case 3:
+                            case 5:
+                            case 7:
+                                f -= img.nivelCinza(i, j);
+                                break;
+                            case 4:
+                                f += (img.nivelCinza(i, j) * 4);
+                                break;
+                        }
+                        index++;
+                }
+                
+                //truncamento
+                if(f < 0)
+                    f = 0;
+                
+                if(f > 255)
+                    f = 255;
+                
+                tmp.setRGB(x, y, f, f, f);
+            }
+        
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage laplacianoH2(Processador img ) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        for(int y = 1; y < (img.getHeight() - 1); y++) 
+            for(int x = 1; x < (img.getWidth() - 1); x++) {
+                
+                int f = 0, index = 0;
+                
+                for(int j = y - 1; j <= y + 1; j++)
+                    for(int i = x - 1; i <= x + 1; i++) {
+                        
+                        switch(index) {
+                            case 1:
+                            case 3:
+                            case 5:
+                            case 7:
+                                f -= (img.nivelCinza(i, j) * 4);
+                                break;
+                            case 4:
+                                f += (img.nivelCinza(i, j) * 20);
+                                break;
+                            default:
+                                f -= img.nivelCinza(i, j);
+                                break;
+                        }
+                        index++;
+                }
+                
+                //truncamento
+                if(f < 0)
+                    f = 0;
+                
+                if(f > 255)
+                    f = 255;
+                
+                tmp.setRGB(x, y, f, f, f);
+            }
+        
+        return tmp.getImg();
+    }
 }
