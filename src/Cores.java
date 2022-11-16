@@ -258,9 +258,8 @@ public class Cores {
                 r = 255 - img.nivelRed(x, y);
                 g = 255 - img.nivelGreen(x, y);
                 b = 255 - img.nivelBlue(x, y);
-                
+            
                 tmp.setRGB(x, y, r, g, b); 
-                
             }
         }
         

@@ -11,6 +11,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -22,9 +23,9 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #666;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.Painel">
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="Arquivo">
+          <Menu mnemonicParsing="false">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#abrirImgPrimaria" text="Abrir" />
                   <MenuItem fx:id="botaoAbrirCamada" disable="true" mnemonicParsing="false" onAction="#abrirImgSec" text="Abrir como camada" />
@@ -33,24 +34,33 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#Sair" text="Sair" />
             </items>
+               <graphic>
+                  <Label text="Arquivo" textFill="WHITE" />
+               </graphic>
           </Menu>
-          <Menu fx:id="menuTransformar" disable="true" mnemonicParsing="false" text="Transformar">
+          <Menu fx:id="menuTransformar" disable="true" mnemonicParsing="false">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#espelhoX" text="Inverter eixo X" />
                   <MenuItem mnemonicParsing="false" onAction="#espelhoY" text="Inverter eixo Y" />
                   <MenuItem mnemonicParsing="false" onAction="#cisalharX" text="Cisalhar eixo X" />
                   <MenuItem mnemonicParsing="false" onAction="#cisalharY" text="Cisalhar eixo Y" />
             </items>
+               <graphic>
+                  <Label text="Transformar" textFill="WHITE" />
+               </graphic>
           </Menu>
-            <Menu fx:id="menuCores" disable="true" mnemonicParsing="false" text="Componentes de cor">
+            <Menu fx:id="menuCores" disable="true" mnemonicParsing="false">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#exibirRGB" text="RGB" />
                   <MenuItem mnemonicParsing="false" onAction="#exibirCMY" text="CMY" />
                   <MenuItem mnemonicParsing="false" onAction="#exibirCMYK" text="CMY-K" />
                   <MenuItem mnemonicParsing="false" onAction="#exibirYUV" text="YUV" />
               </items>
+               <graphic>
+                  <Label text="Componentes de cor" textFill="WHITE" />
+               </graphic>
             </Menu>
-            <Menu fx:id="menuPseudoCor" disable="true" mnemonicParsing="false" text="Pseudocoloração">
+            <Menu fx:id="menuPseudoCor" disable="true" mnemonicParsing="false">
                <items>
                   <Menu mnemonicParsing="false" text="Fatiamento por Densidade">
                     <items>
@@ -88,8 +98,11 @@
                      </items>
                   </Menu>
                </items>
+               <graphic>
+                  <Label text="Pseudocoloração" textFill="WHITE" />
+               </graphic>
             </Menu>
-            <Menu fx:id="menuRealce" disable="true" mnemonicParsing="false" text="Realce">
+            <Menu fx:id="menuRealce" disable="true" mnemonicParsing="false">
                <items>
                   <Menu mnemonicParsing="false" text="Transformação linear">
                      <items>
@@ -108,8 +121,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#equalHisto" text="Equalizar Histograma" />
                   <MenuItem mnemonicParsing="false" onAction="#corrigirGama" text="Corrigir  Gama" />
                </items>
+               <graphic>
+                  <Label text="Realce" textFill="WHITE" />
+               </graphic>
             </Menu>
-            <Menu fx:id="menuFiltragem" disable="true" mnemonicParsing="false" text="Filtros">
+            <Menu fx:id="menuFiltragem" disable="true" mnemonicParsing="false">
                <items>
                   <Menu mnemonicParsing="false" text="Passa-baixa">
                     <items>
@@ -168,8 +184,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#exibirGray" text="Gray Scale" />
                   <MenuItem mnemonicParsing="false" onAction="#negativo" text="Negativo" />
                </items>
+               <graphic>
+                  <Label text="Filtros" textFill="WHITE" />
+               </graphic>
             </Menu>
-            <Menu fx:id="menuSegmentacao" disable="true" mnemonicParsing="false" text="Segmentação">
+            <Menu fx:id="menuSegmentacao" disable="true" mnemonicParsing="false">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#detPonto" text="Detecção de pontos" />
                   <Menu mnemonicParsing="false" text="Detecção de retas">
@@ -197,9 +216,26 @@
                         <MenuItem mnemonicParsing="false" onAction="#laplacianoH2" text="Laplaciano H2" />
                      </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Limiarização">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#limiarGlobal" text="Global" />
+                        <Menu mnemonicParsing="false" text="Local">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#limiarMedia" text="Media" />
+                              <MenuItem mnemonicParsing="false" onAction="#limiarMin" text="Mínimo" />
+                              <MenuItem mnemonicParsing="false" onAction="#limiarMax" text="Máximo" />
+                              <MenuItem mnemonicParsing="false" onAction="#limiarMinMax" text="Média Max &amp; Min" />
+                              <MenuItem mnemonicParsing="false" onAction="#limiarNiblack" text="Niblack" />
+                           </items>
+                        </Menu>
+                     </items>
+                  </Menu>
                </items>
+               <graphic>
+                  <Label text="Segmentação" textFill="WHITE" />
+               </graphic>
             </Menu>
-            <Menu fx:id="menuEstegano" disable="true" mnemonicParsing="false" text="Manipulação de bits">
+            <Menu fx:id="menuEstegano" disable="true" mnemonicParsing="false">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#fatiarBits" text="Fatiar Bits" />
                   <MenuItem mnemonicParsing="false" onAction="#esteganografia" text="Esteganografia">
@@ -211,16 +247,22 @@
                         </ImageView>
                      </graphic></MenuItem>
                </items>
+               <graphic>
+                  <Label text="Manipulação de bits" textFill="WHITE" />
+               </graphic>
             </Menu>
-            <Menu fx:id="menuLimpar" disable="true" mnemonicParsing="false" text="Limpeza">
+            <Menu fx:id="menuLimpar" disable="true" mnemonicParsing="false">
                <items>
                   <MenuItem fx:id="botaoLimparIni" mnemonicParsing="false" onAction="#limparPrimaria" text="Limpar primaria" />
                   <MenuItem fx:id="botaoLimparSec" disable="true" mnemonicParsing="false" onAction="#limparSec" text="Limpar secundária" />
                   <MenuItem fx:id="botaoLimparFinal" disable="true" mnemonicParsing="false" onAction="#limparFinal" text="Limpar imagem final" />
                   <MenuItem mnemonicParsing="false" onAction="#limparTudo" text="Limpar tudo" />
                </items>
+               <graphic>
+                  <Label text="Limpeza" textFill="WHITE" />
+               </graphic>
             </Menu>
-            <Menu mnemonicParsing="false" text="Opções">
+            <Menu mnemonicParsing="false">
               <items>
                   <RadioMenuItem fx:id="botaoTrunc" mnemonicParsing="false" onAction="#Truncar" text="Truncar" />
                   <RadioMenuItem fx:id="botaoNormal" mnemonicParsing="false" onAction="#Normalizar" selected="true" text="Normalizar " />
@@ -240,6 +282,9 @@
                   </items>
                 </Menu>
               </items>
+               <graphic>
+                  <Label text="Opções" textFill="WHITE" />
+               </graphic>
             </Menu>
         </menus>
       </MenuBar>
@@ -369,6 +414,27 @@
                         </Button>
                      </children>
                   </Pane>
+                  <Pane fx:id="NiblackPane" layoutX="20.0" layoutY="20.0" prefHeight="150.0" prefWidth="320.0" style="-fx-background-color: #eee; -fx-border-color: #aaa;" visible="false">
+                     <children>
+                        <Label layoutX="25.0" layoutY="78.0" prefHeight="30.0" prefWidth="147.0" text="Valor da constante k">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="valorN" layoutX="25.0" layoutY="44.0" prefWidth="100.0" text="15" />
+                        <TextField fx:id="valorK" layoutX="25.0" layoutY="108.0" prefWidth="100.0" text="-0.2" />
+                        <Button layoutX="194.0" layoutY="101.0" mnemonicParsing="false" onAction="#botaoNiblack" prefWidth="110.0" style="-fx-background-color: #ddd; -fx-border-color: #ccc;" text="Confirmar">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="25.0" layoutY="14.0" prefHeight="30.0" prefWidth="155.0" text="Quantidade de janelas">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
                </children>
             </AnchorPane>
          </content>
@@ -396,7 +462,7 @@
       </Pane>
    </bottom>
    <right>
-      <Pane fx:id="painelLateral" prefHeight="664.0" prefWidth="220.0" visible="false" BorderPane.alignment="CENTER">
+      <Pane fx:id="painelLateral" prefHeight="664.0" prefWidth="220.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="imagemSec" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
                <cursor>
@@ -526,4 +592,31 @@
          </children>
       </Pane>
    </right>
+   <left>
+      <Pane fx:id="painelFerramentas" prefHeight="200.0" prefWidth="200.0" visible="false" BorderPane.alignment="CENTER">
+         <children>
+            <ToggleButton fx:id="botaoSelMagica" graphicTextGap="10.0" layoutX="20.0" layoutY="41.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="160.0" style="-fx-background-color: #666;" text="Seleção mágica" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@magic.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </ToggleButton>
+            <TextField fx:id="textoTol" layoutX="92.0" layoutY="106.0" prefHeight="20.0" prefWidth="80.0" promptText="\%" text="10" />
+            <Label layoutX="20.0" layoutY="108.0" prefHeight="20.0" prefWidth="64.0" text="Tolerância" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </left>
 </BorderPane>

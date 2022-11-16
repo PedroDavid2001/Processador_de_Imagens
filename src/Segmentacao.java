@@ -1,6 +1,9 @@
 package src;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Segmentacao {
     
@@ -1259,6 +1262,376 @@ public class Segmentacao {
                 
                 tmp.setRGB(x, y, f, f, f);
             }
+        
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage limiarGlobal(Processador img ) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        List<Float> rG = new ArrayList<>();//regiao global
+        List<Float> r1 = new ArrayList<>();//regiao 1
+        List<Float> r2 = new ArrayList<>();//regiao 2
+        float mediaAnt, media, u1, u2;
+        
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+                rG.add( (float)img.nivelCinza(x, y) );
+            }
+        
+        media = media(rG);
+        
+        //repete o calculo da média das regiões até alcançar o estado [média antiga = nova média]
+        do {
+            mediaAnt = media;
+            
+            for(Float pixel : rG) {
+                if(pixel < media)
+                    r1.add(pixel);
+                else
+                    r2.add(pixel);
+            }
+            
+            u1 = media(r1);
+            u2 = media(r2);
+            
+            media = ( u1 + u2 ) / 2.0f;
+            
+            r1.clear();
+            r2.clear();
+            
+        }while(media != mediaAnt);
+        
+        //repinta a imagem agora dividida entre as duas regiões
+        for(int y = 0; y < img.getHeight(); y++) 
+            for(int x = 0; x < img.getWidth(); x++) {
+                float gray = img.nivelCinza(x, y);
+                if(gray < media)
+                    tmp.setRGB(x, y, 0, 0, 0);
+                else
+                    tmp.setRGB(x, y, 255, 255, 255);
+            }
+        
+        return tmp.getImg();
+    }
+    
+    private static float media(List<Float> regiao) {
+        float media = 0;
+        
+        for(Float pixel : regiao)
+            media += pixel;
+        
+        return media / (float)regiao.size();
+    }
+    
+    private static float desvioPadrao(List<Float> regiao, float media) {
+        float dp = 0;
+        
+        for(Float pixel : regiao)
+            dp += (float)Math.pow( (pixel - media), 2);
+        
+        dp /= regiao.size();
+        
+        return (float)Math.sqrt(dp);
+    }
+    
+    public static BufferedImage limiarMedia(Processador img ) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        int larg = (int)(img.getWidth() / 10) > 0 ? (int)(img.getWidth() / 10) : 1;
+        int alt = (int)(img.getHeight() / 10) > 0 ? (int)(img.getHeight() / 10) : 1;
+        
+        List<Float> rL = new ArrayList<>();//regiao local
+        float media = 0;
+       
+        for(int y = 0; y < img.getHeight(); y += alt) 
+            for(int x = 0; x < img.getWidth(); x += larg) {
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) 
+                        if(i < img.getWidth() && j < img.getHeight())
+                            rL.add( (float)img.nivelCinza(i, j) );
+                
+                media = media(rL);
+                rL.clear();
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) {
+                       
+                        if(i < img.getWidth() && j < img.getHeight()) {
+                            float gray = (float)img.nivelCinza(i, j);
+                            
+                            if(gray < media)
+                                tmp.setRGB(i, j, 0, 0, 0);
+                            else
+                                tmp.setRGB(i, j, 255, 255, 255);
+                        }
+                        
+                    }
+                
+            }
+        
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage limiarMin( Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        int larg = (int)(img.getWidth() / 10) > 0 ? (int)(img.getWidth() / 10) : 1;
+        int alt = (int)(img.getHeight() / 10) > 0 ? (int)(img.getHeight() / 10) : 1;
+        
+        List<Float> rL = new ArrayList<>();//regiao local
+        
+        float menor;
+       
+        for(int y = 0; y < img.getHeight(); y += alt) 
+            for(int x = 0; x < img.getWidth(); x += larg) {
+                menor = 255;
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) {
+                        if(i < img.getWidth() && j < img.getHeight()) {
+                            if(img.nivelCinza(i, j) < menor) {
+                                menor = img.nivelCinza(i, j); 
+                            }
+                        }
+                    }
+                                
+                rL.add( menor );
+                
+            }
+        
+        int index = 0;
+        for(int y = 0; y < img.getHeight(); y += alt) 
+            for(int x = 0; x < img.getWidth(); x += larg) {
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) {
+                        if(i < img.getWidth() && j < img.getHeight()) {
+                            float gray = (float)img.nivelCinza(i, j);
+                            
+                            if(gray <= rL.get(index))
+                                tmp.setRGB(i, j, 0, 0, 0);
+                            else
+                                tmp.setRGB(i, j, 255, 255, 255);
+                        }
+                    }
+                index++;
+                
+            }
+        
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage limiarMax( Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        int larg = (int)(img.getWidth() / 10) > 0 ? (int)(img.getWidth() / 10) : 1;
+        int alt = (int)(img.getHeight() / 10) > 0 ? (int)(img.getHeight() / 10) : 1;
+        
+        List<Float> rL = new ArrayList<>();//regiao local
+        
+        float maior;
+       
+        for(int y = 0; y < img.getHeight(); y += alt) 
+            for(int x = 0; x < img.getWidth(); x += larg) {
+                maior = 0;
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) {
+                        if(i < img.getWidth() && j < img.getHeight()) {
+                            if(img.nivelCinza(i, j) > maior) {
+                                maior = img.nivelCinza(i, j); 
+                            }
+                        }
+                    }
+                                
+                rL.add( maior );
+                
+            }
+        
+        int index = 0;
+        for(int y = 0; y < img.getHeight(); y += alt) 
+            for(int x = 0; x < img.getWidth(); x += larg) {
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) {
+                        if(i < img.getWidth() && j < img.getHeight()) {
+                            float gray = (float)img.nivelCinza(i, j);
+                            
+                            if(gray < rL.get(index))
+                                tmp.setRGB(i, j, 0, 0, 0);
+                            else
+                                tmp.setRGB(i, j, 255, 255, 255);
+                        }
+                    }
+                index++;
+                
+            }
+        
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage limiarMinMax( Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        int larg = (int)(img.getWidth() / 10) > 0 ? (int)(img.getWidth() / 10) : 1;
+        int alt = (int)(img.getHeight() / 10) > 0 ? (int)(img.getHeight() / 10) : 1;
+        
+        List<Float> rMin = new ArrayList<>();//minimos da regiao local
+        List<Float> rMax = new ArrayList<>();//maximos da regiao local
+        
+        float maior;
+        float menor;
+       
+        for(int y = 0; y < img.getHeight(); y += alt) 
+            for(int x = 0; x < img.getWidth(); x += larg) {
+                maior = 0;
+                menor = 255;
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) {
+                        if(i < img.getWidth() && j < img.getHeight()) {
+                            if(img.nivelCinza(i, j) > maior) {
+                                maior = img.nivelCinza(i, j); 
+                            }
+                            else if(img.nivelCinza(i, j) < menor) {
+                                menor = img.nivelCinza(i, j); 
+                            }
+                        }
+                    }
+                                
+                rMin.add( menor );
+                rMax.add( maior );
+                
+            }
+        
+        int index = 0;
+        for(int y = 0; y < img.getHeight(); y += alt) 
+            for(int x = 0; x < img.getWidth(); x += larg) {
+                
+                float media = ( rMin.get(index) + rMax.get(index) ) / 2.0f;
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) {
+                        if(i < img.getWidth() && j < img.getHeight()) {
+                            float gray = (float)img.nivelCinza(i, j);
+                            
+                            if(gray < media)
+                                tmp.setRGB(i, j, 0, 0, 0);
+                            else
+                                tmp.setRGB(i, j, 255, 255, 255);
+                        }
+                    }
+                index++;
+                
+            }
+        
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage limiarNiblack(Processador img, float k, int n ) {
+        
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        int larg = (int)(img.getWidth() / n) > 0 ? (int)(img.getWidth() / n) : 1;
+        int alt = (int)(img.getHeight() / n) > 0 ? (int)(img.getHeight() / n) : 1;
+        
+        List<Float> rL = new ArrayList<>();//regiao local
+        float limiar;
+        float media;
+       
+        for(int y = 0; y < img.getHeight(); y += alt) 
+            for(int x = 0; x < img.getWidth(); x += larg) {
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) 
+                        if(i < img.getWidth() && j < img.getHeight())
+                            rL.add( (float)img.nivelCinza(i, j) );
+                
+                media = media(rL);
+                limiar = media + (k * desvioPadrao(rL, media));
+                rL.clear();
+                
+                for(int j = y; j < y + alt; j++)
+                    for(int i = x; i < x + larg; i++) {
+                       
+                        if(i < img.getWidth() && j < img.getHeight()) {
+                            float gray = (float)img.nivelCinza(i, j);
+                            
+                            if(gray < limiar)
+                                tmp.setRGB(i, j, 0, 0, 0);
+                            else
+                                tmp.setRGB(i, j, 255, 255, 255);
+                        }
+                        
+                    }
+                
+            }
+        
+        return tmp.getImg();
+    }
+    
+    public static BufferedImage selecRegiao(Processador img, int posX, int posY, float tol) {
+        
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        float rDif, gDif, bDif;
+        int newR = new Random().nextInt(256);
+        int newG = new Random().nextInt(256);
+        int newB = new Random().nextInt(256);
+        
+        float red = (float)img.nivelRed(posX, posY);
+        float green = (float)img.nivelGreen(posX, posY);
+        float blue = (float)img.nivelBlue(posX, posY);
+        
+        boolean achouIgual;     /*boolean usado para definir se foi 
+                                encontrado um pixel semelhante na 
+                                rodada de busca (melhora perfomance 
+                                para evitar vasculhar toda a imagem)*/
+        int dist = 0;
+        do {
+            achouIgual = false;
+            
+            for(int y = posY - dist; y <= posY + dist; y++) 
+                for(int x = posX - dist; x <= posX + dist; x++) {
+                    
+                    if(x >= 0 && x < img.getWidth() && y >= 0 && y < img.getHeight()) {
+                        float r = img.nivelRed(x, y);
+                        float g = img.nivelGreen(x, y);
+                        float b = img.nivelBlue(x, y);
+                        
+                        rDif = (r - red);
+                        gDif = (g - green);
+                        bDif = (b - blue);
+                        
+                        if(rDif < 0)
+                            rDif = -rDif;
+                        if(gDif < 0)
+                            gDif = -gDif;
+                        if(bDif < 0)
+                            bDif = -bDif;
+                        
+                        rDif /= 255.0f;
+                        gDif /= 255.0f;
+                        bDif /= 255.0f;
+                        
+                        if(rDif <= tol && gDif <= tol && bDif <= tol) {
+                            achouIgual = true;
+                            tmp.setRGB(x, y, newR, newG, newB);
+                        }
+                    }
+                }
+            
+            dist++;
+            
+        }while( achouIgual );
         
         return tmp.getImg();
     }

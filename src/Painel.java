@@ -18,6 +18,7 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -40,6 +41,9 @@ public class Painel implements Initializable{
     
 	@FXML
     private AnchorPane workspace;
+
+    @FXML
+    private ToggleButton botaoSelMagica;
 	
 	@FXML
     private HTMLEditor htmlEditor;
@@ -52,6 +56,12 @@ public class Painel implements Initializable{
     
     @FXML
     private TextField numCamadas;
+    
+    @FXML
+    private TextField valorN;
+    
+    @FXML
+    private TextField valorK;
 
     @FXML
     private ImageView imagemIni;
@@ -90,6 +100,12 @@ public class Painel implements Initializable{
     private Pane painelLateral;
     
     @FXML
+    private Pane painelFerramentas;
+    
+    @FXML
+    private Pane NiblackPane;
+    
+    @FXML
     private ScrollPane paneHTML;
     
     @FXML
@@ -121,6 +137,9 @@ public class Painel implements Initializable{
 
     @FXML
     private TextField textoValor;
+    
+    @FXML
+    private TextField textoTol;
     
     @FXML
     private TextField textoAmplificar;
@@ -209,6 +228,8 @@ public class Painel implements Initializable{
     
     //lista com as alterações feitas para permitir desfazer uma ação
     private List<BufferedImage> alteracoes = new ArrayList<BufferedImage>();
+    
+    private boolean selecRegiao = false;
     
     //Posição inicial da imagem exibida na área de trabalho do software
     private double posXInit = 100.0;
@@ -1838,6 +1859,120 @@ public class Painel implements Initializable{
 
     }
     
+    @FXML
+    void limiarGlobal(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.limiarGlobal(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.limiarGlobal(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void limiarMedia(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.limiarMedia(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.limiarMedia(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void limiarMin(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.limiarMin(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.limiarMin(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void limiarMax(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.limiarMax(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.limiarMax(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void limiarMinMax(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.limiarMinMax(imgFinal) );    
+        else
+            imgFinal.setImg( Segmentacao.limiarMinMax(imagem) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void limiarNiblack(ActionEvent event) {
+        NiblackPane.setVisible(true);
+    }
+    
+    void selecRegiao(int x, int y) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        float tol = Float.valueOf( textoTol.getText() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.selecRegiao(imgFinal, x, y, tol) );    
+        else
+            imgFinal.setImg( Segmentacao.selecRegiao(imagem, x, y, tol) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
     //--------------------------------------------------------------
     //Mapeamento de bits
     
@@ -1903,9 +2038,14 @@ public class Painel implements Initializable{
     	
     	//pega a posição inicial do mouse no momento em que clica na imagem
     	imagemFinal.setOnMouseClicked( mouseEvent -> {
-    		dragMode = !dragMode;
-    		mouseX = mouseEvent.getX() - imagemFinal.getX();
-    		mouseY = mouseEvent.getY() - imagemFinal.getY();
+    	    mouseX = mouseEvent.getX() - imagemFinal.getX();
+            mouseY = mouseEvent.getY() - imagemFinal.getY();
+            
+    	    if( selecRegiao ) {
+    		    selecRegiao((int)mouseX, (int)mouseY);
+    		}else {
+    		    dragMode = !dragMode;
+    		}
     	});
     	
     	//captura o rgb na posição que o mouse está na imagem
@@ -1957,6 +2097,30 @@ public class Painel implements Initializable{
         		posXText.setText( Double.toString( imagemFinal.getX() ));
         		posYText.setText( Double.toString( imagemFinal.getY() ));
     		}
+    	});
+    	
+    	//limpa popups da tela
+    	workspace.setOnMouseClicked( mouseEvent ->{
+    	    popupAmplificacao.setVisible(false);
+    	    popupValor.setVisible(false);
+    	    MinMaxPane.setVisible(false);
+    	    GammaPane.setVisible(false);
+    	    fatiarPanel.setVisible(false);
+    	    popupT.setVisible(false);
+    	    NiblackPane.setVisible(false);
+    	});
+    	
+    	//altera estilo dos botões toggle na barra lateral
+    	botaoSelMagica.setOnMouseClicked( mouseEvent ->{
+    	    if(botaoSelMagica.isSelected()) {
+    	        botaoSelMagica.setStyle( "-fx-border-color:  #aaa; -fx-background-color:  #666" );
+    	        selecRegiao = true;
+    	    }
+    	    else {
+    	        botaoSelMagica.setStyle( "-fx-background-color:  #666" );
+    	        selecRegiao = false;
+    	    }
+    	    
     	});
     }
 
@@ -2059,6 +2223,30 @@ public class Painel implements Initializable{
     }
     
     @FXML
+    void botaoNiblack(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        float k = Float.valueOf( valorK.getText() );
+        int n = Integer.valueOf( valorN.getText() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.limiarNiblack(imgFinal, k, n));    
+        else
+            imgFinal.setImg( Segmentacao.limiarNiblack(imagem, k, n));
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
+        NiblackPane.setVisible(false);
+        valorK.setText("-0.2");
+        valorN.setText("15");
+        
+        lstAct = 0;
+    }
+    
+    @FXML
     void botaoT(ActionEvent event) {
         
         img = null;
@@ -2140,6 +2328,7 @@ public class Painel implements Initializable{
         menuTransformar.setDisable(true);
         menuOperacoes.setDisable(true);
         painelLateral.setVisible(false);
+        painelFerramentas.setVisible(false);
         menuPseudoCor.setDisable(true);
         menuCores.setDisable(true);
         botaoHistograma.setDisable(true);
@@ -2213,6 +2402,7 @@ public class Painel implements Initializable{
         menuLimpar.setDisable(false);
         botaoLimparIni.setDisable(false);
         painelLateral.setVisible(true);
+        painelFerramentas.setVisible(true);
         menuPseudoCor.setDisable(false);
         menuCores.setDisable(false);
         botaoHistograma.setDisable(false);
