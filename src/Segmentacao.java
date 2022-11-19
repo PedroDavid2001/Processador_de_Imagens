@@ -1,5 +1,6 @@
 package src;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -1577,62 +1578,72 @@ public class Segmentacao {
         return tmp.getImg();
     }
     
-    public static BufferedImage selecRegiao(Processador img, int posX, int posY, float tol) {
+    public static BufferedImage selecRegiao(Processador img, int posX, int posY, int tol) {
         
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
-        float rDif, gDif, bDif;
         int newR = new Random().nextInt(256);
         int newG = new Random().nextInt(256);
         int newB = new Random().nextInt(256);
         
-        float red = (float)img.nivelRed(posX, posY);
-        float green = (float)img.nivelGreen(posX, posY);
-        float blue = (float)img.nivelBlue(posX, posY);
+        int newRGB = Processador.getRGB( newR, newG, newB);
+        int rgbInit = img.getRGB(posX, posY);
         
-        boolean achouIgual;     /*boolean usado para definir se foi 
-                                encontrado um pixel semelhante na 
-                                rodada de busca (melhora perfomance 
-                                para evitar vasculhar toda a imagem)*/
-        int dist = 0;
-        do {
-            achouIgual = false;
-            
-            for(int y = posY - dist; y <= posY + dist; y++) 
-                for(int x = posX - dist; x <= posX + dist; x++) {
-                    
-                    if(x >= 0 && x < img.getWidth() && y >= 0 && y < img.getHeight()) {
-                        float r = img.nivelRed(x, y);
-                        float g = img.nivelGreen(x, y);
-                        float b = img.nivelBlue(x, y);
-                        
-                        rDif = (r - red);
-                        gDif = (g - green);
-                        bDif = (b - blue);
-                        
-                        if(rDif < 0)
-                            rDif = -rDif;
-                        if(gDif < 0)
-                            gDif = -gDif;
-                        if(bDif < 0)
-                            bDif = -bDif;
-                        
-                        rDif /= 255.0f;
-                        gDif /= 255.0f;
-                        bDif /= 255.0f;
-                        
-                        if(rDif <= tol && gDif <= tol && bDif <= tol) {
-                            achouIgual = true;
-                            tmp.setRGB(x, y, newR, newG, newB);
-                        }
-                    }
-                }
-            
-            dist++;
-            
-        }while( achouIgual );
+        expandir( tmp, posX, posY, tol, rgbInit, newRGB );
         
         return tmp.getImg();
+    }
+    
+    private static void expandir( Processador img, int x, int y, int tol, int rgbInit, int newRGB ) {
+        
+        int rDif, gDif, bDif;
+        
+        int red = Processador.getRed(rgbInit);
+        int green = Processador.getRed(rgbInit);
+        int blue = Processador.getRed(rgbInit);
+        
+        if(x >= 0 && x < img.getWidth() && y >= 0 && y < img.getHeight()) {
+            int r = img.nivelRed(x, y);
+            int g = img.nivelGreen(x, y);
+            int b = img.nivelBlue(x, y);
+            
+            rDif = (r - red);
+            gDif = (g - green);
+            bDif = (b - blue);
+            
+            if(rDif < 0)
+                rDif = -rDif;
+            if(gDif < 0)
+                gDif = -gDif;
+            if(bDif < 0)
+                bDif = -bDif;
+            
+            rDif /= 2.55f;
+            gDif /= 2.55f;
+            bDif /= 2.55f;
+            
+            if(rDif <= tol && gDif <= tol && bDif <= tol) {
+                img.setRGB(x, y, newRGB);
+                
+                try {
+                    //expande região pela vizinhança
+                    expandir( img, (x - 1), (y - 1), tol, rgbInit, newRGB );
+                    expandir( img,    x,    (y - 1), tol, rgbInit, newRGB );
+                    expandir( img, (x + 1), (y - 1), tol, rgbInit, newRGB );
+                    
+                    expandir( img, (x - 1), y, tol, rgbInit, newRGB );
+                    expandir( img, (x + 1), y, tol, rgbInit, newRGB );
+                    
+                    expandir( img, (x - 1), (y + 1), tol, rgbInit, newRGB );
+                    expandir( img,    x,    (y + 1), tol, rgbInit, newRGB );
+                    expandir( img, (x + 1), (y + 1), tol, rgbInit, newRGB );
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+            }
+            
+        }
+        
     }
 }

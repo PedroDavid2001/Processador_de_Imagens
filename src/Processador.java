@@ -343,5 +343,19 @@ public class Processador {
     public static BufferedImage createBufferedImage(Image img) {
         return SwingFXUtils.fromFXImage(img, null);
     }
+    
+    public static int getRGB( int r, int g, int b){
+        
+        Color cor = new Color(r, g, b);
+        return cor.getRGB();
+        
+    }
+  
+    public static int getRGB( float r, float g, float b){
+        
+        Color cor = new Color(r, g, b);
+        return cor.getRGB();
+        
+    }
 
 }

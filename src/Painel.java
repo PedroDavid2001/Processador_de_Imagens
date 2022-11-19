@@ -1958,7 +1958,7 @@ public class Painel implements Initializable{
         img = null;
         alteracoes.add( imgFinal.getImg() );
         
-        float tol = Float.valueOf( textoTol.getText() );
+        int tol = Integer.valueOf( textoTol.getText() );
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.selecRegiao(imgFinal, x, y, tol) );    
