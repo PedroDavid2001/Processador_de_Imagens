@@ -325,6 +325,14 @@ public class Processador {
         fSaver.saveAsPng(path);
     }
     
+    public boolean isNull(int x, int y) {
+        if(x >= 0 && x < (int)this.getWidth() && y >= 0 && y < (int)this.getHeight()) {
+            return false;
+        }else {
+            return true;
+        }
+    }
+    
     //métodos static (algumas utilidades da classe :^D )
     
     public static int getRed(int rgb) {

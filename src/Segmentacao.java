@@ -1267,7 +1267,7 @@ public class Segmentacao {
         return tmp.getImg();
     }
     
-    public static BufferedImage limiarGlobal(Processador img ) {
+    public static BufferedImage limiarGlobal(Processador img, boolean useWS ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         List<Float> rG = new ArrayList<>();//regiao global
@@ -1312,6 +1312,9 @@ public class Segmentacao {
                 else
                     tmp.setRGB(x, y, 255, 255, 255);
             }
+        
+        if(useWS)
+            tmp.setImg( watershed(tmp) );
         
         return tmp.getImg();
     }
@@ -1600,34 +1603,35 @@ public class Segmentacao {
         int rDif, gDif, bDif;
         
         int red = Processador.getRed(rgbInit);
-        int green = Processador.getRed(rgbInit);
-        int blue = Processador.getRed(rgbInit);
+        int green = Processador.getGreen(rgbInit);
+        int blue = Processador.getBlue(rgbInit);
         
-        if(x >= 0 && x < img.getWidth() && y >= 0 && y < img.getHeight()) {
-            int r = img.nivelRed(x, y);
-            int g = img.nivelGreen(x, y);
-            int b = img.nivelBlue(x, y);
-            
-            rDif = (r - red);
-            gDif = (g - green);
-            bDif = (b - blue);
-            
-            if(rDif < 0)
-                rDif = -rDif;
-            if(gDif < 0)
-                gDif = -gDif;
-            if(bDif < 0)
-                bDif = -bDif;
-            
-            rDif /= 2.55f;
-            gDif /= 2.55f;
-            bDif /= 2.55f;
-            
-            if(rDif <= tol && gDif <= tol && bDif <= tol) {
-                img.setRGB(x, y, newRGB);
+        if(!img.isNull(x, y)) {
+            if(img.getRGB(x, y) != newRGB) {
+
+                int r = img.nivelRed(x, y);
+                int g = img.nivelGreen(x, y);
+                int b = img.nivelBlue(x, y);
                 
-                try {
-                    //expande região pela vizinhança
+                rDif = (r - red);
+                gDif = (g - green);
+                bDif = (b - blue);
+                
+                if(rDif < 0)
+                    rDif = -rDif;
+                if(gDif < 0)
+                    gDif = -gDif;
+                if(bDif < 0)
+                    bDif = -bDif;
+                
+                rDif /= 2.55f;
+                gDif /= 2.55f;
+                bDif /= 2.55f;
+                
+                if(rDif <= tol && gDif <= tol && bDif <= tol) {
+                    
+                    img.setRGB(x, y, newRGB);
+                    
                     expandir( img, (x - 1), (y - 1), tol, rgbInit, newRGB );
                     expandir( img,    x,    (y - 1), tol, rgbInit, newRGB );
                     expandir( img, (x + 1), (y - 1), tol, rgbInit, newRGB );
@@ -1638,12 +1642,80 @@ public class Segmentacao {
                     expandir( img, (x - 1), (y + 1), tol, rgbInit, newRGB );
                     expandir( img,    x,    (y + 1), tol, rgbInit, newRGB );
                     expandir( img, (x + 1), (y + 1), tol, rgbInit, newRGB );
-                } catch (Exception e) {
-                    // TODO: handle exception
                 }
             }
-            
         }
         
+    }
+    
+    public static BufferedImage watershed( Processador img) {
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        int larg = (int)(img.getWidth() / 8) > 0 ? (int)(img.getWidth() / 8) : 1;
+        int alt = (int)(img.getHeight() / 8) > 0 ? (int)(img.getHeight() / 8) : 1;
+        
+        int newRGB = Processador.getRGB( 1, 1, 1);
+       
+        for(int y = alt; y < img.getHeight() - 1; y += alt) 
+            for(int x = 1; x < img.getWidth() - 1; x++) {
+                
+                //inundação na horizontal
+                if(img.nivelRed(x, y) == 255) {
+                    if(tmp.nivelRed(x + 1, y) == 0) {
+                        int xx = x + 1;
+                        int yy = y;
+                        while(!img.isNull(xx, yy) && tmp.nivelRed(xx, yy) == 0) {
+                            tmp.setRGB(xx, yy, 255, 255, 255);
+                            xx++;
+                        }
+                        expandir( tmp, x + 1, y + 1, 1, 0, newRGB );
+                        break;
+                    }
+                    else if( tmp.nivelRed(x - 1, y) == 0) {
+                        int xx = x - 1;
+                        int yy = y;
+                        while(!img.isNull(xx, yy) && tmp.nivelRed(xx, yy) == 0) {
+                            tmp.setRGB(xx, yy, 255, 255, 255);
+                            xx--;
+                        }
+                        expandir( tmp, x + 1, y + 1, 1, 0, newRGB );
+                        break;
+                    }
+                }
+                
+            }
+        
+        for(int y = 1; y < img.getHeight() - 1; y++) 
+            for(int x = larg; x < img.getWidth() - 1; x += larg) {
+                
+                //inundação na horizontal
+                if(img.nivelRed(x, y) == 255) {
+                    if(tmp.nivelRed(x, y + 1) == 0) {
+                        int xx = x;
+                        int yy = y + 1;
+                        while(!img.isNull(xx, yy) && tmp.nivelRed(xx, yy) == 0) {
+                            tmp.setRGB(xx, yy, 255, 255, 255);
+                            yy++;
+                        }
+                        expandir( tmp, x + 1, y + 1, 1, 0, newRGB );
+                        break;
+                    }
+                    else if( tmp.nivelRed(x, y - 1) == 0) {
+                        int xx = x;
+                        int yy = y - 1;
+                        while(!img.isNull(xx, yy) && tmp.nivelRed(xx, yy) == 0) {
+                            tmp.setRGB(xx, yy, 255, 255, 255);
+                            yy--;
+                        }
+                        expandir( tmp, x + 1, y + 1, 1, 0, newRGB );
+                        break;
+                    }
+                }
+                
+            }
+        
+        
+        return tmp.getImg();
     }
 }

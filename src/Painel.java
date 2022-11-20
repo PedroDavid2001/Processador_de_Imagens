@@ -1865,9 +1865,27 @@ public class Painel implements Initializable{
         alteracoes.add( imgFinal.getImg() );
         
         if( botaoAcc.isSelected() )
-            imgFinal.setImg( Segmentacao.limiarGlobal(imgFinal) );    
+            imgFinal.setImg( Segmentacao.limiarGlobal(imgFinal, false) );    
         else
-            imgFinal.setImg( Segmentacao.limiarGlobal(imagem) );
+            imgFinal.setImg( Segmentacao.limiarGlobal(imagem, false) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
+        lstAct = 0;
+
+    }
+    
+    @FXML
+    void limiarGlobalWatersheld(ActionEvent event) {
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.limiarGlobal(imgFinal, true) );    
+        else
+            imgFinal.setImg( Segmentacao.limiarGlobal(imagem, true) );
         
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 

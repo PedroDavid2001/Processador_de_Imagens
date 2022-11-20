@@ -219,6 +219,7 @@
                   <Menu mnemonicParsing="false" text="Limiarização">
                      <items>
                         <MenuItem mnemonicParsing="false" onAction="#limiarGlobal" text="Global" />
+                        <MenuItem mnemonicParsing="false" onAction="#limiarGlobalWatersheld" text="Global + Watersheld" />
                         <Menu mnemonicParsing="false" text="Local">
                            <items>
                               <MenuItem mnemonicParsing="false" onAction="#limiarMedia" text="Media" />
@@ -462,7 +463,7 @@
       </Pane>
    </bottom>
    <right>
-      <Pane fx:id="painelLateral" prefHeight="664.0" prefWidth="220.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="painelLateral" prefHeight="664.0" prefWidth="220.0" visible="false" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="imagemSec" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
                <cursor>
