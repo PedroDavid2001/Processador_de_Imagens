@@ -383,17 +383,17 @@
                         </Button>
                      </children>
                   </Pane>
-                  <ScrollPane fx:id="paneHTML" layoutX="14.0" layoutY="10.0" visible="false">
+                  <ScrollPane fx:id="paneHTML" layoutX="14.0" layoutY="10.0" pannable="true" visible="false">
                      <content>
-                        <Pane prefHeight="600.0" prefWidth="700.0">
+                        <Pane prefHeight="700.0" prefWidth="900.0">
                            <children>
-                              <HTMLEditor fx:id="htmlEditor" htmlText="" prefHeight="550.0" prefWidth="700.0" />
-                              <Button layoutX="630.0" layoutY="5.0" mnemonicParsing="false" onAction="#fecharHTML" prefHeight="25.0" prefWidth="53.0" text="Fechar" />
-                              <AnchorPane layoutY="550.0" prefHeight="50.0" prefWidth="700.0" style="-fx-background-color: #eee; -fx-border-width: 1px; -fx-border-color: #bbb;">
+                              <HTMLEditor fx:id="htmlEditor" htmlText="" prefHeight="650.0" prefWidth="900.0" />
+                              <Button layoutX="830.0" layoutY="5.0" mnemonicParsing="false" onAction="#fecharHTML" prefHeight="25.0" prefWidth="53.0" text="Fechar" />
+                              <AnchorPane layoutY="650.0" prefHeight="50.0" prefWidth="900.0" style="-fx-background-color: #eee; -fx-border-width: 1px; -fx-border-color: #bbb;">
                                  <children>
-                                    <TextField layoutX="20.0" layoutY="13.0" promptText="Insira uma URL" />
+                                    <TextField fx:id="urlText" layoutX="20.0" layoutY="13.0" promptText="Insira uma URL" />
                                     <Button layoutX="180.0" layoutY="13.0" mnemonicParsing="false" onAction="#carregarURL" text="Carregar URL" />
-                                    <Button layoutX="630.0" layoutY="13.0" mnemonicParsing="false" onAction="#salvarHTML" prefHeight="25.0" prefWidth="53.0" text="Salvar" />
+                                    <Button layoutX="830.0" layoutY="13.0" mnemonicParsing="false" onAction="#salvarHTML" prefHeight="25.0" prefWidth="53.0" text="Salvar" />
                                  </children>
                               </AnchorPane>
                            </children>

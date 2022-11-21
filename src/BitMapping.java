@@ -87,4 +87,5 @@ public class BitMapping {
         
         return Character.toString((char)letra);
     }
+    
 }

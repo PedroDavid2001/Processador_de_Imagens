@@ -1,10 +1,15 @@
 package src;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javax.swing.JFileChooser;
@@ -62,6 +67,9 @@ public class Painel implements Initializable{
     
     @FXML
     private TextField valorK;
+
+    @FXML
+    private TextField urlText;
 
     @FXML
     private ImageView imagemIni;
@@ -2488,7 +2496,34 @@ public class Painel implements Initializable{
     
     @FXML
     void carregarURL(ActionEvent event) {
+        if(!urlText.getText().isBlank()) {
+            htmlEditor.setHtmlText( carregarURL( urlText.getText() ));
+        }
+    }
+    
+    private String carregarURL(String src) {
 
+        String pageCode = "";
+
+        try {
+            URL url = new URL(src);
+            URLConnection connection = url.openConnection();
+            InputStream inputStream = connection.getInputStream();
+            Scanner scanner = new Scanner(inputStream);
+
+            while (scanner.hasNextLine()) {
+                pageCode += scanner.nextLine() + "\n";
+            }
+            
+            scanner.close();
+
+        } catch (MalformedURLException ex) {
+            System.out.println("Erro na URL");
+        } catch (IOException ex) {
+            System.out.println("Erro no carregamento do HTML");
+        }
+
+        return pageCode;
     }
 
     @FXML

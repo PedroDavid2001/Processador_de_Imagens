@@ -1,6 +1,5 @@
 package src;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -1632,16 +1631,14 @@ public class Segmentacao {
                     
                     img.setRGB(x, y, newRGB);
                     
-                    expandir( img, (x - 1), (y - 1), tol, rgbInit, newRGB );
-                    expandir( img,    x,    (y - 1), tol, rgbInit, newRGB );
-                    expandir( img, (x + 1), (y - 1), tol, rgbInit, newRGB );
+                    for( int yy = y - 1; yy <= y + 1; yy++)
+                        for( int xx = x - 1; xx <= x + 1; xx++) {
+                            if( !img.isNull( xx, yy ))
+                                if(xx != x || yy != y )
+                                    if(img.getRGB(xx, yy) != newRGB)
+                                        expandir( img, xx, yy, tol, rgbInit, newRGB );
+                        }
                     
-                    expandir( img, (x - 1), y, tol, rgbInit, newRGB );
-                    expandir( img, (x + 1), y, tol, rgbInit, newRGB );
-                    
-                    expandir( img, (x - 1), (y + 1), tol, rgbInit, newRGB );
-                    expandir( img,    x,    (y + 1), tol, rgbInit, newRGB );
-                    expandir( img, (x + 1), (y + 1), tol, rgbInit, newRGB );
                 }
             }
         }
