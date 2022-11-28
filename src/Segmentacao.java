@@ -1592,13 +1592,46 @@ public class Segmentacao {
         int newRGB = Processador.getRGB( newR, newG, newB);
         int rgbInit = img.getRGB(posX, posY);
         
-        expandir( tmp, posX, posY, tol, rgbInit, newRGB );
+        int [][] pixels = zerar( img );
+        expandir( tmp, posX, posY, tol, rgbInit, pixels );
+        repintar(pixels, tmp, newRGB);
         
         return tmp.getImg();
     }
     
-    private static void expandir( Processador img, int x, int y, int tol, int rgbInit, int newRGB ) {
+    private static void repintar(int [][] pixels, Processador img, int newRGB) {
         
+        for(int y = 0; y < img.getHeight(); y++) {
+            for(int x = 0; x < img.getWidth(); x++) {
+                if(pixels[x][y] == 3) {
+                    img.setRGB(x, y, newRGB);
+                }
+            }
+        }
+        
+    }
+    
+    private static int [][] zerar(Processador img) {
+        
+        int [][] pixels = new int[ (int)img.getWidth() ][ (int)img.getHeight() ];
+        
+        for(int [] vetor : pixels) {
+            for(@SuppressWarnings("unused") int item : vetor) {
+                item = 0;
+            }
+        }
+        
+        return pixels;
+    }
+    
+    private static void expandir( Processador img, int x, int y, int tol, int rgbInit, int[][] pixels ) {
+        
+        /**
+         * Estados de um pixel na matriz[x][y]
+         * 00(0) - virgem, estado inicial
+         * 10(2) - alterado, mas não atende ao limite da tolerância
+         * 11(3) - alterado e atende ao limite da tolerancia 
+        **/
         int rDif, gDif, bDif;
         
         int red = Processador.getRed(rgbInit);
@@ -1606,7 +1639,6 @@ public class Segmentacao {
         int blue = Processador.getBlue(rgbInit);
         
         if(!img.isNull(x, y)) {
-            if(img.getRGB(x, y) != newRGB) {
 
                 int r = img.nivelRed(x, y);
                 int g = img.nivelGreen(x, y);
@@ -1623,24 +1655,34 @@ public class Segmentacao {
                 if(bDif < 0)
                     bDif = -bDif;
                 
-                rDif /= 2.55f;
-                gDif /= 2.55f;
-                bDif /= 2.55f;
-                
                 if(rDif <= tol && gDif <= tol && bDif <= tol) {
                     
-                    img.setRGB(x, y, newRGB);
+                    pixels[x][y] = 3;
                     
-                    for( int yy = y - 1; yy <= y + 1; yy++)
-                        for( int xx = x - 1; xx <= x + 1; xx++) {
-                            if( !img.isNull( xx, yy ))
-                                if(xx != x || yy != y )
-                                    if(img.getRGB(xx, yy) != newRGB)
-                                        expandir( img, xx, yy, tol, rgbInit, newRGB );
-                        }
+                    if(y >= 1) {
+                        if(pixels[x][y - 1] == 0)
+                            expandir(img, x, y - 1, tol, rgbInit, pixels);
+                    }
+                    
+                    if(y < (img.getHeight() - 1)) {
+                        if(pixels[x][y + 1] == 0)
+                            expandir(img, x, y + 1, tol, rgbInit, pixels);
+                    }
+                    
+                    if(x >= 1) {
+                        if(pixels[x - 1][y] == 0)
+                            expandir(img, x - 1, y, tol, rgbInit, pixels);
+                    }
+                    
+                    if(x < (img.getWidth() - 1)) {
+                        if(pixels[x + 1][y] == 0)
+                            expandir(img, x + 1, y, tol, rgbInit, pixels);
+                    }
                     
                 }
-            }
+                else {
+                    pixels[x][y] = 2;
+                }
         }
         
     }
@@ -1653,7 +1695,9 @@ public class Segmentacao {
         int alt = (int)(img.getHeight() / 8) > 0 ? (int)(img.getHeight() / 8) : 1;
         
         int newRGB = Processador.getRGB( 1, 1, 1);
-       
+        
+        int [][] pixels = zerar( img );
+        
         for(int y = alt; y < img.getHeight() - 1; y += alt) 
             for(int x = 1; x < img.getWidth() - 1; x++) {
                 
@@ -1666,7 +1710,8 @@ public class Segmentacao {
                             tmp.setRGB(xx, yy, 255, 255, 255);
                             xx++;
                         }
-                        expandir( tmp, x + 1, y + 1, 1, 0, newRGB );
+                        expandir( tmp, x + 1, y + 1, 1, 0, pixels );
+                        repintar(pixels, tmp, newRGB);
                         break;
                     }
                     else if( tmp.nivelRed(x - 1, y) == 0) {
@@ -1676,12 +1721,15 @@ public class Segmentacao {
                             tmp.setRGB(xx, yy, 255, 255, 255);
                             xx--;
                         }
-                        expandir( tmp, x + 1, y + 1, 1, 0, newRGB );
+                        expandir( tmp, x + 1, y + 1, 1, 0, pixels );
+                        repintar(pixels, tmp, newRGB);
                         break;
                     }
                 }
                 
             }
+        
+        pixels = zerar( img );
         
         for(int y = 1; y < img.getHeight() - 1; y++) 
             for(int x = larg; x < img.getWidth() - 1; x += larg) {
@@ -1695,7 +1743,8 @@ public class Segmentacao {
                             tmp.setRGB(xx, yy, 255, 255, 255);
                             yy++;
                         }
-                        expandir( tmp, x + 1, y + 1, 1, 0, newRGB );
+                        expandir( tmp, x + 1, y + 1, 1, 0, pixels );
+                        repintar(pixels, tmp, newRGB);
                         break;
                     }
                     else if( tmp.nivelRed(x, y - 1) == 0) {
@@ -1705,7 +1754,8 @@ public class Segmentacao {
                             tmp.setRGB(xx, yy, 255, 255, 255);
                             yy--;
                         }
-                        expandir( tmp, x + 1, y + 1, 1, 0, newRGB );
+                        expandir( tmp, x + 1, y + 1, 1, 0, pixels );
+                        repintar(pixels, tmp, newRGB);
                         break;
                     }
                 }

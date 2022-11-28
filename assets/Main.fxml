@@ -611,7 +611,7 @@
                   <Font size="14.0" />
                </font>
             </ToggleButton>
-            <TextField fx:id="textoTol" layoutX="92.0" layoutY="106.0" prefHeight="20.0" prefWidth="80.0" promptText="\%" text="10" />
+            <TextField fx:id="textoTol" layoutX="92.0" layoutY="106.0" prefHeight="20.0" prefWidth="80.0" promptText="Diferença " text="10" />
             <Label layoutX="20.0" layoutY="108.0" prefHeight="20.0" prefWidth="64.0" text="Tolerância" textFill="WHITE">
                <font>
                   <Font size="14.0" />

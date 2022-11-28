@@ -2139,7 +2139,7 @@ public class Painel implements Initializable{
     	//altera estilo dos botões toggle na barra lateral
     	botaoSelMagica.setOnMouseClicked( mouseEvent ->{
     	    if(botaoSelMagica.isSelected()) {
-    	        botaoSelMagica.setStyle( "-fx-border-color:  #aaa; -fx-background-color:  #666" );
+    	        botaoSelMagica.setStyle( "-fx-border-color:  #999; -fx-background-color:  #555" );
     	        selecRegiao = true;
     	    }
     	    else {
