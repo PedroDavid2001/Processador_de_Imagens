@@ -17,6 +17,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
@@ -46,9 +47,21 @@ public class Painel implements Initializable{
     
 	@FXML
     private AnchorPane workspace;
+	
+    @FXML
+    private Button botaoRedo;
+    
+    @FXML
+    private Button botaoUndo;
 
     @FXML
     private ToggleButton botaoSelMagica;
+    
+    @FXML
+    private ToggleButton botaoApagar;
+    
+    @FXML
+    private ToggleButton botaoCortar;
 	
 	@FXML
     private HTMLEditor htmlEditor;
@@ -175,6 +188,12 @@ public class Painel implements Initializable{
     
     @FXML
     private Pane paneBrightness;
+    
+    @FXML
+    private Pane panCoord;
+    
+    @FXML
+    private ImageView dicaCoord;
    
     @FXML
     private TextField tamXTexto;
@@ -237,19 +256,24 @@ public class Painel implements Initializable{
     //lista com as alterações feitas para permitir desfazer uma ação
     private List<BufferedImage> alteracoes = new ArrayList<BufferedImage>();
     
+    //lista com as alterações feitas para permitir refazer uma ação
+    private List<BufferedImage> refazer = new ArrayList<BufferedImage>();
+    
     private boolean selecRegiao = false;
+    private boolean limparPixels = false;
+    private boolean corteInit = false;
+    private boolean corteFinal = false;
     
-    //Posição inicial da imagem exibida na área de trabalho do software
-    private double posXInit = 100.0;
-    private double posYInit = 100.0;
+    //posições usadas para corte
+    private List<Integer> posCorte = new ArrayList<Integer>();
     
-    //posições do mouse na tela
-    private double mouseXpos;
-    private double mouseYpos;
-    
-  //posições do mouse na imagem
+    //posição do mouse na imagem
     private double mouseX;
     private double mouseY;
+    
+    //posição do mouse na tela
+    private double mouseXcena;
+    private double mouseYcena;
     
     //boolean para ativar/desativar opção de arrastar
     private boolean dragMode = false;
@@ -339,9 +363,8 @@ public class Painel implements Initializable{
     @FXML
     void abrirImgSec(ActionEvent event) {
         img = null;
-        imgSec.carregarImg();
-
-        if(imgSec.getImg() != null){
+        
+        if( imgSec.carregarImg() ){
             img = SwingFXUtils.toFXImage(imgSec.getImg(), null);
             
             imagemSec.setImage(img);
@@ -355,9 +378,10 @@ public class Painel implements Initializable{
             //habilita os botões da interface caso a imagem abra com sucesso
             menuOperacoes.setDisable(false);
             botaoLimparSec.setDisable(false);
+        
+            colarImg(event);
         }
         
-        colarImg(event);
     }
 
     //--------------------------------------------------------------
@@ -365,8 +389,7 @@ public class Painel implements Initializable{
 
     @FXML
     void adicionar(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( botaoNormal.isSelected() ? 
@@ -378,17 +401,14 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
             
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
-       
+
         lstAct = 1;
 
     }
 
     @FXML
     void subtrair(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( botaoNormal.isSelected() ? 
@@ -400,17 +420,14 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
-        
+  
         lstAct = 2;
 
     }
 
     @FXML
     void multiplicar(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( botaoNormal.isSelected() ? 
@@ -422,17 +439,14 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
-       
+
         lstAct = 3;
 
     }
 
     @FXML
     void dividir(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Operacoes.divisao(imgFinal, imgSec) );      
@@ -442,9 +456,7 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
-        
+
         lstAct = 0;
        
 
@@ -452,8 +464,7 @@ public class Painel implements Initializable{
 
     @FXML
     void operacaoAnd(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( botaoNormal.isSelected() ? 
@@ -465,17 +476,14 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
-        
+
         lstAct = 4;
 
     }
 
     @FXML
     void operacaoOr(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( botaoNormal.isSelected() ? 
@@ -487,17 +495,14 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
-       
+        
         lstAct = 5;
 
     }
 
     @FXML
     void operacaoXor(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( botaoNormal.isSelected() ? 
@@ -509,17 +514,14 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
-       
+
         lstAct = 6;
 
     }
 
     @FXML
     void colarImg(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Operacoes.colarImg(imgFinal, imgSec) );      
@@ -529,12 +531,7 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
         
-        lstAct = 0;
-        
-
     }
     
     //--------------------------------------------------------------
@@ -542,8 +539,7 @@ public class Painel implements Initializable{
 
     @FXML
     void espelhoX(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Transformacoes.horizontalMirror( imgFinal.getImg() ) );    
@@ -553,16 +549,12 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
         
-
     }
 
     @FXML
     void espelhoY(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Transformacoes.verticalMirror( imgFinal.getImg() ) );    
@@ -572,8 +564,6 @@ public class Painel implements Initializable{
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
         imagemFinal.setImage(img);
-        imagemFinal.setFitHeight( imgFinal.getHeight() );
-        imagemFinal.setFitWidth( imgFinal.getWidth() );
        
     }
     
@@ -584,9 +574,7 @@ public class Painel implements Initializable{
     }
 
     void cisX(){
-        
-    	img = null;
-    	alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Transformacoes.cisalhamentoX( imgFinal.getImg(), valorTransf ) );    
@@ -597,17 +585,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
         
-        /*Se acumular estiver selecionado, o tamanho 
-        após cisalhamento será o definido nos sliders 
-        de redimensionamento*/
-        if( botaoAcc.isSelected() ){
-        	imagemFinal.setFitWidth( imgFinal.getWidth() * tamXSlide.getValue() );
-        	imagemFinal.setFitHeight( imgFinal.getHeight() * tamYSlide.getValue() );
-        }
-        else {
-        	imagemFinal.setFitHeight( imgFinal.getHeight() );
-        	imagemFinal.setFitWidth( imgFinal.getWidth() );
-        }
+        /**
+         * Se acumular estiver selecionado, 
+         * o tamanho será o definido nos sliders 
+         * de redimensionamento
+         **/
+        redimensionar();
         
     }
 
@@ -618,9 +601,7 @@ public class Painel implements Initializable{
     }
 
     void cisY(){
-        
-    	img = null;
-    	alteracoes.add( imgFinal.getImg() );
+        alteracao();
 
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Transformacoes.cisalhamentoY( imgFinal.getImg(), valorTransf ) );    
@@ -631,50 +612,68 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
         
-        /*Se acumular estiver selecionado, o tamanho 
-        após cisalhamento será o definido nos sliders 
-        de redimensionamento*/
-        if( botaoAcc.isSelected() ) {
-        	imagemFinal.setFitWidth( imgFinal.getWidth() * tamXSlide.getValue() );
-        	imagemFinal.setFitHeight( imgFinal.getHeight() * tamYSlide.getValue() );
-        }
-        else {
-        	imagemFinal.setFitHeight( imgFinal.getHeight() );
-        	imagemFinal.setFitWidth( imgFinal.getWidth() );
-        }
-        
+        /**
+         * Se acumular estiver selecionado, 
+         * o tamanho será o definido nos sliders 
+         * de redimensionamento
+         **/
+        redimensionar();
         
     }
 
     @FXML
     void transladeX(ActionEvent event) {
-    	if( botaoAcc.isSelected() )
-    		imagemFinal.setX( imagemFinal.getX() + Double.valueOf(posXText.getText()) );
-    	else
-    		imagemFinal.setX( posXInit + Double.valueOf(posXText.getText()) );
+        imagemFinal.setLayoutX( Double.valueOf(posXText.getText()) );
+    	
+    	lstAct = 0;
     }
 
     @FXML
     void transladeY(ActionEvent event) {
-    	if( botaoAcc.isSelected() )
-    		imagemFinal.setY( imagemFinal.getY() + Double.valueOf(posYText.getText()) );
-    	else
-    		imagemFinal.setY( posYInit + Double.valueOf(posYText.getText()) );
+        imagemFinal.setLayoutY( Double.valueOf(posYText.getText()) );
+    	
+    	lstAct = 0;
     }
     
     void redimensionarX() {
-    	imagemFinal.setFitWidth( imagem.getWidth() * tamXSlide.getValue() );
+    	imagemFinal.setFitWidth( imgFinal.getWidth() * tamXSlide.getValue() );
     	imgFinal.setImg( imagemFinal.getImage());
+    	
+    	lstAct = 0;
     }
     
     void redimensionarY() {
-    	imagemFinal.setFitHeight( imagem.getHeight() * tamYSlide.getValue() );
+    	imagemFinal.setFitHeight( imgFinal.getHeight() * tamYSlide.getValue() );
     	imgFinal.setImg( imagemFinal.getImage());
+    	
+    	lstAct = 0;
     }
  
     void rotacionar() {
     	imagemFinal.setRotate( rotacaoSlide.getValue() );
     	imgFinal.setImg( imagemFinal.getImage() );
+    	
+    	lstAct = 0;
+    }
+    
+    void cortarImagem() {
+        alteracao();
+
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Transformacoes.cortarImg(imgFinal.getImg(), posCorte) );    
+        else
+            imgFinal.setImg( Transformacoes.cortarImg(imgFinal.getImg(), posCorte) );
+
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
+        /**
+         * Se acumular estiver selecionado, 
+         * o tamanho será o definido nos sliders 
+         * de redimensionamento
+         **/
+        redimensionar();
     }
     
     //--------------------------------------------------------------
@@ -715,8 +714,7 @@ public class Painel implements Initializable{
     
     @FXML
     void exibirGray(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
     	if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.grayScale(imgFinal) );    
@@ -727,13 +725,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void negativo(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.negativo(imgFinal) );    
@@ -744,7 +740,6 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     //--------------------------------------------------------------
@@ -752,8 +747,7 @@ public class Painel implements Initializable{
     
     @FXML
     void PseudoRGB(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorGrayScale(imgFinal, 1) );    
@@ -764,13 +758,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }	
 
     @FXML
     void PseudoRBG(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorGrayScale(imgFinal, 2) );    
@@ -781,13 +773,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
 
     @FXML
     void PseudoBRG(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorGrayScale(imgFinal, 3) );    
@@ -798,13 +788,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
 
     @FXML
     void PseudoBGR(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorGrayScale(imgFinal, 4) );    
@@ -815,13 +803,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
 
     @FXML
     void PseudoGRB(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorGrayScale(imgFinal, 5) );    
@@ -832,13 +818,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
 
     @FXML
     void PseudoGBR(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorGrayScale(imgFinal, 6) );    
@@ -849,15 +833,13 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     //Ignorar uma cor
 
     @FXML
     void IgnoreBlue(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
     	if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorIgnoring(imgFinal, 1) );    
@@ -868,13 +850,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void IgnoreRed(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorIgnoring(imgFinal, 2) );    
@@ -885,13 +865,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void IgnoreGreen(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorIgnoring(imgFinal, 3) );    
@@ -902,15 +880,13 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     //Aumentar uma cor
     
     @FXML
     void IncBlue(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorIncreasing(imgFinal, 1) );    
@@ -921,13 +897,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void IncRed(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorIncreasing(imgFinal, 2) );    
@@ -938,13 +912,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void IncGreen(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorIncreasing(imgFinal, 3) );    
@@ -955,14 +927,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
 
     //Reduzir uma cor
     @FXML
     void ReduBlue(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorReducing(imgFinal, 1) );    
@@ -973,13 +943,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void ReduRed(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorReducing(imgFinal, 2) );    
@@ -990,13 +958,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void ReduGreen(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Cores.pseudoColorReducing(imgFinal, 3) );    
@@ -1007,7 +973,6 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     //--------------------------------------------------------------
@@ -1034,8 +999,7 @@ public class Painel implements Initializable{
     
     @FXML
     void RealceLog(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Realce.NaoLinear(imgFinal, 1) );    
@@ -1046,13 +1010,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
         
-        lstAct = 0;
     }
 
     @FXML
     void RealceQuad(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Realce.NaoLinear(imgFinal, 3) );    
@@ -1063,14 +1025,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
         
-        lstAct = 0;
     }
     
 
     @FXML
     void RealceExp(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Realce.NaoLinear(imgFinal, 2) );    
@@ -1081,14 +1041,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
         
-        lstAct = 0;
     }
 
     @FXML
     void RealceRaiz(ActionEvent event) {
-        
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Realce.NaoLinear(imgFinal, 4) );    
@@ -1099,14 +1056,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
         
-        lstAct = 0;
     }
     
     @FXML
     void equalHisto(ActionEvent event) {
-        
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Realce.EqualizarHistoGrama(imgFinal.getImg()) );    
@@ -1117,7 +1071,6 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
         
-        lstAct = 0;
     }
     
     @FXML
@@ -1135,8 +1088,7 @@ public class Painel implements Initializable{
     
     @FXML
     void media3x3(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.media3x3(imgFinal) );    
@@ -1147,13 +1099,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
 
     @FXML
     void media5x5(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.media5x5(imgFinal) );    
@@ -1164,13 +1114,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
 
     @FXML
     void mediana3x3(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.mediana3x3(imgFinal) );    
@@ -1181,13 +1129,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
 
     @FXML
     void mediana5x5(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.mediana5x5(imgFinal) );    
@@ -1198,13 +1144,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void maximo(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.maximo(imgFinal) );    
@@ -1215,13 +1159,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
 
     @FXML
     void minimo(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.minimo(imgFinal) );    
@@ -1232,13 +1174,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void moda(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.moda(imgFinal) );    
@@ -1249,13 +1189,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void kuwahara(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.kuwahara(imgFinal) );    
@@ -1266,13 +1204,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void tomitaTsuji(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.tomitaTsuji(imgFinal) );    
@@ -1283,13 +1219,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void nagaoMatsuyama(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.nagaoMatsuyama(imgFinal) );    
@@ -1300,13 +1234,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void somboonkaew(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.somboonkaew(imgFinal) );    
@@ -1317,13 +1249,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void h1(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.h1(imgFinal) );    
@@ -1334,13 +1264,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void h2(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.h2(imgFinal) );    
@@ -1351,13 +1279,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void m1(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.m1(imgFinal) );    
@@ -1368,13 +1294,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void m2(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.m2(imgFinal) );    
@@ -1385,13 +1309,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void m3(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.m3(imgFinal) );    
@@ -1402,7 +1324,6 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
@@ -1412,8 +1333,7 @@ public class Painel implements Initializable{
     
     @FXML
     void ht2x2(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.ht2x2(imgFinal) );    
@@ -1424,13 +1344,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
     }
     
     @FXML
     void ht3x2(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.ht3x2(imgFinal) );    
@@ -1441,14 +1359,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void ht3x3(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.ht3x3(imgFinal) );    
@@ -1459,14 +1375,11 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
-
     }
     
     @FXML
     void floydSteinberg(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.floydSteinberg(imgFinal) );    
@@ -1477,14 +1390,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void rogers(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.rogers(imgFinal) );    
@@ -1495,14 +1406,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void jarvisJudiceNinke(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.jarvisJudiceNinke(imgFinal) );    
@@ -1513,14 +1422,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void stucki(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.stucki(imgFinal) );    
@@ -1531,14 +1438,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void stevensonArce(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.stevensonArce(imgFinal) );    
@@ -1549,7 +1454,6 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
 
@@ -1563,8 +1467,7 @@ public class Painel implements Initializable{
     
     @FXML
     void detRetaHori(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.detRetaHori(imgFinal) );    
@@ -1575,14 +1478,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void detRetaVert(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.detRetaVert(imgFinal) );    
@@ -1593,14 +1494,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void detReta45(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.detReta45(imgFinal) );    
@@ -1611,14 +1510,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void detReta135(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.detReta135(imgFinal) );    
@@ -1629,14 +1526,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void roberts(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.roberts(imgFinal) );    
@@ -1647,14 +1542,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void robertsCruz(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.robertsCruz(imgFinal) );    
@@ -1665,14 +1558,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void prewittMag(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.prewittMag(imgFinal) );    
@@ -1683,14 +1574,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void prewittGX(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.prewittGX(imgFinal) );    
@@ -1701,14 +1590,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void prewittGY(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.prewittGY(imgFinal) );    
@@ -1719,14 +1606,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void sobelGX(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.sobelGX(imgFinal) );    
@@ -1737,14 +1622,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void sobelGY(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.sobelGY(imgFinal) );    
@@ -1755,14 +1638,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void sobelMag(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.sobelMag(imgFinal) );    
@@ -1773,14 +1654,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void kirsh(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.kirsh(imgFinal) );    
@@ -1791,14 +1670,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void robison(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.robison(imgFinal) );    
@@ -1809,14 +1686,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void freiChen(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.freiChen(imgFinal) );    
@@ -1827,14 +1702,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void laplacianoH1(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.laplacianoH1(imgFinal) );    
@@ -1845,14 +1718,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void laplacianoH2(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.laplacianoH2(imgFinal) );    
@@ -1863,14 +1734,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void limiarGlobal(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.limiarGlobal(imgFinal, false) );    
@@ -1881,14 +1750,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void limiarGlobalWatersheld(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.limiarGlobal(imgFinal, true) );    
@@ -1899,14 +1766,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void limiarMedia(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.limiarMedia(imgFinal) );    
@@ -1917,14 +1782,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void limiarMin(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.limiarMin(imgFinal) );    
@@ -1935,14 +1798,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void limiarMax(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.limiarMax(imgFinal) );    
@@ -1953,14 +1814,12 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
     @FXML
     void limiarMinMax(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.limiarMinMax(imgFinal) );    
@@ -1971,7 +1830,6 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
 
     }
     
@@ -1981,8 +1839,7 @@ public class Painel implements Initializable{
     }
     
     void selecRegiao(int x, int y) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         int tol = Integer.valueOf( textoTol.getText() );
         
@@ -1995,7 +1852,23 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
 
-        lstAct = 0;
+
+    }
+    
+    void limparPixels(int x, int y) {
+        alteracao();
+        
+        int tol = Integer.valueOf( textoTol.getText() );
+        
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Segmentacao.limparPixels(imgFinal, x, y, tol) );    
+        else
+            imgFinal.setImg( Segmentacao.limparPixels(imagem, x, y, tol) );
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+
 
     }
     
@@ -2031,7 +1904,7 @@ public class Painel implements Initializable{
     
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-    	
+        
     	//detecção de rotação
     	rotacaoSlide.valueProperty().addListener(new ChangeListener<Number>() {
     		
@@ -2064,12 +1937,35 @@ public class Painel implements Initializable{
     	
     	//pega a posição inicial do mouse no momento em que clica na imagem
     	imagemFinal.setOnMouseClicked( mouseEvent -> {
-    	    mouseX = mouseEvent.getX() - imagemFinal.getX();
-            mouseY = mouseEvent.getY() - imagemFinal.getY();
+    	    double x = (( mouseEvent.getX() - imagemFinal.getX() ) / tamXSlide.getValue() );
+            double y = (( mouseEvent.getY() - imagemFinal.getY() ) / tamYSlide.getValue() );
             
+            mouseX = mouseEvent.getX();
+            mouseY = mouseEvent.getY();
+    	    
     	    if( selecRegiao ) {
-    		    selecRegiao((int)mouseX, (int)mouseY);
-    		}else {
+    		    selecRegiao((int)x, (int)y);
+    		}
+    	    else if(limparPixels){
+    	        limparPixels((int)x, (int)y);
+            }
+    	    else if(corteInit){
+    	        posCorte.add( (int)x );
+    	        posCorte.add( (int)y );
+                corteInit = false;
+                corteFinal = true;
+            }
+    	    else if(corteFinal){
+    	        posCorte.add( (int)x );
+                posCorte.add( (int)y );
+                
+                cortarImagem();
+    	        
+                botaoCortar.setStyle( "-fx-background-color:  #666" );
+                corteFinal = false;
+    	        posCorte.clear();
+            }
+    	    else {
     		    dragMode = !dragMode;
     		}
     	});
@@ -2101,8 +1997,8 @@ public class Painel implements Initializable{
     			
     			hueArrow.setLayoutX( (( Cores.Hue(R, G, B) ) / 360.0) * 200.0 );//( valor / 360 ) * 200px
     			
-    			paneBrightness.setStyle("-fx-background-color: #" + matiz.getHex((int)hueArrow.getLayoutX(), 10) );
-                paneSaturation.setStyle("-fx-background-color: #" + matiz.getHex((int)hueArrow.getLayoutX(), 10) );
+    			paneBrightness.setStyle("-fx-background-color: " + matiz.getHex((int)hueArrow.getLayoutX(), 10) );
+                paneSaturation.setStyle("-fx-background-color: " + matiz.getHex((int)hueArrow.getLayoutX(), 10) );
     			saturationArrow.setLayoutX( Cores.Saturation(R, G, B) * 200.0 ); //( valor / 255 ) * 200px
     			brightnessArrow.setLayoutX( (( Cores.Brightness(R, G, B) ) / 255.0) * 200.0 ); //( valor / 255 ) * 200px
     		}
@@ -2110,18 +2006,25 @@ public class Painel implements Initializable{
     	
     	//captura posição do mouse
     	workspace.setOnMouseMoved( mouseEvent ->{
-    		mouseXpos = mouseEvent.getX();
-    		mouseYpos = mouseEvent.getY();
+    	    
+    	    //esconde paineis de dica
+    	    panCoord.setVisible( false );
+    	    
+    	    mouseXcena = mouseEvent.getX();
+            mouseYcena = mouseEvent.getY();
+            
+            double x = mouseEvent.getX() - mouseX;
+    		double y = mouseEvent.getY() - mouseY;
     		
-    		mousePosText.setText(  (int)mouseXpos + ", " + (int)mouseYpos + "px" );
+    		mousePosText.setText(  (int)mouseXcena + ", " + (int)mouseYcena + "px" );
     		
     		if( dragMode ) {
-    			imagemFinal.setX( mouseXpos - mouseX);
-        		imagemFinal.setY( mouseYpos - mouseY);
+    			imagemFinal.setLayoutX( x );
+        		imagemFinal.setLayoutY( y );
         		
         		//atualiza os valores nos textos de posição
-        		posXText.setText( Double.toString( imagemFinal.getX() ));
-        		posYText.setText( Double.toString( imagemFinal.getY() ));
+        		posXText.setText( Double.toString( imagemFinal.getLayoutX() ));
+        		posYText.setText( Double.toString( imagemFinal.getLayoutY() ));
     		}
     	});
     	
@@ -2134,11 +2037,26 @@ public class Painel implements Initializable{
     	    fatiarPanel.setVisible(false);
     	    popupT.setVisible(false);
     	    NiblackPane.setVisible(false);
+    	    
     	});
     	
     	//altera estilo dos botões toggle na barra lateral
     	botaoSelMagica.setOnMouseClicked( mouseEvent ->{
     	    if(botaoSelMagica.isSelected()) {
+    	        
+    	        //---------------------------------------------------------
+    	        //desativa outros botões
+    	        if(botaoApagar.isSelected()) {
+                    botaoApagar.setStyle( "-fx-background-color:  #666" );
+                    limparPixels = false;
+                }
+    	        if(botaoCortar.isSelected()) {
+                    botaoCortar.setStyle( "-fx-background-color:  #666" );
+                    corteInit = false;
+                    corteFinal = false;
+                }
+    	        //---------------------------------------------------------
+    	        
     	        botaoSelMagica.setStyle( "-fx-border-color:  #999; -fx-background-color:  #555" );
     	        selecRegiao = true;
     	    }
@@ -2148,6 +2066,65 @@ public class Painel implements Initializable{
     	    }
     	    
     	});
+    	
+    	//altera estilo dos botões toggle na barra lateral
+        botaoApagar.setOnMouseClicked( mouseEvent ->{
+            if(botaoApagar.isSelected()) {
+                
+                //---------------------------------------------------------
+                //desativa outros botões                
+                if(botaoSelMagica.isSelected()) {
+                    botaoSelMagica.setStyle( "-fx-background-color:  #666" );
+                    selecRegiao = false;
+                }
+                if(botaoCortar.isSelected()) {
+                    botaoCortar.setStyle( "-fx-background-color:  #666" );
+                    corteInit = false;
+                    corteFinal = false;
+                }
+                //---------------------------------------------------------
+                                
+                botaoApagar.setStyle( "-fx-border-color:  #999; -fx-background-color:  #555" );
+                limparPixels = true;
+            }
+            else {
+                botaoApagar.setStyle( "-fx-background-color:  #666" );
+                limparPixels = false;
+            }
+            
+        });
+        
+        //altera estilo dos botões toggle na barra lateral
+        botaoCortar.setOnMouseClicked( mouseEvent ->{
+            if(botaoCortar.isSelected()) {
+
+                //---------------------------------------------------------
+                //desativa outros botões                
+                if(botaoSelMagica.isSelected()) {
+                    botaoSelMagica.setStyle( "-fx-background-color:  #666" );
+                    selecRegiao = false;
+                }
+                if(botaoApagar.isSelected()) {
+                    botaoApagar.setStyle( "-fx-background-color:  #666" );
+                    limparPixels = false;
+                }
+                //---------------------------------------------------------
+                
+                botaoCortar.setStyle( "-fx-border-color:  #999; -fx-background-color:  #555" );
+                corteInit = true;
+            }
+            else {
+                botaoCortar.setStyle( "-fx-background-color:  #666" );
+                corteInit = false;
+                corteFinal = false;
+            }
+            
+        });
+        
+        //exibe painel de dica do corte
+        dicaCoord.setOnMouseMoved(mouseEvent ->{
+            panCoord.setVisible(true);
+        });
     }
 
     /*
@@ -2230,8 +2207,7 @@ public class Painel implements Initializable{
     
     @FXML
     void botaoAmplificar(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Filtros.highBoost(imgFinal, Float.valueOf( textoAmplificar.getText() )));    
@@ -2245,13 +2221,11 @@ public class Painel implements Initializable{
         popupAmplificacao.setVisible(false);
         textoAmplificar.setText("1");
         
-        lstAct = 0;
     }
     
     @FXML
     void botaoNiblack(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         float k = Float.valueOf( valorK.getText() );
         int n = Integer.valueOf( valorN.getText() );
@@ -2269,14 +2243,11 @@ public class Painel implements Initializable{
         valorK.setText("-0.2");
         valorN.setText("15");
         
-        lstAct = 0;
     }
     
     @FXML
     void botaoT(ActionEvent event) {
-        
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( Segmentacao.detPonto(imgFinal, Double.valueOf(textoT.getText())) );    
@@ -2290,13 +2261,11 @@ public class Painel implements Initializable{
         popupT.setVisible(false);
         textoT.setText("");
         
-        lstAct = 0;
     }
     
     @FXML
     void botaoRealceLinear(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         valorMaximo = Integer.valueOf( valorMax.getText() );
         valorMinimo = Integer.valueOf( valorMin.getText() );
@@ -2314,13 +2283,11 @@ public class Painel implements Initializable{
         valorMax.clear();
         valorMin.clear();
         
-        lstAct = 0;
     }
     
     @FXML
     void botaoControlGamma(ActionEvent event) {
-        img = null;
-        alteracoes.add( imgFinal.getImg() );
+        alteracao();
         
         fatorC = Double.valueOf( valorFatorC.getText() );
         gamma = Double.valueOf( valorGamma.getText() );
@@ -2335,7 +2302,6 @@ public class Painel implements Initializable{
 
         imagemFinal.setImage(img);
         
-        lstAct = 0;
     }
     
     @FXML
@@ -2437,6 +2403,8 @@ public class Painel implements Initializable{
         menuEstegano.setDisable(false);
         botaoSalvar.setDisable(false);
         menuSegmentacao.setDisable(false);
+        botaoUndo.setDisable(true);
+        botaoRedo.setDisable(true);
         
         dragMode = false;
         
@@ -2452,8 +2420,8 @@ public class Painel implements Initializable{
             img = null;
             img = SwingFXUtils.toFXImage(imagem.getImg(), null);
             
-            imagemFinal.setFitHeight( imagem.getHeight() );
-            imagemFinal.setFitWidth(  imagem.getWidth() );
+            imagemFinal.setFitHeight( imagem.getHeight() * tamYSlide.getValue() );
+            imagemFinal.setFitWidth(  imagem.getWidth() * tamXSlide.getValue() );
             
             //imagem exibida na área de trabalho do software
             imagemFinal.setImage(img);
@@ -2461,6 +2429,88 @@ public class Painel implements Initializable{
         
         botaoLimparFinal.setDisable(false);
         
+    }
+    
+    @FXML
+    void undo(ActionEvent event) {
+        if(alteracoes.size() > 0) {
+            BufferedImage tmp = alteracoes.remove( (alteracoes.size() - 1) );
+            
+            refazer.add( imgFinal.getImg() );
+            botaoRedo.setDisable(false);
+            
+            if(tmp != null) {
+                imgFinal.setImg( tmp );
+                img = null;
+                img = SwingFXUtils.toFXImage(tmp, null);
+                
+                imagemFinal.setFitHeight( tmp.getHeight() * tamYSlide.getValue() );
+                imagemFinal.setFitWidth(  tmp.getWidth() * tamXSlide.getValue() );
+                
+                //imagem exibida na área de trabalho do software
+                imagemFinal.setImage(img);
+            } 
+        }
+        
+        //verifica se esvaziou a lista para desabilitar o botão
+        if(alteracoes.size() == 0) {
+            botaoUndo.setDisable(true);
+        }
+        
+        lstAct = 0;
+    }
+    
+    @FXML
+    void redo(ActionEvent event) {
+        if(refazer.size() > 0) {
+            BufferedImage tmp = refazer.remove( (refazer.size() - 1) );
+            
+            alteracoes.add( imgFinal.getImg() );
+            botaoUndo.setDisable(false);
+            
+            if(tmp != null) {
+                imgFinal.setImg( tmp );
+                img = null;
+                img = SwingFXUtils.toFXImage(tmp, null);
+                
+                imagemFinal.setFitHeight( tmp.getHeight() * tamYSlide.getValue() );
+                imagemFinal.setFitWidth(  tmp.getWidth() * tamXSlide.getValue() );
+                
+                //imagem exibida na área de trabalho do software
+                imagemFinal.setImage(img);
+            } 
+        }
+        
+        //verifica se esvaziou a lista para desabilitar o botão
+        if(refazer.size() == 0) {
+            botaoRedo.setDisable(true);
+        }
+        
+        lstAct = 0;
+    }
+    
+    void redimensionar() {
+        if( botaoAcc.isSelected() ){
+            imagemFinal.setFitWidth( imgFinal.getWidth() * tamXSlide.getValue() );
+            imagemFinal.setFitHeight( imgFinal.getHeight() * tamYSlide.getValue() );
+        }
+        else {
+            imagemFinal.setFitHeight( imgFinal.getHeight() );
+            imagemFinal.setFitWidth( imgFinal.getWidth() );
+        }
+    }
+    
+    //método invocado quando realiza uma alteração
+    void alteracao() {
+        
+        //reseta a ultima ação para evitar bugs no normalizar e truncar
+        lstAct = 0;
+        
+        img = null;
+        alteracoes.add( imgFinal.getImg() );
+        refazer.clear();
+        botaoUndo.setDisable(false);
+        botaoRedo.setDisable(true);
     }
     
     @FXML
@@ -2475,8 +2525,7 @@ public class Painel implements Initializable{
     
     @FXML
     void salvarHTML(ActionEvent event) {
-        
-        System.out.println(htmlEditor.getHtmlText());
+        alteracao();
         
         if( botaoAcc.isSelected() )
             imgFinal.setImg( BitMapping.esteganografia(imgFinal, htmlEditor.getHtmlText()) );    

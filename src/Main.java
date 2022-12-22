@@ -1,6 +1,7 @@
 package src;
 
 import java.io.IOException;
+import javax.swing.UIManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +19,14 @@ import javafx.scene.image.Image;
  */
 public class Main extends Application {
     public static void main(String[] args) {
+        
+        java.awt.EventQueue.invokeLater( new Runnable() {
+            public void run() {
+                try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } 
+                catch (Exception e) {}
+            }
+        });
+        
         launch(args);
     }
 

@@ -2,11 +2,14 @@ package src;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.Color;
-import ij.IJ;
 import ij.ImagePlus;
-import ij.io.FileSaver;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
@@ -87,17 +90,21 @@ public class Processador {
     private BufferedImage arquivo = null;
     private ImagePlus imagePlus = null;
     private String path = null;
+    JFileChooser jFile = new JFileChooser();
     
     public boolean carregarImg(){
         
-        ImagePlus opened = IJ.openImage(); //abre o explorador de arquivo
+        int resp = jFile.showOpenDialog( null );//abre o explorador de arquivo
         
-        if(opened != null) {
+        if(resp == JFileChooser.APPROVE_OPTION) {
+            
+            ImagePlus opened = new ImagePlus( jFile.getSelectedFile().getAbsolutePath() ); 
             
             arquivo = null;
             imagePlus = null;
           
             imagePlus = opened; 
+            
             
             path = imagePlus.getOriginalFileInfo().getFilePath();   
             /*passa o path da imagem selecionada
@@ -127,9 +134,8 @@ public class Processador {
             }
 
         }
-        else{
-            return false;
-        } 
+        
+        return false;
     }
     
     public int nivelCinza(int x, int y){
@@ -307,7 +313,7 @@ public class Processador {
     	if(hexB.length() < 2)
     		hexB = "0" + hexB;
     	
-    	String retorno = "";
+    	String retorno = "#";
     	retorno = retorno.concat(hexR);
     	retorno = retorno.concat(hexG);
     	retorno = retorno.concat(hexB);
@@ -320,9 +326,15 @@ public class Processador {
     }
     
     public void salvarImagem() {
-        FileSaver fSaver = new FileSaver(imagePlus);
         
-        fSaver.saveAsPng(path);
+        jFile.setFileFilter(new FileNameExtensionFilter("*.png", "png"));
+        
+        if (jFile.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            File file = jFile.getSelectedFile();
+            
+            try { ImageIO.write(arquivo, "png", new File(file.getAbsolutePath() + ".png" )); } 
+            catch (IOException ex) {}
+        }
     }
     
     public boolean isNull(int x, int y) {

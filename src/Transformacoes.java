@@ -1,6 +1,7 @@
 package src;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
 * Para multiplicar duas matrizes, A e B, devemos multiplicar 
@@ -140,6 +141,39 @@ public class Transformacoes {
                 newY = (int)(newX * sy) + y;
                 tmp.setRGB( x, newY, img.getRGB(x, y) );
             }
+        }
+    
+        return tmp;
+    }
+    
+    public static BufferedImage cortarImg(BufferedImage img, List<Integer> coord){
+
+        int xInit = coord.get(0);
+        int yInit = coord.get(1);
+        int xFim = coord.get(2);
+        int yFim = coord.get(3);
+        int larg = (xFim - xInit);
+        int alt = (yFim - yInit);
+        
+        if(larg < 0)
+            larg = -larg;
+        if(alt < 0)
+            alt = -alt;
+        
+        BufferedImage tmp = new BufferedImage( (larg + 1), (alt + 1), img.getType() );
+
+        int xTMP, yTMP = 0;
+        
+        for(int y = yInit; y <= yFim ; y++){
+            xTMP = 0;
+            for(int x = xInit; x <= xFim; x++){
+                
+                tmp.setRGB(xTMP, yTMP, img.getRGB(x, y) );
+                xTMP++;
+                
+            }
+            
+            yTMP++;
         }
     
         return tmp;

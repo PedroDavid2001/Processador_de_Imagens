@@ -1599,6 +1599,20 @@ public class Segmentacao {
         return tmp.getImg();
     }
     
+    public static BufferedImage limparPixels(Processador img, int posX, int posY, int tol) {
+        
+        Processador tmp = new Processador();
+        tmp.setImg( img.getImg() );
+        
+        int rgbInit = img.getRGB(posX, posY);
+        
+        int [][] pixels = zerar( img );
+        expandir( tmp, posX, posY, tol, rgbInit, pixels );
+        repintar(pixels, tmp, 0);
+        
+        return tmp.getImg();
+    }
+    
     private static void repintar(int [][] pixels, Processador img, int newRGB) {
         
         for(int y = 0; y < img.getHeight(); y++) {
@@ -1628,7 +1642,7 @@ public class Segmentacao {
         
         /**
          * Estados de um pixel na matriz[x][y]
-         * 00(0) - virgem, estado inicial
+         * 00(0) - estado inicial
          * 10(2) - alterado, mas não atende ao limite da tolerância
          * 11(3) - alterado e atende ao limite da tolerancia 
         **/
@@ -1639,6 +1653,10 @@ public class Segmentacao {
         int blue = Processador.getBlue(rgbInit);
         
         if(!img.isNull(x, y)) {
+            
+                if(img.escalaAlpha(x, y) == 0){
+                    return;
+                }
 
                 int r = img.nivelRed(x, y);
                 int g = img.nivelGreen(x, y);
