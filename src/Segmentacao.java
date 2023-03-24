@@ -7,6 +7,8 @@ import java.util.Random;
 
 public class Segmentacao {
     
+    static Expansao expandir;
+    
     public static BufferedImage detPonto(Processador img, double t ) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
@@ -1592,9 +1594,9 @@ public class Segmentacao {
         int newRGB = Processador.getRGB( newR, newG, newB);
         int rgbInit = img.getRGB(posX, posY);
         
-        int [][] pixels = zerar( img );
-        expandir( tmp, posX, posY, tol, rgbInit, pixels );
-        repintar(pixels, tmp, newRGB);
+        expandir = new Expansao(img.getWidth(), img.getHeight());
+        expandir.expandir( tmp, posX, posY, tol, rgbInit );
+        repintar(expandir.getArray(), tmp, newRGB);
         
         return tmp.getImg();
     }
@@ -1606,9 +1608,9 @@ public class Segmentacao {
         
         int rgbInit = img.getRGB(posX, posY);
         
-        int [][] pixels = zerar( img );
-        expandir( tmp, posX, posY, tol, rgbInit, pixels );
-        repintar(pixels, tmp, 0);
+        expandir = new Expansao(img.getWidth(), img.getHeight());
+        expandir.expandir( tmp, posX, posY, tol, rgbInit );
+        repintar(expandir.getArray(), tmp, 0);
         
         return tmp.getImg();
     }
@@ -1624,87 +1626,7 @@ public class Segmentacao {
         }
         
     }
-    
-    private static int [][] zerar(Processador img) {
-        
-        int [][] pixels = new int[ (int)img.getWidth() ][ (int)img.getHeight() ];
-        
-        for(int [] vetor : pixels) {
-            for(@SuppressWarnings("unused") int item : vetor) {
-                item = 0;
-            }
-        }
-        
-        return pixels;
-    }
-    
-    private static void expandir( Processador img, int x, int y, int tol, int rgbInit, int[][] pixels ) {
-        
-        /**
-         * Estados de um pixel na matriz[x][y]
-         * 00(0) - estado inicial
-         * 10(2) - alterado, mas não atende ao limite da tolerância
-         * 11(3) - alterado e atende ao limite da tolerancia 
-        **/
-        int rDif, gDif, bDif;
-        
-        int red = Processador.getRed(rgbInit);
-        int green = Processador.getGreen(rgbInit);
-        int blue = Processador.getBlue(rgbInit);
-        
-        if(!img.isNull(x, y)) {
-            
-                if(img.escalaAlpha(x, y) == 0){
-                    return;
-                }
-
-                int r = img.nivelRed(x, y);
-                int g = img.nivelGreen(x, y);
-                int b = img.nivelBlue(x, y);
-                
-                rDif = (r - red);
-                gDif = (g - green);
-                bDif = (b - blue);
-                
-                if(rDif < 0)
-                    rDif = -rDif;
-                if(gDif < 0)
-                    gDif = -gDif;
-                if(bDif < 0)
-                    bDif = -bDif;
-                
-                if(rDif <= tol && gDif <= tol && bDif <= tol) {
-                    
-                    pixels[x][y] = 3;
-                    
-                    if(y >= 1) {
-                        if(pixels[x][y - 1] == 0)
-                            expandir(img, x, y - 1, tol, rgbInit, pixels);
-                    }
-                    
-                    if(y < (img.getHeight() - 1)) {
-                        if(pixels[x][y + 1] == 0)
-                            expandir(img, x, y + 1, tol, rgbInit, pixels);
-                    }
-                    
-                    if(x >= 1) {
-                        if(pixels[x - 1][y] == 0)
-                            expandir(img, x - 1, y, tol, rgbInit, pixels);
-                    }
-                    
-                    if(x < (img.getWidth() - 1)) {
-                        if(pixels[x + 1][y] == 0)
-                            expandir(img, x + 1, y, tol, rgbInit, pixels);
-                    }
-                    
-                }
-                else {
-                    pixels[x][y] = 2;
-                }
-        }
-        
-    }
-    
+   
     public static BufferedImage watershed( Processador img) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
@@ -1714,7 +1636,7 @@ public class Segmentacao {
         
         int newRGB = Processador.getRGB( 1, 1, 1);
         
-        int [][] pixels = zerar( img );
+        expandir = new Expansao(img.getWidth(), img.getHeight());
         
         for(int y = alt; y < img.getHeight() - 1; y += alt) 
             for(int x = 1; x < img.getWidth() - 1; x++) {
@@ -1728,8 +1650,8 @@ public class Segmentacao {
                             tmp.setRGB(xx, yy, 255, 255, 255);
                             xx++;
                         }
-                        expandir( tmp, x + 1, y + 1, 1, 0, pixels );
-                        repintar(pixels, tmp, newRGB);
+                        expandir.expandir( tmp, x + 1, y + 1, 1, 0 );
+                        repintar(expandir.getArray(), tmp, newRGB);
                         break;
                     }
                     else if( tmp.nivelRed(x - 1, y) == 0) {
@@ -1739,20 +1661,20 @@ public class Segmentacao {
                             tmp.setRGB(xx, yy, 255, 255, 255);
                             xx--;
                         }
-                        expandir( tmp, x + 1, y + 1, 1, 0, pixels );
-                        repintar(pixels, tmp, newRGB);
+                        expandir.expandir( tmp, x + 1, y + 1, 1, 0 );
+                        repintar(expandir.getArray(), tmp, newRGB);
                         break;
                     }
                 }
                 
             }
         
-        pixels = zerar( img );
+        expandir.zerar();
         
         for(int y = 1; y < img.getHeight() - 1; y++) 
             for(int x = larg; x < img.getWidth() - 1; x += larg) {
                 
-                //inundação na horizontal
+                //inundação na vertical
                 if(img.nivelRed(x, y) == 255) {
                     if(tmp.nivelRed(x, y + 1) == 0) {
                         int xx = x;
@@ -1761,8 +1683,8 @@ public class Segmentacao {
                             tmp.setRGB(xx, yy, 255, 255, 255);
                             yy++;
                         }
-                        expandir( tmp, x + 1, y + 1, 1, 0, pixels );
-                        repintar(pixels, tmp, newRGB);
+                        expandir.expandir( tmp, x + 1, y + 1, 1, 0 );
+                        repintar(expandir.getArray(), tmp, newRGB);
                         break;
                     }
                     else if( tmp.nivelRed(x, y - 1) == 0) {
@@ -1772,8 +1694,8 @@ public class Segmentacao {
                             tmp.setRGB(xx, yy, 255, 255, 255);
                             yy--;
                         }
-                        expandir( tmp, x + 1, y + 1, 1, 0, pixels );
-                        repintar(pixels, tmp, newRGB);
+                        expandir.expandir( tmp, x + 1, y + 1, 1, 0 );
+                        repintar(expandir.getArray(), tmp, newRGB);
                         break;
                     }
                 }

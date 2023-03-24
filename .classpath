@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path=""/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-18">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-18">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/imagej-lib/ij.jar"/>
-	<classpathentry kind="lib" path="libs/javafx-lib/javafx.base.jar"/>
-	<classpathentry kind="lib" path="libs/javafx-lib/javafx.controls.jar"/>
-	<classpathentry kind="lib" path="libs/javafx-lib/javafx.fxml.jar"/>
-	<classpathentry kind="lib" path="libs/javafx-lib/javafx.graphics.jar"/>
-	<classpathentry kind="lib" path="libs/javafx-lib/javafx.media.jar"/>
-	<classpathentry kind="lib" path="libs/javafx-lib/javafx.swing.jar"/>
-	<classpathentry kind="lib" path="libs/javafx-lib/javafx.web.jar"/>
-	<classpathentry kind="lib" path="libs/javafx-lib/javafx-swt.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/imagej-lib/ij.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javafx-lib/javafx.base.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javafx-lib/javafx.controls.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javafx-lib/javafx.fxml.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javafx-lib/javafx.graphics.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javafx-lib/javafx.media.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javafx-lib/javafx.swing.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javafx-lib/javafx.web.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javafx-lib/javafx-swt.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

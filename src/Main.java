@@ -11,11 +11,6 @@ import javafx.scene.image.Image;
 
 /**
  * PDI-Main
- * 
- * Vm arguments
- * 
- * --module-path C:\Users\pedro\OneDrive\Documents\JAVA\javafx-sdk-17.0.0.1\lib --add-modules javafx.controls,javafx.fxml,javafx.web
- * -Xms4m
  */
 public class Main extends Application {
     public static void main(String[] args) {
