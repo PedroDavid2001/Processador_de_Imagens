@@ -1,5 +1,8 @@
 package src;
 
+import java.awt.Point;
+import java.util.Stack;
+
 public class Expansao {
     int [][] vetor;
     
@@ -17,72 +20,87 @@ public class Expansao {
         }
     }
     
-    public void expandir( Processador img, int x, int y, int tol, int rgbInit ) {
+    public void expandir(Processador img, int x, int y, int tol, int rgbInit) {
         
-        if(vetor[x][y] != 0) {
-            return;
-        }
+        /* 
+         * Uma pilha(stack) armazena os pontos na imagem. 
+         * O primeiro ponto é passado pelo parâmetro.
+         * 
+         */
         
-        /**
-         * Estados de um pixel na matriz[x][y]
-         * 00(0) - estado inicial
-         * 10(2) - alterado, mas não atende ao limite da tolerância
-         * 11(3) - alterado e atende ao limite da tolerancia 
-        **/
-        int rDif, gDif, bDif;
+        Stack<Point> stack = new Stack<>();
+        stack.push(new Point(x, y));
         
-        int red = Processador.getRed(rgbInit);
-        int green = Processador.getGreen(rgbInit);
-        int blue = Processador.getBlue(rgbInit);
         
-        if(!img.isNull(x, y)) {
-            
-                if(img.escalaAlpha(x, y) == 0){
-                    return;
+        /*
+         * A cada iteração é resgatado o último 
+         * ponto armanzenado na pilha e as 
+         * coordenadas dele são passadas para 
+         * as variáveis inteiras "px" e "py".
+         */
+        while (!stack.isEmpty()) {
+            Point p = stack.pop();
+            int px = p.x;
+            int py = p.y;
+
+            if (vetor[px][py] != 0) {
+                continue;
+            }
+
+            int red = Processador.getRed(rgbInit);
+            int green = Processador.getGreen(rgbInit);
+            int blue = Processador.getBlue(rgbInit);
+
+            if (!img.isNull(px, py)) {
+                if (img.escalaAlpha(px, py) == 0) {
+                    continue;
                 }
 
-                int r = img.nivelRed(x, y);
-                int g = img.nivelGreen(x, y);
-                int b = img.nivelBlue(x, y);
-                
-                if(r == 0 && g == 0 && b == 0) {
-                    return;
+                int r = img.nivelRed(px, py);
+                int g = img.nivelGreen(px, py);
+                int b = img.nivelBlue(px, py);
+
+                if (r == 0 && g == 0 && b == 0) {
+                    continue;
+                }
+
+                int rDif = Math.abs(r - red);
+                int gDif = Math.abs(g - green);
+                int bDif = Math.abs(b - blue);
+
+                if (rDif > tol || gDif > tol || bDif > tol) {
+                    // Valor do pixel vai além da tolerância, 
+                    // portanto não poderá ser alterado.
+                    vetor[px][py] = 2;
+                    continue;
                 }
                 
-                rDif = (r - red);
-                gDif = (g - green);
-                bDif = (b - blue);
-                
-                if(rDif < 0)
-                    rDif = -rDif;
-                if(gDif < 0)
-                    gDif = -gDif;
-                if(bDif < 0)
-                    bDif = -bDif;
-                
-                if(rDif > tol || gDif > tol || bDif > tol) {
-                    vetor[x][y] = 2;
-                    return;
+                // Pixel se encaixa na tolerância, 
+                // portanto poderá ser alterado.
+                vetor[px][py] = 3;
+
+                /* 
+                 * Verifica-se a vizinhança do pixel.
+                 * Os vizinhos "aptos" serão armazenados 
+                 * na pilha para serem verificados nas 
+                 * próximas iterações.
+                 */
+                if (py >= 1 && vetor[px][py - 1] == 0) {
+                    stack.push(new Point(px, py - 1));
                 }
-                    
-                vetor[x][y] = 3;
-                
-                if(y >= 1 && vetor[x][y - 1] == 0) {
-                    expandir(img, x, y - 1, tol, rgbInit);
+                if (py < (img.getHeight() - 1) && vetor[px][py + 1] == 0) {
+                    stack.push(new Point(px, py + 1));
                 }
-                if(y < (img.getHeight() - 1) && vetor[x][y + 1] == 0) {
-                    expandir(img, x, y + 1, tol, rgbInit);
+                if (px >= 1 && vetor[px - 1][py] == 0) {
+                    stack.push(new Point(px - 1, py));
                 }
-                if(x >= 1 && vetor[x - 1][y] == 0) {
-                    expandir(img, x - 1, y, tol, rgbInit);
-                }       
-                if(x < (img.getWidth() - 1) && vetor[x + 1][y] == 0) {
-                    expandir(img, x + 1, y, tol, rgbInit);
-                }           
+                if (px < (img.getWidth() - 1) && vetor[px + 1][py] == 0) {
+                    stack.push(new Point(px + 1, py));
+                }
+            }
         }
-        
     }
-    
+        
     public int [][] getArray(){
         return vetor;
     }
