@@ -15,9 +15,12 @@ import javafx.beans.value.ObservableValue;
 import javax.swing.JFileChooser;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
@@ -29,6 +32,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.web.HTMLEditor;
 
@@ -56,6 +60,12 @@ public class Painel implements Initializable{
 
     @FXML
     private ToggleButton botaoSelMagica;
+    
+    @FXML
+    private ToggleButton botaoLapis;
+    
+    @FXML
+    private ToggleButton botaoSelWatershed;
     
     @FXML
     private ToggleButton botaoApagar;
@@ -178,6 +188,9 @@ public class Painel implements Initializable{
     private Pane paneSaturation;
     
     @FXML
+    private ColorPicker selecCor;
+    
+    @FXML
     private ImageView saturationArrow;
     
     @FXML
@@ -260,9 +273,13 @@ public class Painel implements Initializable{
     private List<BufferedImage> refazer = new ArrayList<BufferedImage>();
     
     private boolean selecRegiao = false;
+    private boolean selecWatershed = false;
     private boolean limparPixels = false;
     private boolean corteInit = false;
     private boolean corteFinal = false;
+    private boolean lapisSelecionado = false;
+    private double [] posicoesLapis = new double [4];
+    private int rgb_from_ColorPicker;
     
     //posições usadas para corte
     private List<Integer> posCorte = new ArrayList<Integer>();
@@ -524,9 +541,23 @@ public class Painel implements Initializable{
         alteracao();
 
         if( botaoAcc.isSelected() )
-            imgFinal.setImg( Operacoes.colarImg(imgFinal, imgSec) );      
+            Operacoes.colarImg(imgFinal, imgSec);      
         else
-            imgFinal.setImg( Operacoes.colarImg(imagem, imgSec) );
+            Operacoes.colarImg(imagem, imgSec);
+        
+        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
+
+        imagemFinal.setImage(img);
+        
+    }
+    
+    void pintarPixel( int rgb ) {
+        alteracao();
+
+        if( botaoAcc.isSelected() )
+            imgFinal.setImg( Operacoes.pintarPixel(imgFinal, posicoesLapis, rgb) );      
+        else
+            imgFinal.setImg( Operacoes.pintarPixel(imagem, posicoesLapis, rgb) );
         
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
@@ -1742,25 +1773,9 @@ public class Painel implements Initializable{
         alteracao();
         
         if( botaoAcc.isSelected() )
-            imgFinal.setImg( Segmentacao.limiarGlobal(imgFinal, false) );    
+            imgFinal.setImg( Segmentacao.limiarGlobal(imgFinal) );    
         else
-            imgFinal.setImg( Segmentacao.limiarGlobal(imagem, false) );
-        
-        img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
-
-        imagemFinal.setImage(img);
-
-
-    }
-    
-    @FXML
-    void limiarGlobalWatersheld(ActionEvent event) {
-        alteracao();
-        
-        if( botaoAcc.isSelected() )
-            imgFinal.setImg( Segmentacao.limiarGlobal(imgFinal, true) );    
-        else
-            imgFinal.setImg( Segmentacao.limiarGlobal(imagem, true) );
+            imgFinal.setImg( Segmentacao.limiarGlobal(imagem) );
         
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
@@ -1843,10 +1858,17 @@ public class Painel implements Initializable{
         
         int tol = Integer.valueOf( textoTol.getText() );
         
-        if( botaoAcc.isSelected() )
-            imgFinal.setImg( Segmentacao.selecRegiao(imgFinal, x, y, tol) );    
-        else
-            imgFinal.setImg( Segmentacao.selecRegiao(imagem, x, y, tol) );
+        if(selecWatershed) {
+            if( botaoAcc.isSelected() )
+                imgFinal.setImg( Segmentacao.watershed(imgFinal, x, y, tol, rgb_from_ColorPicker ));    
+            else
+                imgFinal.setImg( Segmentacao.watershed(imagem, x, y, tol, rgb_from_ColorPicker ));  
+        }else {
+            if( botaoAcc.isSelected() )
+                imgFinal.setImg( Segmentacao.selecRegiao(imgFinal, x, y, tol, rgb_from_ColorPicker ));    
+            else
+                imgFinal.setImg( Segmentacao.selecRegiao(imagem, x, y, tol, rgb_from_ColorPicker ));
+        }
         
         img = SwingFXUtils.toFXImage( imgFinal.getImg(), null);
 
@@ -1902,8 +1924,17 @@ public class Painel implements Initializable{
     	redimensionarY();
     }
     
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        
+        //detecção da cor selecionada no ColorPicker
+        selecCor.setOnAction(new EventHandler() {
+            public void handle(Event t) {
+                Color c = selecCor.getValue();
+                rgb_from_ColorPicker = Processador.getRGB((float)c.getRed(), (float)c.getGreen(), (float)c.getBlue());
+            }
+        });
         
     	//detecção de rotação
     	rotacaoSlide.valueProperty().addListener(new ChangeListener<Number>() {
@@ -1965,9 +1996,32 @@ public class Painel implements Initializable{
                 corteFinal = false;
     	        posCorte.clear();
             }
-    	    else {
-    		    dragMode = !dragMode;
-    		}
+    	    else if( !lapisSelecionado ){
+                dragMode = !dragMode;
+            }
+    	});
+    	
+    	imagemFinal.setOnMousePressed( mouseEvent -> {
+    	    double x = (( mouseEvent.getX() - imagemFinal.getX() ) / tamXSlide.getValue() );
+            double y = (( mouseEvent.getY() - imagemFinal.getY() ) / tamYSlide.getValue() );
+    	    
+    	    posicoesLapis[0] = x; //x inicial
+            posicoesLapis[1] = y; //y inicial
+    	});
+    	
+    	imagemFinal.setOnMouseDragged( mouseEvent -> { 
+    	    double x = (( mouseEvent.getX() - imagemFinal.getX() ) / tamXSlide.getValue() );
+            double y = (( mouseEvent.getY() - imagemFinal.getY() ) / tamYSlide.getValue() );
+            
+            posicoesLapis[2] = x; //x final
+            posicoesLapis[3] = y; //y final
+            
+            if( lapisSelecionado ) {
+                pintarPixel(rgb_from_ColorPicker);//transparente (temporário)
+            }
+            
+            posicoesLapis[0] = x; //x inicial
+            posicoesLapis[1] = y; //y inicial
     	});
     	
     	//captura o rgb na posição que o mouse está na imagem
@@ -2055,17 +2109,37 @@ public class Painel implements Initializable{
                     corteInit = false;
                     corteFinal = false;
                 }
+    	        if(botaoLapis.isSelected()) {
+                    botaoLapis.setStyle( "-fx-background-color:  #666" );
+                    lapisSelecionado = false;
+                }
     	        //---------------------------------------------------------
     	        
     	        botaoSelMagica.setStyle( "-fx-border-color:  #999; -fx-background-color:  #555" );
     	        selecRegiao = true;
+    	        botaoSelWatershed.setDisable(false);
     	    }
     	    else {
     	        botaoSelMagica.setStyle( "-fx-background-color:  #666" );
     	        selecRegiao = false;
+    	        botaoSelWatershed.setSelected(false);
+    	        botaoSelWatershed.setDisable(true);
     	    }
     	    
     	});
+    	
+    	//altera estilo do botão watershed na barra lateral
+        botaoSelWatershed.setOnMouseClicked( mouseEvent ->{
+            if(botaoSelWatershed.isSelected()) {    
+                botaoSelWatershed.setStyle( "-fx-border-color:  #999; -fx-background-color:  #555" );
+                selecWatershed = true;
+            }
+            else {
+                botaoSelWatershed.setStyle( "-fx-border-color:  #999; -fx-background-color:  #777" );
+                selecWatershed = false;
+            }
+            
+        });
     	
     	//altera estilo dos botões toggle na barra lateral
         botaoApagar.setOnMouseClicked( mouseEvent ->{
@@ -2081,6 +2155,10 @@ public class Painel implements Initializable{
                     botaoCortar.setStyle( "-fx-background-color:  #666" );
                     corteInit = false;
                     corteFinal = false;
+                }
+                if(botaoLapis.isSelected()) {
+                    botaoLapis.setStyle( "-fx-background-color:  #666" );
+                    lapisSelecionado = false;
                 }
                 //---------------------------------------------------------
                                 
@@ -2108,6 +2186,10 @@ public class Painel implements Initializable{
                     botaoApagar.setStyle( "-fx-background-color:  #666" );
                     limparPixels = false;
                 }
+                if(botaoLapis.isSelected()) {
+                    botaoLapis.setStyle( "-fx-background-color:  #666" );
+                    lapisSelecionado = false;
+                }
                 //---------------------------------------------------------
                 
                 botaoCortar.setStyle( "-fx-border-color:  #999; -fx-background-color:  #555" );
@@ -2117,6 +2199,36 @@ public class Painel implements Initializable{
                 botaoCortar.setStyle( "-fx-background-color:  #666" );
                 corteInit = false;
                 corteFinal = false;
+            }
+            
+        });
+        
+        //altera estilo dos botões toggle na barra lateral
+        botaoLapis.setOnMouseClicked( mouseEvent ->{
+            if(botaoLapis.isSelected()) {
+
+                //---------------------------------------------------------
+                //desativa outros botões                
+                if(botaoSelMagica.isSelected()) {
+                    botaoSelMagica.setStyle( "-fx-background-color:  #666" );
+                    selecRegiao = false;
+                }
+                if(botaoApagar.isSelected()) {
+                    botaoApagar.setStyle( "-fx-background-color:  #666" );
+                    limparPixels = false;
+                }
+                if(botaoLapis.isSelected()) {
+                    botaoLapis.setStyle( "-fx-background-color:  #666" );
+                    lapisSelecionado = false;
+                }
+                //---------------------------------------------------------
+                
+                botaoLapis.setStyle( "-fx-border-color:  #999; -fx-background-color:  #555" );
+                lapisSelecionado = true;
+            }
+            else {
+                botaoLapis.setStyle( "-fx-background-color:  #666" );
+                lapisSelecionado = false;
             }
             
         });
@@ -2405,6 +2517,9 @@ public class Painel implements Initializable{
         menuSegmentacao.setDisable(false);
         botaoUndo.setDisable(true);
         botaoRedo.setDisable(true);
+        
+        Color c = selecCor.getValue();
+        rgb_from_ColorPicker = Processador.getRGB((float)c.getRed(), (float)c.getGreen(), (float)c.getBlue());
         
         dragMode = false;
         

@@ -1,5 +1,6 @@
 package src;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -573,28 +574,48 @@ public class Operacoes {
 
     //--------------------------------------------------------------
     //Operações extras
-    public static BufferedImage colarImg( Processador imgA, Processador imgB ){
+    public static void colarImg( Processador imgA, Processador imgB ){
+        
+        int w = (int)imgB.getWidth(); 
+        int h = (int)imgB.getHeight(); 
+
+        Graphics2D graphics = imgA.getImg().createGraphics();
+        graphics.drawImage(imgB.getImg(), 0, 0, w, h, null);
+        graphics.dispose();
+        
+    }
+    
+    public static BufferedImage pintarPixel( Processador imgA, double [] linha_desenhada, int rgb ){
         
         Processador imgF = new Processador();
-        
         imgF.setImg( imgA.getImg() );
-
-        int r, g, b;
         
-        for(int x = 0; x < imgA.getWidth() && x < imgB.getWidth(); x++) {
-            for(int y = 0; y < imgA.getHeight() && y < imgB.getHeight(); y++) {
-
-                if(imgB.escalaAlpha(x, y) != 0){
-                    r = imgB.nivelRed(x, y); 
-                    g = imgB.nivelGreen(x, y); 
-                    b = imgB.nivelBlue(x, y);
-                    
-                    imgF.setRGB( x, y, r, g, b );
-                }
-
+        int xInit = (int) linha_desenhada[0];
+        int yInit = (int) linha_desenhada[1];        
+        int xFim  = (int) linha_desenhada[2];
+        int yFim  = (int) linha_desenhada[3]; 
+        
+        //verifica se deverá incrementar ou decrementar
+        int xIterator = xInit < xFim ? 1 : -1;
+        int yIterator = yInit < yFim ? 1 : -1;
+        
+        int x = xInit;
+        int y = yInit;
+        
+        while(true){
+            
+            imgF.setRGB( x, y, rgb );
+            
+            if(x == xFim && y == yFim) {
+                break;
             }
+            else {
+                if(x != xFim) x += xIterator;
+                if(y != yFim) y += yIterator;
+            }
+            
         }
-
+         
         return imgF.getImg();
     }
 }

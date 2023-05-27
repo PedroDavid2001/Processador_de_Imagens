@@ -3,7 +3,6 @@ package src;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Segmentacao {
     
@@ -1268,7 +1267,7 @@ public class Segmentacao {
         return tmp.getImg();
     }
     
-    public static BufferedImage limiarGlobal(Processador img, boolean useWS ) {
+    public static BufferedImage limiarGlobal(Processador img) {
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         List<Float> rG = new ArrayList<>();//regiao global
@@ -1313,10 +1312,7 @@ public class Segmentacao {
                 else
                     tmp.setRGB(x, y, 255, 255, 255);
             }
-        
-        if(useWS)
-            tmp.setImg( watershed(tmp) );
-        
+                
         return tmp.getImg();
     }
     
@@ -1582,16 +1578,11 @@ public class Segmentacao {
         return tmp.getImg();
     }
     
-    public static BufferedImage selecRegiao(Processador img, int posX, int posY, int tol) {
+    public static BufferedImage selecRegiao(Processador img, int posX, int posY, int tol, int newRGB) {
         
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
-        int newR = new Random().nextInt(256);
-        int newG = new Random().nextInt(256);
-        int newB = new Random().nextInt(256);
-        
-        int newRGB = Processador.getRGB( newR, newG, newB);
         int rgbInit = img.getRGB(posX, posY);
         
         expandir = new Expansao(img.getWidth(), img.getHeight());
@@ -1626,83 +1617,32 @@ public class Segmentacao {
         }
         
     }
-   
-    public static BufferedImage watershed( Processador img) {
+    
+    private static void repintarBorda(int [][] pixels, Processador img, int bordaRGB) {
+        
+        for(int y = 0; y < img.getHeight(); y++) {
+            for(int x = 0; x < img.getWidth(); x++) {
+                if(pixels[x][y] == 1) {
+                    img.setRGB(x, y, bordaRGB);
+                }
+            }
+        }
+        
+    }
+    
+    public static BufferedImage watershed(Processador img, int posX, int posY, int tol, int newRGB) {
+        
         Processador tmp = new Processador();
         tmp.setImg( img.getImg() );
         
-        int larg = (int)(img.getWidth() / 8) > 0 ? (int)(img.getWidth() / 8) : 1;
-        int alt = (int)(img.getHeight() / 8) > 0 ? (int)(img.getHeight() / 8) : 1;
-        
-        int newRGB = Processador.getRGB( 1, 1, 1);
+        int rgbInit = img.getRGB(posX, posY);
         
         expandir = new Expansao(img.getWidth(), img.getHeight());
-        
-        for(int y = alt; y < img.getHeight() - 1; y += alt) 
-            for(int x = 1; x < img.getWidth() - 1; x++) {
-                
-                //inundação na horizontal
-                if(img.nivelRed(x, y) == 255) {
-                    if(tmp.nivelRed(x + 1, y) == 0) {
-                        int xx = x + 1;
-                        int yy = y;
-                        while(!img.isNull(xx, yy) && tmp.nivelRed(xx, yy) == 0) {
-                            tmp.setRGB(xx, yy, 255, 255, 255);
-                            xx++;
-                        }
-                        expandir.expandir( tmp, x + 1, y + 1, 1, 0 );
-                        repintar(expandir.getArray(), tmp, newRGB);
-                        break;
-                    }
-                    else if( tmp.nivelRed(x - 1, y) == 0) {
-                        int xx = x - 1;
-                        int yy = y;
-                        while(!img.isNull(xx, yy) && tmp.nivelRed(xx, yy) == 0) {
-                            tmp.setRGB(xx, yy, 255, 255, 255);
-                            xx--;
-                        }
-                        expandir.expandir( tmp, x + 1, y + 1, 1, 0 );
-                        repintar(expandir.getArray(), tmp, newRGB);
-                        break;
-                    }
-                }
-                
-            }
-        
-        expandir.zerar();
-        
-        for(int y = 1; y < img.getHeight() - 1; y++) 
-            for(int x = larg; x < img.getWidth() - 1; x += larg) {
-                
-                //inundação na vertical
-                if(img.nivelRed(x, y) == 255) {
-                    if(tmp.nivelRed(x, y + 1) == 0) {
-                        int xx = x;
-                        int yy = y + 1;
-                        while(!img.isNull(xx, yy) && tmp.nivelRed(xx, yy) == 0) {
-                            tmp.setRGB(xx, yy, 255, 255, 255);
-                            yy++;
-                        }
-                        expandir.expandir( tmp, x + 1, y + 1, 1, 0 );
-                        repintar(expandir.getArray(), tmp, newRGB);
-                        break;
-                    }
-                    else if( tmp.nivelRed(x, y - 1) == 0) {
-                        int xx = x;
-                        int yy = y - 1;
-                        while(!img.isNull(xx, yy) && tmp.nivelRed(xx, yy) == 0) {
-                            tmp.setRGB(xx, yy, 255, 255, 255);
-                            yy--;
-                        }
-                        expandir.expandir( tmp, x + 1, y + 1, 1, 0 );
-                        repintar(expandir.getArray(), tmp, newRGB);
-                        break;
-                    }
-                }
-                
-            }
-        
+        expandir.expandir( tmp, posX, posY, tol, rgbInit );
+        expandir.criarContorno();
+        repintarBorda(expandir.getArray(), tmp, newRGB);
         
         return tmp.getImg();
     }
+   
 }

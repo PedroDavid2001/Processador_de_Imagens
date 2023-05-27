@@ -1,21 +1,32 @@
 package src;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class Expansao {
-    int [][] vetor;
+    /*
+     * Matriz que informa o estado de cada pixel 
+     * na imagem após uma ação de expansão de cor 
+     * ou remoção de pixels.
+     * 0 = estado inicial
+     * 1 = contorno 
+     * 2 = não será alterado
+     * 3 = sreá alterado
+     */
+    int [][] matriz_pixels;
     
     public Expansao( double w, double h ) {
-        vetor = new int[(int)w][(int)h];
+        matriz_pixels = new int[(int)w][(int)h];
         zerar();
     }
     
     public void zerar() {
     
-        for(int i = 0; i < vetor.length; i++) {
-            for(int j = 0; j < vetor[i].length; j++) {
-                vetor[i][j] = 0;
+        for(int i = 0; i < matriz_pixels.length; i++) {
+            for(int j = 0; j < matriz_pixels[i].length; j++) {
+                matriz_pixels[i][j] = 0;
             }
         }
     }
@@ -43,7 +54,7 @@ public class Expansao {
             int px = p.x;
             int py = p.y;
 
-            if (vetor[px][py] != 0) {
+            if (matriz_pixels[px][py] != 0) {
                 continue;
             }
 
@@ -71,13 +82,13 @@ public class Expansao {
                 if (rDif > tol || gDif > tol || bDif > tol) {
                     // Valor do pixel vai além da tolerância, 
                     // portanto não poderá ser alterado.
-                    vetor[px][py] = 2;
+                    matriz_pixels[px][py] = 2;
                     continue;
                 }
                 
                 // Pixel se encaixa na tolerância, 
                 // portanto poderá ser alterado.
-                vetor[px][py] = 3;
+                matriz_pixels[px][py] = 3;
 
                 /* 
                  * Verifica-se a vizinhança do pixel.
@@ -85,23 +96,77 @@ public class Expansao {
                  * na pilha para serem verificados nas 
                  * próximas iterações.
                  */
-                if (py >= 1 && vetor[px][py - 1] == 0) {
+                if (py >= 1 && matriz_pixels[px][py - 1] == 0) {
                     stack.push(new Point(px, py - 1));
                 }
-                if (py < (img.getHeight() - 1) && vetor[px][py + 1] == 0) {
+                if (py < (img.getHeight() - 1) && matriz_pixels[px][py + 1] == 0) {
                     stack.push(new Point(px, py + 1));
                 }
-                if (px >= 1 && vetor[px - 1][py] == 0) {
+                if (px >= 1 && matriz_pixels[px - 1][py] == 0) {
                     stack.push(new Point(px - 1, py));
                 }
-                if (px < (img.getWidth() - 1) && vetor[px + 1][py] == 0) {
+                if (px < (img.getWidth() - 1) && matriz_pixels[px + 1][py] == 0) {
                     stack.push(new Point(px + 1, py));
                 }
             }
         }
     }
+    
+    public void criarContorno() {
+        List<Point> contorno = new ArrayList<>();
+        
+        // Percorre a matriz
+        for (int i = 0; i < matriz_pixels.length; i++) {
+            for (int j = 0; j < matriz_pixels[0].length; j++) {
+                // Verifica se o pixel atual é um ponto de contorno
+                if (ehPontoContorno(matriz_pixels, i, j)) {
+                    // Adiciona o pixel à lista de pontos de contorno
+                    contorno.add(new Point(i, j));
+                }
+            }
+        }
+        
+        for(Point pix : contorno) {
+            matriz_pixels[pix.x][pix.y] = 1;
+        }
+    }
+
+    public boolean ehPontoContorno(int[][] matriz, int x, int y) {
+        // Verifica se o pixel atual é diferente de zero
+        if (matriz[x][y] != 0) {
+            // Verifica se o pixel tem pelo menos um vizinho que está fora da área selecionada
+            if (temVizinhoFora(matriz, x, y)) {
+                return true; // É um ponto de contorno
+            }
+        }
+        
+        return false; // Não é um ponto de contorno
+    }
+
+    public boolean temVizinhoFora(int[][] matriz, int x, int y) {
+        int[] dx = {-1, 0, 1, 0}; // Deslocamento em x para os vizinhos (esquerda, cima, direita, baixo)
+        int[] dy = {0, -1, 0, 1}; // Deslocamento em y para os vizinhos (esquerda, cima, direita, baixo)
+        
+        // Verifica cada vizinho
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            
+            // Verifica se o vizinho está fora dos limites da matriz
+            if (nx < 0 || nx >= matriz.length || ny < 0 || ny >= matriz[0].length) {
+                return true; // Vizinho está fora da matriz, é um ponto de contorno
+            }
+            
+            // Verifica se o vizinho é zero (fora da área selecionada)
+            if (matriz[nx][ny] == 0) {
+                return true; // Vizinho está fora da área selecionada, é um ponto de contorno
+            }
+        }
+        
+        return false; // Todos os vizinhos estão dentro da área selecionada
+    }
         
     public int [][] getArray(){
-        return vetor;
+        return matriz_pixels;
     }
 }

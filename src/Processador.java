@@ -252,11 +252,8 @@ public class Processador {
         return arquivo.getRGB(x, y);
     }
     
-    public void setRGB(int x, int y, int rgb){ //[RANGE 0 - 255]
-        
-        if(escalaAlpha(x, y) != 0)
-            arquivo.setRGB(x, y, rgb);
-        
+    public void setRGB(int x, int y, int rgb){ //[RANGE 0 - 255] 
+        arquivo.setRGB(x, y, rgb);
     }
     
     public void setRGB(int x, int y, int r, int g, int b){ //[RANGE 0 - 255]
@@ -347,16 +344,20 @@ public class Processador {
     
     //métodos static (algumas utilidades da classe :^D )
     
-    public static int getRed(int rgb) {
-        return ( rgb & 0xff0000 ) >> 16 ;
+    public static int getAlpha(int rgb) {
+        return ( rgb & 0xff000000 ) >> 24;
     }
-
-    public static int getBlue(int rgb) {
-        return rgb & 0xff; 
+    
+    public static int getRed(int rgb) {
+        return ( rgb & 0xff0000 ) >> 16;
     }
 
     public static int getGreen(int rgb) {
-        return ( rgb & 0xff00 ) >> 8 ;
+        return ( rgb & 0xff00 ) >> 8;
+    }
+    
+    public static int getBlue(int rgb) {
+        return rgb & 0xff; 
     }
     
     //cria uma BufferedImage com uma Image do JavaFX
