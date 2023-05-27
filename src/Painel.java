@@ -2121,7 +2121,11 @@ public class Painel implements Initializable{
     	    }
     	    else {
     	        botaoSelMagica.setStyle( "-fx-background-color:  #666" );
-    	        selecRegiao = false;
+                selecRegiao = false;
+                
+    	        //desativa também o botão de watershed
+    	        botaoSelWatershed.setStyle( "-fx-border-color:  #999; -fx-background-color:  #777" );
+                selecWatershed = false;
     	        botaoSelWatershed.setSelected(false);
     	        botaoSelWatershed.setDisable(true);
     	    }
